@@ -3,8 +3,7 @@ submodule engdb-region {
         prefix engdb;
     }
 
-    
-    
+       
     import tailf-common { prefix tailf; }
     import ietf-inet-types { prefix inet; }
     include engdb-types;
