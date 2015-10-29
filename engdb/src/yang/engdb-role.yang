@@ -1,5 +1,5 @@
 submodule engdb-role {
-    belongs-to engdb {
+    belongs-to "engdb"  {
         prefix engdb;
     }
 
