@@ -3,9 +3,6 @@ submodule engdb-taxon {
         prefix engdb-taxon;
     }
 
-    include engdb-types;
-    include engdb-region;
-    include engdb-role;
 
     import ietf-inet-types { prefix inet; }
 

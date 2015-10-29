@@ -3,17 +3,10 @@ submodule engdb-rib {
         prefix engdb-rib;
     }
 
-    include engdb-types;
-    include engdb-region;
-    include engdb-role;
-    include engdb-taxon;
 
     import ietf-inet-types { prefix inet; }
 
-    revision 2015-10-10 {
-        description
-                "Initial revision";
-    }
+
 
     list rib {
         description "A discriptor for a discrete routing information base ";

@@ -3,7 +3,6 @@ submodule engdb-role {
         prefix engdb-role;
     }
 
-    include engdb-types;
 
     import tailf-common { prefix tailf; }
 

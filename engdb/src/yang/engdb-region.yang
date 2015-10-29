@@ -3,9 +3,6 @@ submodule engdb-region {
         prefix engdb-region;
     }
 
-    include engdb-types;
-    include engdb-role;
-
     import tailf-common { prefix tailf; }
     import ietf-inet-types { prefix inet; }
 
