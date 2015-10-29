@@ -1,6 +1,6 @@
 submodule engdb-rib {
     belongs-to engdb {
-        prefix engdb-rib;
+        prefix engdb;
     }
 
 

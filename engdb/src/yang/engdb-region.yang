@@ -1,8 +1,9 @@
 submodule engdb-region {
     belongs-to engdb {
-        prefix engdb-region;
+        prefix engdb;
     }
-    include engdb-types;
+
+    
     import tailf-common { prefix tailf; }
     import ietf-inet-types { prefix inet; }
 
@@ -22,7 +23,7 @@ submodule engdb-region {
                 "";
         key "region-name";
         leaf region-name {
-            type engdb:chtr-region-t;
+            type chtr-region-t;
         }
         container function {
             description

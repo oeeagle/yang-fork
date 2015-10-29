@@ -1,15 +1,9 @@
 submodule engdb-types {
     belongs-to engdb {
-        prefix engdb-types;
+        prefix engdb;
     }
 
     import tailf-common { prefix tailf; }
-
-    organization "Charter Engineering";
-    contact
-        "bill.armstrong@charter.com";
-    description
-        "Charter Specific derived types";
 
     revision 2015-10-10 {
         description
