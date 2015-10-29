@@ -18,6 +18,7 @@ submodule engdb-role {
                 "Initial revision";
     }
 
+    grouping role-grp{
     list role {
         description
                 "";
@@ -467,4 +468,5 @@ submodule engdb-role {
             }
         }
     }
+}
 }

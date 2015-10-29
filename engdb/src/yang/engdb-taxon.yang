@@ -29,7 +29,8 @@ submodule engdb-taxon {
         description
                 "Initial revision";
     }
-
+grouping taxa-grp{
+	
     list Domain {
         key "id";
         leaf id {
@@ -78,4 +79,4 @@ submodule engdb-taxon {
         }
     }
 }
-
+}

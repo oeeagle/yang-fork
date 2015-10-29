@@ -23,5 +23,17 @@ module engdb {
         description
                 "Initial revision";
     }
+    container taxonomy{
+    	uses taxa-grp;
+    }
+    container role{
+    	uses role-grp;
+    }
+    container region{
+    	uses region-grp;
+    }
+    container rib{
+    	uses rib-grp;
+    }
 }
 

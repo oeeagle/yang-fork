@@ -18,6 +18,7 @@ submodule engdb-region {
                 "Initial revision";
     }
 
+    grouping region{
     list region {
         description
                 "";
@@ -164,4 +165,5 @@ submodule engdb-region {
             }
         }
     }
+}
 }
