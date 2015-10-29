@@ -1,0 +1,50 @@
+module dc-eco-system {
+  namespace "http://com/example/dcecosystem";
+  prefix dc-eco-system;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  augment /ncs:services {
+
+    list dc-eco-system {
+      description "This is an RFS skeleton service";
+
+      key name;
+      leaf name {
+        tailf:info "Unique service id";
+        tailf:cli-allow-range;
+        type string;
+      }
+
+      uses ncs:service-data;
+      ncs:servicepoint dc-eco-system-servicepoint;
+
+      tailf:action self-test {
+        tailf:info "Perform self-test of the service";
+        tailf:actionpoint dc-eco-system-self-test;
+        output {
+          leaf success {
+            type boolean;
+          }
+          leaf message {
+            type string;
+            description
+              "Free format message.";
+          }
+        }
+      }
+      // replace with your own stuff here
+      leaf dummy {
+        type inet:ipv4-address;
+      }
+    }
+  }
+}

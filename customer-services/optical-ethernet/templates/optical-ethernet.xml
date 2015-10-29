@@ -1,0 +1,1154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0" servicepoint="optical-ethernet">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <!-- UPE[1] CFP Configuration -->
+    <!-- Configuration -->
+    <device tags="nocreate">
+      <name>{/evc-info/path[1]/upe-ac-parameters/upe}</name>
+      <config tags="merge">
+        <!-- Cisco IOS XR -->
+        <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <GigabitEthernet when="{/evc-info/path[1]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}">
+            <id>{/evc-info/path[1]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}</id>
+            <description>chn{/evc-info/path[2]/upe-ac-parameters/upe},gige</description>
+            <l2transport />
+          </GigabitEthernet>
+          <GigabitEthernet-subinterface>
+            <GigabitEthernet>
+              <id>{/evc-info/path[1]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}.{/evc-info/evc_spvlan}</id>
+              <encapsulation>
+                <dot1q>
+                  <vlan-id>{/evc-info/evc_spvlan}</vlan-id>
+                  <second-dot1q>any</second-dot1q>
+                </dot1q>
+              </encapsulation>
+            </GigabitEthernet>
+          </GigabitEthernet-subinterface>
+          <TenGigE when="{/evc-info/path[1]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}">
+            <id>{/evc-info/path[1]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}</id>
+            <l2transport />
+            <description>chn{/evc-info/path[2]/upe-ac-parameters/upe},gige</description>
+          </TenGigE>
+          <TenGigE-subinterface>
+            <TenGigE>
+              <id>{/evc-info/path[1]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}.{/evc-info/evc_spvlan}</id>
+              <encapsulation>
+                <dot1q>
+                  <vlan-id>{/evc-info/evc_spvlan}</vlan-id>
+                  <second-dot1q>any</second-dot1q>
+                </dot1q>
+              </encapsulation>
+            </TenGigE>
+          </TenGigE-subinterface>
+          <HundredGigE when="{/evc-info/path[1]/upe-ac-parameters/cfp/HundredGigE-iosxr/intf-number}">
+            <id>{/evc-info/path[1]/upe-ac-parameters/cfp/HundredGigE-iosxr/intf-number}</id>
+            <l2transport />
+            <description>chn{/evc-info/path[2]/upe-ac-parameters/upe},gige</description>
+          </HundredGigE>
+          <HundredGigE-subinterface>
+            <HundredGigE>
+              <id>{/evc-info/path[1]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}.{/evc-info/evc_spvlan}</id>
+              <encapsulation>
+                <dot1q>
+                  <vlan-id>{/evc-info/evc_spvlan}</vlan-id>
+                  <second-dot1q>any</second-dot1q>
+                </dot1q>
+              </encapsulation>
+            </HundredGigE>
+          </HundredGigE-subinterface>
+        </interface>
+        <!-- pseudowire-and-bridge group creation -->
+        <l2vpn xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <xconnect>
+            <group>
+              <name>{/customer}</name>
+              <p2p>
+                <name>{/customer}-{/name}</name>
+                <neighbor>
+                  <address>{/services/entity:entity[device=current()/evc-info/path[2]/upe-ac-parameters/upe]/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet4}</address>
+                  <pw-id>{/evc-info/evc-id}</pw-id>
+                </neighbor>
+                <interface when="{/evc-info/path[1]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}">
+                  <name>GigabitEthernet{/link[1]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+                <interface when="{/evc-info/path[1]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}">
+                  <name>TenGigE{/link[1]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+                <interface when="{/evc-info/path[1]/upe-ac-parameters/cfp/HundredGigE-iosxr/intf-number}">
+                  <name>HundredGigE{/link[1]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+                <interface when="{/evc-info/path[1]/upe-ac-parameters/cfp/LAG-iosxr/intf-number}">
+                  <name>Bundle-Ether{/link[1]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+              </p2p>
+            </group>
+          </xconnect>
+        </l2vpn>
+      </config>
+    </device>
+    <!-- UPE[2] CFP Configuration -->
+    <!-- Configuration -->
+    <device tags="nocreate">
+      <name>{/evc-info/path[2]/upe-ac-parameters/upe}</name>
+      <config tags="merge">
+        <!-- Cisco IOS XR -->
+        <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <GigabitEthernet when="{/evc-info/path[2]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}">
+            <id>{/evc-info/path[2]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}</id>
+            <description>chn{/evc-info/path[2]/upe-ac-parameters/upe},gige</description>
+            <l2transport />
+          </GigabitEthernet>
+          <GigabitEthernet-subinterface>
+            <GigabitEthernet>
+              <id>{/evc-info/path[2]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}.{/evc-info/evc_spvlan}</id>
+              <encapsulation>
+                <dot1q>
+                  <vlan-id>{/evc-info/evc_spvlan}</vlan-id>
+                  <second-dot1q>any</second-dot1q>
+                </dot1q>
+              </encapsulation>
+            </GigabitEthernet>
+          </GigabitEthernet-subinterface>
+          <TenGigE when="{/evc-info/path[2]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}">
+            <id>{/evc-info/path[2]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}</id>
+            <l2transport />
+            <description>chn{/evc-info/path[1]/upe-ac-parameters/upe},gige</description>
+          </TenGigE>
+          <TenGigE-subinterface>
+            <TenGigE>
+              <id>{/evc-info/path[2]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}.{/evc-info/evc_spvlan}</id>
+              <encapsulation>
+                <dot1q>
+                  <vlan-id>{/evc-info/evc_spvlan}</vlan-id>
+                  <second-dot1q>any</second-dot1q>
+                </dot1q>
+              </encapsulation>
+            </TenGigE>
+          </TenGigE-subinterface>
+          <HundredGigE when="{/evc-info/path[2]/upe-ac-parameters/cfp/HundredGigE-iosxr/intf-number}">
+            <id>{/evc-info/path[2]/upe-ac-parameters/cfp/HundredGigE-iosxr/intf-number}</id>
+            <l2transport />
+            <description>chn{/evc-info/path[1]/upe-ac-parameters/upe},gige</description>
+          </HundredGigE>
+          <HundredGigE-subinterface>
+            <HundredGigE>
+              <id>{/evc-info/path[2]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}.{/evc-info/evc_spvlan}</id>
+              <encapsulation>
+                <dot1q>
+                  <vlan-id>{/evc-info/evc_spvlan}</vlan-id>
+                  <second-dot1q>any</second-dot1q>
+                </dot1q>
+              </encapsulation>
+            </HundredGigE>
+          </HundredGigE-subinterface>
+        </interface>
+        <!-- pseudowire-and-bridge group creation -->
+        <l2vpn xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <xconnect>
+            <group>
+              <name>{/customer}</name>
+              <p2p>
+                <name>{/customer}-{/name}</name>
+                <neighbor>
+                  <address>{/services/entity:entity[device=current()/evc-info/path[1]/upe-ac-parameters/upe]/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet4}</address>
+                  <pw-id>{/evc-info/evc-id}</pw-id>
+                </neighbor>
+                <interface when="{/evc-info/path[2]/upe-ac-parameters/cfp/GigE-iosxr/intf-number}">
+                  <name>GigabitEthernet{/link[2]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+                <interface when="{/evc-info/path[2]/upe-ac-parameters/cfp/TenGigE-iosxr/intf-number}">
+                  <name>TenGigE{/link[2]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+                <interface when="{/evc-info/path[2]/upe-ac-parameters/cfp/HundredGigE-iosxr/intf-number}">
+                  <name>HundredGigE{/link[2]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+                <interface when="{/evc-info/path[2]/upe-ac-parameters/cfp/LAG-iosxr/intf-number}">
+                  <name>Bundle-Ether{/link[2]/iosxr/intf-number}.{/evc-info/evc_spvlan}</name>
+                </interface>
+              </p2p>
+            </group>
+          </xconnect>
+        </l2vpn>
+      </config>
+    </device>
+    <!-- End UPE Configuration -->
+    <!-- DSW[1] -->
+    <!-- Configuration -->
+    <device tags="nocreate">
+      <name>{/evc-info/path[1]/dsw-ac-parameters/dsw}</name>
+      <config tags="merge">
+        <!-- Cisco IOS -->
+        <vlan xmlns="urn:ios">
+          <vlan-list>
+            <id>{/evc-info/evc_spvlan}</id>
+            <name>{/evc-info/evc-id}_{/evc-info/service-type}</name>
+          </vlan-list>
+        </vlan>
+        <!-- Cisco IOS CFP -->
+        <interface xmlns="urn:ios">
+          <GigabitEthernet>
+            <name>{/evc-info/path[1]/dsw-ac-parameters/cfp/GigE-ios/intf-number}</name>
+            <media-type>{/intf-medium}</media-type>
+            <description>&lt;UNIPID chc#&gt;,&lt;EVCID chc#&gt;,&lt;custname&gt;,&lt;type&gt;, &lt;LER_prt#&gt;,&lt;cir&gt;,&lt;fff&gt;</description>
+            <l2protocol-tunnel>
+              <cdp />
+              <stp />
+              <vtp />
+            </l2protocol-tunnel>
+            <switchport>
+              <access>
+                <vlan when="/evc-info/path[1]/dsw-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/evc_spvlan}</vlan>
+                <vlan when="/evc-info/path[1]/dsw-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/path[1]/dsw-ac-parameters/cfp/*/intf-parameters/wan_spvlan}</vlan>
+              </access>
+              <mode>
+                <dot1q-tunnel />
+              </mode>
+            </switchport>
+          </GigabitEthernet>
+          <!-- Cisco IOS HFP -->
+          <GigabitEthernet>
+            <name>{/evc-info/path[1]/dsw-ac-parameters/hfp/GigE-ios/intf-number}</name>
+            <port-type>nni</port-type>
+            <speed>nonegotiate</speed>
+            <description>&lt;UNIPID chn#&gt;,&lt;-&gt;,&lt;chrtrc&gt;,&lt;l2trnk&gt;,&lt;nexthopdevice_prt#&gt;,&lt;media speed&gt;,&lt;fff&gt;</description>
+            <load-interval>30</load-interval>
+            <service-policy>
+              <input>QPP-ALL-HFP-IN-TOPMAP</input>
+              <output>QSP-ALL-HFP-OUT-MAP</output>
+            </service-policy>
+            <switchport>
+              <mode>
+                <trunk />
+              </mode>
+              <trunk>
+                <allowed>
+                  <vlan>
+                    <vlans when="/evc-info/path[1]/dsw-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/evc_spvlan}</vlans>
+                    <vlans when="/evc-info/path[1]/dsw-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/path[1]/dsw-ac-parameters/hfp/*/intf-parameters/wan_spvlan}</vlans>
+                    <vlans>1000</vlans>
+                  </vlan>
+                </allowed>
+              </trunk>
+            </switchport>
+          </GigabitEthernet>
+        </interface>
+        <!-- QOS for IOS -->
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Premier'}">
+          <name>QSP-CBP{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>3</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>3</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Express'}">
+          <name>QSP-CBE{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>2</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>2</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Standard'}">
+          <name>QSP-CBS{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>1</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>1</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QSP-ANY-CFP-OUT-MAP</name>
+          <class>
+            <name>QC-CBA-TRFC</name>
+            <bandwidth>
+              <percent>30</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-SVC-TRFC</name>
+            <bandwidth>
+              <percent>10</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-VVV-TRFC</name>
+            <bandwidth>
+              <percent>40</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>class-default</name>
+            <queue-limit>
+              <queue-limit-value>272</queue-limit-value>
+            </queue-limit>
+          </class>
+          <description>grooms bandwidth, apply to output of any customer facing port</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-transmit>
+                    <conform-action>
+                      <transmit />
+                    </conform-action>
+                  </conform-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp qos-group to 6 other traffic is queued bydscp, polices to cir</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QPP-ALL-HFP-IN-TOPMAP</name>
+          <class>
+            <name>QC-{/evc-info/customer}-WAN{/evc-info/evc_spvlan}TRFC</name>
+            <service-policy>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</service-policy>
+          </class>
+          <description>sorts by vlan and applies actions listed in	submap;	apply to input of HFP</description>
+        </policy-map>
+      </config>
+    </device>
+    <!-- DSW[2] -->
+    <!-- Configuration -->
+    <device tags="nocreate">
+      <name>{/evc-info/path[2]/dsw-ac-parameters/dsw}</name>
+      <config tags="merge">
+        <!-- Cisco IOS -->
+        <vlan xmlns="urn:ios">
+          <vlan-list>
+            <id>{/evc-info/evc_spvlan}</id>
+            <name>{/evc-info/evc-id}_{/evc-info/service-type}</name>
+          </vlan-list>
+        </vlan>
+        <!-- Cisco IOS CFP -->
+        <interface xmlns="urn:ios">
+          <GigabitEthernet>
+            <name>{/evc-info/path[2]/dsw-ac-parameters/cfp/GigE-ios/intf-number}</name>
+            <media-type>{/intf-medium}</media-type>
+            <description>&lt;UNIPID chc#&gt;,&lt;EVCID	chc#&gt;,&lt;custname&gt;,&lt;type&gt;, &lt;LER_prt#&gt;,&lt;cir&gt;,&lt;fff&gt;</description>
+            <l2protocol-tunnel>
+              <cdp />
+              <stp />
+              <vtp />
+            </l2protocol-tunnel>
+            <switchport>
+              <access>
+                <vlan when="/evc-info/path[2]/dsw-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/evc_spvlan}</vlan>
+                <vlan when="/evc-info/path[2]/dsw-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/path[2]/dsw-ac-parameters/cfp/*/intf-parameters/wan_spvlan}</vlan>
+              </access>
+              <mode>
+                <dot1q-tunnel />
+              </mode>
+            </switchport>
+          </GigabitEthernet>
+          <!-- Cisco IOS HFP -->
+          <GigabitEthernet>
+            <name>{/evc-info/path[1]/dsw-ac-parameters/hfp/GigE-ios/intf-number}</name>
+            <port-type>nni</port-type>
+            <speed>nonegotiate</speed>
+            <description>UNIPID	chn{/evc-info/path[2]/circuit-id},{/evc-info/path[2]/upe-ac-parameters/upe},&lt;mediaspeed&gt;,{/name}&gt;</description>
+            <load-interval>30</load-interval>
+            <service-policy>
+              <input>QPP-ALL-HFP-IN-TOPMAP</input>
+              <output>QSP-ALL-HFP-OUT-MAP</output>
+            </service-policy>
+            <switchport>
+              <mode>
+                <trunk />
+              </mode>
+              <trunk>
+                <allowed>
+                  <vlan>
+                    <vlans when="/evc-info/path[2]/dsw-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="merge">{/evc-info/evc_spvlan}</vlans>
+                    <vlans when="/evc-info/path[2]/dsw-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="merge">{/evc-info/path[2]/dsw-ac-parameters/hfp/*/intf-parameters/wan_spvlan}</vlans>
+                    <vlans>1000</vlans>
+                  </vlan>
+                </allowed>
+              </trunk>
+            </switchport>
+          </GigabitEthernet>
+        </interface>
+        <!-- QOS for IOS -->
+        <policy-map xmlns="urn:ios">
+          <name>QSP-ANY-CFP-OUT-MAP</name>
+          <class>
+            <name>QC-CBA-TRFC</name>
+            <bandwidth>
+              <percent>30</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-SVC-TRFC</name>
+            <bandwidth>
+              <percent>10</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-VVV-TRFC</name>
+            <bandwidth>
+              <percent>40</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>class-default</name>
+            <queue-limit>
+              <queue-limit-value>272</queue-limit-value>
+            </queue-limit>
+          </class>
+          <description>grooms bandwidth, apply to output of any customer facing port</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-transmit>
+                    <conform-action>
+                      <transmit />
+                    </conform-action>
+                  </conform-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp qos-group to 6 other traffic is queued by dscp, polices to cir</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QPP-ALL-HFP-IN-TOPMAP</name>
+          <class>
+            <name>QC-{/evc-info/customer}-WAN{/evc-info/evc_spvlan}TRFC</name>
+            <service-policy>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</service-policy>
+          </class>
+          <description>sorts by vlan and applies actions listed in submap; apply to input of HFP</description>
+        </policy-map>
+      </config>
+    </device>
+    <!-- CPE[1] -->
+    <!-- Configuration -->
+    <device tags="nocreate">
+      <name>{/evc-info/path[1]/cpe-ac-parameters/cpe}</name>
+      <config tags="merge">
+        <!-- Cisco IOS -->
+        <vlan xmlns="urn:ios">
+          <vlan-list>
+            <id>{/evc-info/evc_spvlan}</id>
+            <name>{/evc-info/evc-id}_{/evc-info/service-type}</name>
+          </vlan-list>
+        </vlan>
+        <!-- Cisco IOS CFP -->
+        <interface xmlns="urn:ios">
+          <GigabitEthernet>
+            <name>{/evc-info/path[1]/cpe-ac-parameters/cfp/GigE-ios/intf-number}</name>
+            <media-type>{/intf-medium}</media-type>
+            <description>&lt;UNIPID chc#&gt;,&lt;EVCIDchc#&gt;,&lt;custname&gt;,&lt;type&gt;, &lt;LER_prt#&gt;,&lt;cir&gt;,&lt;fff&gt;</description>
+            <l2protocol-tunnel>
+              <cdp />
+              <stp />
+              <vtp />
+            </l2protocol-tunnel>
+            <switchport>
+              <access>
+                <vlan when="/evc-info/path[1]/cpe-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/evc_spvlan}</vlan>
+                <vlan when="/evc-info/path[1]/cpe-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/path[1]/cpe-ac-parameters/cfp/*/intf-parameters/wan_spvlan}</vlan>
+              </access>
+              <mode>
+                <dot1q-tunnel />
+              </mode>
+            </switchport>
+          </GigabitEthernet>
+          <!-- Cisco IOS HFP -->
+          <GigabitEthernet>
+            <name>{/evc-info/path[1]/cpe-ac-parameters/hfp/GigE-ios/intf-number}</name>
+            <port-type>nni</port-type>
+            <speed>nonegotiate</speed>
+            <description>&lt;UNIPID		chn#&gt;,&lt;-&gt;,&lt;chrtrc&gt;,&lt;l2trnk&gt;,&lt;nexthopdevice_prt#&gt;,&lt;media speed&gt;,&lt;fff&gt;</description>
+            <load-interval>30</load-interval>
+            <service-policy>
+              <input>QPP-ALL-HFP-IN-TOPMAP</input>
+              <output>QSP-ALL-HFP-OUT-MAP</output>
+            </service-policy>
+            <switchport>
+              <mode>
+                <trunk />
+              </mode>
+              <trunk>
+                <allowed>
+                  <vlan>
+                    <vlans when="/evc-info/path[1]/cpe-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/evc_spvlan}</vlans>
+                    <vlans when="/evc-info/path[1]/cpe-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/path[1]/cpe-ac-parameters/hfp/*/intf-parameters/wan_spvlan}</vlans>
+                    <vlans>1000</vlans>
+                  </vlan>
+                </allowed>
+              </trunk>
+            </switchport>
+          </GigabitEthernet>
+        </interface>
+        <!-- QOS for IOS -->
+        <policy-map xmlns="urn:ios">
+          <name>QSP-ANY-CFP-OUT-MAP</name>
+          <class>
+            <name>QC-CBA-TRFC</name>
+            <bandwidth>
+              <percent>30</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-SVC-TRFC</name>
+            <bandwidth>
+              <percent>10</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-VVV-TRFC</name>
+            <bandwidth>
+              <percent>40</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>class-default</name>
+            <queue-limit>
+              <queue-limit-value>272</queue-limit-value>
+            </queue-limit>
+          </class>
+          <description>grooms bandwidth, apply to output of any customer facing port</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Premier'}">
+          <name>QSP-CBP{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>3</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>3</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Express'}">
+          <name>QSP-CBE{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>2</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>2</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-transmit>
+                    <conform-action>
+                      <transmit />
+                    </conform-action>
+                  </conform-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp qos-group to 6 other traffic is queued by dscp, polices to cir</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QPP-ALL-HFP-IN-TOPMAP</name>
+          <class>
+            <name>QC-{/evc-info/customer}-WAN{/evc-info/evc_spvlan}TRFC</name>
+            <service-policy>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</service-policy>
+          </class>
+          <description>sorts by vlan and applies actions listed in submap;apply to input of HFP</description>
+        </policy-map>
+      </config>
+    </device>
+    <!-- CPE[2] -->
+    <!-- Configuration -->
+    <device tags="nocreate">
+      <name>{/evc-info/path[2]/cpe-ac-parameters/cpe}</name>
+      <config tags="merge">
+        <!-- Cisco IOS -->
+        <vlan xmlns="urn:ios">
+          <vlan-list>
+            <id>{/evc-info/evc_spvlan}</id>
+            <name>{/evc-info/evc-id}_{/evc-info/service-type}</name>
+          </vlan-list>
+        </vlan>
+        <!-- Cisco IOS CFP -->
+        <interface xmlns="urn:ios">
+          <GigabitEthernet>
+            <name>{/evc-info/path[2]/cpe-ac-parameters/cfp/GigE-ios/intf-number}</name>
+            <media-type>{/intf-medium}</media-type>
+            <description>&lt;UNIPID chc#&gt;,&lt;EVCID
+							chc#&gt;,&lt;custname&gt;,&lt;type&gt;, &lt;LER_prt#&gt;,&lt;
+							cir&gt;,&lt;fff&gt;</description>
+            <l2protocol-tunnel>
+              <cdp />
+              <stp />
+              <vtp />
+            </l2protocol-tunnel>
+            <switchport>
+              <access>
+                <vlan when="/evc-info/path[2]/cpe-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/evc_spvlan}</vlan>
+                <vlan when="/evc-info/path[2]/cpe-ac-parameters/cfp/*/intf-parameters/wan_spvlan" tags="replace">{/evc-info/path[2]/cpe-ac-parameters/cfp/*/intf-parameters/wan_spvlan}</vlan>
+              </access>
+              <mode>
+                <dot1q-tunnel />
+              </mode>
+            </switchport>
+          </GigabitEthernet>
+          <!-- Cisco IOS HFP -->
+          <GigabitEthernet>
+            <name>{/evc-info/path[1]/cpe-ac-parameters/hfp/GigE-ios/intf-number}</name>
+            <port-type>nni</port-type>
+            <speed>nonegotiate</speed>
+            <description>UNIPID chn{/evc-info/path[2]/circuit-id},{/evc-info/path[2]/upe-ac-parameters/upe},&lt;media speed&gt;,{/name}&gt;</description>
+            <load-interval>30</load-interval>
+            <service-policy>
+              <input>QPP-ALL-HFP-IN-TOPMAP</input>
+              <output>QSP-ALL-HFP-OUT-MAP</output>
+            </service-policy>
+            <switchport>
+              <mode>
+                <trunk />
+              </mode>
+              <trunk>
+                <allowed>
+                  <vlan>
+                    <vlans when="/evc-info/path[2]/cpe-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="merge">{/evc-info/evc_spvlan}</vlans>
+                    <vlans when="/evc-info/path[2]/cpe-ac-parameters/hfp/*/intf-parameters/wan_spvlan" tags="merge">{/evc-info/path[2]/cpe-ac-parameters/hfp/*/intf-parameters/wan_spvlan}</vlans>
+                    <vlans>1000</vlans>
+                  </vlan>
+                </allowed>
+              </trunk>
+            </switchport>
+          </GigabitEthernet>
+        </interface>
+        <!-- QOS for IOS -->
+        <policy-map xmlns="urn:ios">
+          <name>QSP-ANY-CFP-OUT-MAP</name>
+          <class>
+            <name>QC-CBA-TRFC</name>
+            <bandwidth>
+              <percent>30</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-SVC-TRFC</name>
+            <bandwidth>
+              <percent>10</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>QC-VVV-TRFC</name>
+            <bandwidth>
+              <percent>40</percent>
+            </bandwidth>
+          </class>
+          <class>
+            <name>class-default</name>
+            <queue-limit>
+              <queue-limit-value>272</queue-limit-value>
+            </queue-limit>
+          </class>
+          <description>grooms bandwidth, apply to output of any customer
+						facing port</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Premier'}">
+          <name>QSP-CBP{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>3</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>3</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios" when="{/evc-info/service-tier='Express'}">
+          <name>QSP-CBE{/evc-info/cir}M-CFP-IN-MAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>2</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>2</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp cos and qos-group to 6</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</name>
+          <class>
+            <name>QC-BGP-TRFC</name>
+            <police-policy-map>
+              <police>
+                <cir>1000000</cir>
+                <actions>
+                  <conform-set-cos-transmit>
+                    <conform-action>
+                      <set-cos-transmit>6</set-cos-transmit>
+                    </conform-action>
+                  </conform-set-cos-transmit>
+                  <conform-set-qos-transmit>
+                    <conform-action>
+                      <set-qos-transmit>6</set-qos-transmit>
+                    </conform-action>
+                  </conform-set-qos-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <class>
+            <name>class-default</name>
+            <police-policy-map>
+              <police>
+                <cir>{/evc-info/cir}000</cir>
+                <actions>
+                  <conform-transmit>
+                    <conform-action>
+                      <transmit />
+                    </conform-action>
+                  </conform-transmit>
+                  <exceed-drop>
+                    <exceed-action>
+                      <drop />
+                    </exceed-action>
+                  </exceed-drop>
+                </actions>
+              </police>
+            </police-policy-map>
+          </class>
+          <description>marks bgp qos-group to 6 other traffic is queued by
+						dscp, polices to cir</description>
+        </policy-map>
+        <policy-map xmlns="urn:ios">
+          <name>QPP-ALL-HFP-IN-TOPMAP</name>
+          <class>
+            <name>QC-{/evc-info/customer}-WAN{/evc-info/evc_spvlan}TRFC</name>
+            <service-policy>QCP-CBD{/evc-info/cir}M-HFP-IN-SUBMAP</service-policy>
+          </class>
+          <description>sorts by vlan and applies actions listed in
+						submap;
+						apply to input of HFP</description>
+        </policy-map>
+      </config>
+    </device>
+    <!-- Alcatel TiMoS -->
+    <!-- Junos -->
+  </devices>
+</config-template>

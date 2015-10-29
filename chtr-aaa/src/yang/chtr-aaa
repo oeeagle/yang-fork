@@ -1,0 +1,61 @@
+module chtr-aaa {
+  namespace "http://com/example/chtr-aaa";
+  prefix chtr-aaa;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common { 
+   prefix tailf; 
+  }
+
+  revision "2015-07-09" {
+	    description
+	        "initial model:
+	    	The goal of this service is to support the user input of 'set service ntp <name> [device] <aaa-host-1> <aaa-host-2> <aaa-host-3>'
+	    	where name describes the NTP service, device is a list <aaa-host-1> is madatory and <aaa-host-2> and <aaa-host-3> are optional
+	    	Each service instance is made unique by the declaraion of <name> and the ordered combination of aaa-hosts. The devices added to 
+	    	this service act as subscribers to the service RATHER than the service being dependent upon the devices";
+}   
+  
+  augment /ncs:services {
+    list chtr-aaa {
+      key name;
+
+      uses ncs:service-data;
+      ncs:servicepoint "chtr-aaa";
+
+      leaf name {
+        type string;
+      }
+
+      leaf-list device {
+        type leafref {
+          path "/ncs:devices/ncs:device/ncs:name";
+        }
+      }
+      // Mandatory AAA server Entry
+        leaf aaa-host-1 {
+         mandatory true;
+         tailf:info "Primary AAA Server, this entry is required";         
+         type inet:ipv4-address;
+       }
+       // Secondary AAA server Entry
+        leaf aaa-host-2 {
+         tailf:info "Secondary AAA Server, this entry is optional";            
+         type inet:ipv4-address;
+       }
+       // Tertiary AAA server Entry
+        leaf aaa-host-3 {
+         tailf:info "Tertiary AAA Server, this entry is optional";    
+         type inet:ipv4-address;
+       } 
+
+      //Platform Specific YANG data GOES HERE
+
+    }
+  }
+}

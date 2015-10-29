@@ -1,0 +1,89 @@
+module chtr-p2p {
+  namespace "http://com/example/chtr-p2p";
+  prefix chtr-p2p;
+
+  import ietf-inet-types { prefix inet; }
+  import tailf-ncs { prefix ncs; }
+  import tailf-common { prefix tailf; }
+
+revision "2015-07-09" {
+	    description
+	        "The goal of the service is to support the user input 'set service chtr-p2p <name> <circuit-id> <intf-speed> <device[]> <p2p-intf-addr-inet4> <p2p-intf-addr-inet6> <intf-id>'
+	    	2 times which will result in the instantiation of one point to point chtr-p2pion between two routers.";
+}      
+
+
+augment /ncs:services {
+    list chtr-p2p {
+            description "";
+      key name;
+      unique circuit-id;
+      uses ncs:service-data;
+      ncs:servicepoint "chtr-p2p";
+
+      typedef intf-speed-t {
+                description "";
+  	    type enumeration {
+  	      enum "GigE";
+  	      enum "TenGigE";
+  	      enum "HundredGigE";
+  	      enum "LAG";
+  	    }
+    }      
+      
+      leaf name {
+        tailf:info "Point to point interconnect Description (routerA-to-routerB)";
+	    mandatory true;
+        type string;
+      }
+
+      leaf circuit-id {
+        description "";
+        tailf:info "Granite Circuit ID";
+	    mandatory true;
+        type string {
+	    pattern '([0-9]){8}'; }
+      }
+
+      leaf intf-speed {
+          type intf-speed-t;
+          default TenGigE ;
+       }      
+            
+      list link {
+        description "";
+        tailf:info "Attachment Circuit";
+	    min-elements 2;
+        max-elements 2;
+
+
+        list p2p-intf-addr { 
+    	    min-elements 2;
+            max-elements 2;
+            key "inet4-p2p-intf-addr inet6-p2p-intf-addr";
+            
+            leaf inet4-p2p-intf-addr {
+               description "IPv4 Point to Point Interface Address";
+               tailf:info
+               "IPv4 Point to Point Interface Address";
+               type inet:ipv4-address;
+               }
+
+            leaf inet6-p2p-intf-addr {
+               description "IPv6 Point to Point Interface Address";
+                tailf:info
+                "IPv6 Point to Point Interface Address";
+                type inet:ipv6-address;
+               }
+         }
+
+            /* Medium Specific modules will augment this list.
+            */
+
+            
+            
+  }
+ }
+
+}    
+}

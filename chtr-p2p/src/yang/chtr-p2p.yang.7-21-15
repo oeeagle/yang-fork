@@ -1,0 +1,211 @@
+module chtr-p2p {
+  namespace "http://com/example/chtr-p2p";
+  prefix chtr-p2p;
+
+  import ietf-inet-types { prefix inet; }
+  import tailf-ncs { prefix ncs; }
+  import tailf-common { prefix tailf; }
+  import tailf-ned-cisco-ios { prefix ios; }
+  import tailf-ned-cisco-ios-xr { prefix cisco-ios-xr; }
+    description "";
+
+  revision "2015-07-12" {
+	    description
+	        "adding choice statement to handle interface types and removed typedef";
+}      
+  
+  revision "2015-07-09" {
+	    description
+	        "The goal of the service is to support the user input 'set service chtr-p2p <name> <circuit-id> <intf-speed> <device[]> <p2p-intf-addr-inet4> <p2p-intf-addr-inet6> <intf-id>'
+	    	2 times which will result in the instantiation of one point to point chtr-p2pion between two routers.";
+}      
+
+
+augment /ncs:services {
+    list chtr-p2p {
+            description "";
+      key name;
+      unique circuit-id;
+      uses ncs:service-data;
+      ncs:servicepoint "chtr-p2p";
+      
+      leaf name {
+        tailf:info "Point to point interconnect Description (routerA-to-routerB)";
+	    mandatory true;
+        type string;
+      }
+
+      leaf circuit-id {
+        description "";
+        tailf:info "Granite Circuit ID";
+	    mandatory true;
+        type string {
+	    pattern '([0-9]){8}'; }
+      }
+
+     list link {
+        description "";
+        tailf:info "Attachment Circuit";
+	    min-elements 2;
+        max-elements 2;
+        key "inet4-p2p-intf-addr inet6-p2p-intf-addr";
+
+
+            /* Medium Specific modules will augment this list.
+            */
+        container intf-speed {
+            
+        	leaf device {
+                description "";
+                tailf:info "Router";
+                mandatory true;
+                type leafref {
+                path "/ncs:devices/ncs:device/ncs:name";
+               }
+             }
+            
+            choice intf-link {
+                description "";
+                default TenGigE;
+                case GigE {
+                	
+
+                    
+                    
+                  	container GigE-ios {
+                                description "";
+                  	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                  	    tailf:dependency "../../device";
+                  	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                  	  }
+
+                            leaf intf-number {
+                                    description "";
+                              tailf:info "TenGigabitEthernet Interface ID";
+                              type leafref {
+                  	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                  	    }
+                  	  }
+                  	}
+
+                  	container GigE-iosxr {
+                                description "";
+                  	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  	    tailf:dependency "../../device";
+                  	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                  	  }
+
+                            leaf intf-number {
+                                    description "";
+                              tailf:info "GigabitEthernet Interface ID";
+                              type leafref {
+                  	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                  	    }
+                  	  }
+                  	}
+                }
+                case TenGigE {
+                	
+                  	container TenGigE-ios {
+                                description "";
+                    	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                    	    tailf:dependency "../../device";
+                    	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                    	  }
+
+                              leaf intf-number {
+                                tailf:info "TenGigabitEthernet Interface ID";
+                                type leafref {
+                    	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                    	    }
+                    	  }
+                    	}
+
+                    	container TenGigE-iosxr {
+                                description "";
+                    	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                    	    tailf:dependency "../../device";
+                    	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                    	  }
+
+                              leaf intf-number {
+                                tailf:info "TenGigabitEthernet Interface ID";
+                                type leafref {
+                    	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                    	    }
+                    	  }
+                    	}
+                }
+                case HundredGigE {
+                	
+
+                  	container HundredGigE-iosxr {
+                  	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  	    tailf:dependency "../../device";
+                  	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                  	  }
+
+                            leaf intf-number {
+                              tailf:info "TenGigabitEthernet Interface ID";
+                              type leafref {
+                  	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                  	    }
+                  	  }
+                  	}
+                }
+                case LAG {
+                	
+
+                  	container LAG-ios {
+                  	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                  	    tailf:dependency "../../device";
+                  	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                  	  }
+
+                            leaf intf-number {
+                              tailf:info "Aggregated Ethernet Interface ID";
+                              type leafref {
+                  	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/ios:interface/ios:Port-channel/ios:name";
+                  	    }
+                  	  }
+                  	}
+
+                  	container LAG-iosxr {
+                  	  when "/ncs:devices/ncs:device[ncs:name=current()/../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  	    tailf:dependency "../../device";
+                  	    tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                  	  }
+
+                            leaf intf-number {
+                                    description "";
+                              tailf:info "Aggregated Ethernet Interface ID";
+                              type leafref {
+                  	      path "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:Bundle-Ether/cisco-ios-xr:id";
+                  	    }
+                  	  }
+                  	}
+                }
+            }
+        }
+        
+        leaf inet4-p2p-intf-addr {
+            description "IPv4 Point to Point Interface Address";
+            tailf:info
+            "IPv4 Point to Point Interface Address";
+            type inet:ipv4-address;
+            }
+
+         leaf inet6-p2p-intf-addr {
+            description "IPv6 Point to Point Interface Address";
+             tailf:info
+             "IPv6 Point to Point Interface Address";
+             type inet:ipv6-address;
+            }
+           
+            
+  }
+ }
+
+}    
+    
+}

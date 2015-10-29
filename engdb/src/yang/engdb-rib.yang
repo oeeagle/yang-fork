@@ -1,0 +1,52 @@
+submodule engdb-rib {
+    belongs-to engdb{
+        prefix engdb-rib;
+    }
+    
+    include engdb-types;
+    include engdb-region;
+    include engdb-role;
+    include engdb-taxon;
+
+    import ietf-inet-types { prefix inet; }
+
+    revision 2015-10-10 {
+        description
+                "Initial revision";
+    }
+
+    list rib {
+        description "A discriptor for a discrete routing information base ";
+        key "name as-number";
+        leaf name {
+            description "unique name of routing information base";
+            type string;
+        }
+        leaf as-number {
+            description "";
+            type inet:as-number;
+        }
+        leaf distinguisher {
+            description "an unique 16bit identifier used to identify a rib";
+            type int16;
+        }
+        leaf domain {
+            description "an area of territory under the control of a particular organization
+                        or individual";
+            type leafref {
+                path "/Domain/id";
+            }
+        }
+        leaf context {
+            description "the circumstances that form the setting for an event, statement,
+                        or idea, and in terms of which it can be fully understood and
+                        assessed.";
+            type leafref {
+                path "/Domain[id=current()/../domain]/Context/id";
+            }
+        }
+        container SAFI {
+            //to be augmented               
+        	}
+    }
+}

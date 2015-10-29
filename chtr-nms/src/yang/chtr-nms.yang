@@ -1,0 +1,92 @@
+module chtr-nms {
+  namespace "http://charterlab.com/base/chtr-nms";
+  prefix chtr-nms; 
+  
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import engdb {
+    prefix engdb;
+  }
+  import entity {
+    prefix entity;
+  }
+
+  description
+    "";
+
+
+  augment "/ncs:services" {
+    list chtr-nms {
+      key "name";
+      uses ncs:service-data;
+      ncs:servicepoint "chtr-nms";
+      leaf name {
+        description
+          "NMS management group name";
+        tailf:info  "NMS management group name";
+        type string;
+      }
+      leaf-list device {
+        description
+          "";
+        tailf:info "Router requiring remote authentication enabled";
+        type leafref {
+          path "/ncs:devices/ncs:device";
+        }
+        must "count(../../chtr-nms[name != current()/../name][device = current()/../device]) = 0";
+      }
+      container snmp {
+                description "";
+        leaf local-username {
+          tailf:info "shared secret";
+          type string;
+        }
+        leaf vtypass {
+          tailf:info "shared secret";
+          type string;
+        }
+        leaf enablepass {
+          tailf:info "shared secret";
+          type string;
+        }
+      }
+      container syslog {
+                description "";
+        leaf aaa-shared-secret {
+        	mandatory true;
+          tailf:info "shared secret";
+          type string;
+        }
+        leaf aaa-host-1 {
+          mandatory true;
+          tailf:info "Primary AAA Server, this entry is required";
+          type union {
+            type inet:ipv4-address;
+            type inet:ipv6-address;
+          }
+        }
+        leaf aaa-host-2 {
+          tailf:info "Secondary AAA Server, this entry is optional";
+          type union {
+            type inet:ipv4-address;
+            type inet:ipv6-address;
+          }
+        }
+        leaf aaa-host-3 {
+          tailf:info "Tertiary AAA Server, this entry is optional";
+          type union {
+            type inet:ipv4-address;
+            type inet:ipv6-address;
+          }
+        }
+      }
+    }
+  }
+}

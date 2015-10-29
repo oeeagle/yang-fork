@@ -1,0 +1,151 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+                 servicepoint="chtr-aaa">
+         
+  <devices xmlns="http://tail-f.com/ns/ncs">
+
+        
+    <device>
+      <name>{/device}</name>
+      <config>
+          <!-- IOS -->
+       <aaa xmlns="http://tail-f.com/ned/cisco-ios-xr">
+        <authentication>
+          <login>
+            <name>default</name>
+            <local/>
+            <group>tacacs+</group>
+          </login>
+        </authentication>
+        <authorization>
+          <commands>
+            <name>default</name>
+            <group>tacacs+</group>
+            <none/>
+          </commands>
+          <exec>
+            <name>default</name>
+            <group>tacacs+</group>
+            <local/>
+            <none/>
+          </exec>
+        </authorization>
+        <accounting>
+          <exec>
+            <name>default</name>
+            <notice>start-stop</notice>
+            <group>tacacs+</group>
+          </exec>
+          <commands>
+            <name>default</name>
+            <notice>start-stop</notice>
+            <group>tacacs+</group>
+          </commands>
+        </accounting>
+        <default-taskgroup>chtridgroup</default-taskgroup>
+      </aaa>
+      <tacacs xmlns="http://tail-f.com/ned/cisco-ios-xr">
+        <source-interface>
+          <Loopback>0</Loopback>
+          <vrf>default</vrf>
+        </source-interface>
+      </tacacs>
+      <tacacs-server xmlns="http://tail-f.com/ned/cisco-ios-xr">
+        <host>
+          <name>{/remote-auth/aaa-host-1}</name>
+          <port>49</port>
+          <key>
+            <encryption>7</encryption>
+            <key>{/remote-auth/shared-secret}</key>
+          </key>
+        </host>
+      </tacacs-server>
+
+    <tacacs-server xmlns="http://tail-f.com/ned/cisco-ios-xr" when="{/device/aaa-host-2}" tags="merge">       
+         <host>
+          <name>{/remote-auth/aaa-host-2}</name>
+          <port>49</port>
+          <key>
+            <encryption>7</encryption>
+            <key>{/remote-auth/shared-secret}</key>
+          </key>
+        </host>
+        <timeout>3</timeout>
+      </tacacs-server>
+
+    <tacacs-server xmlns="http://tail-f.com/ned/cisco-ios-xr" when="{/device/aaa-host-3}" tags="merge">
+         <host>
+          <name>{/remote-auth/aaa-host-3}</name>
+          <port>49</port>
+          <key>
+            <encryption>7</encryption>
+            <key>{/remote-auth/shared-secret}</key>
+          </key>
+        </host>
+        <timeout>3</timeout>
+      </tacacs-server>
+        <enable xmlns="http://tail-f.com/ned/cisco-ios-xr">
+    <secret>
+      <secret>{/local-auth/enablepass}</secret>
+      <type>0</type>
+    </secret>
+  </enable>
+      
+      
+          <!-- JUNOS -->
+    <configuration xmlns="http://xml.juniper.net/xnm/1.1/xnm">
+      <system>
+        <login>
+        <class>
+          <name>tacacs-readonly</name>
+          <idle-timeout>5</idle-timeout>
+          <permissions>view</permissions>
+          <permissions>view-configuration</permissions>
+        </class>
+        <class>
+          <name>tacacs-superuser</name>
+          <idle-timeout>360</idle-timeout>
+          <permissions>all</permissions>
+        </class>
+        <user>
+          <name>{/local-auth/local-user}</name>
+          <uid>2002</uid>
+          <class>super-user</class>
+          <authentication>
+            <plain-text-password-value>{/local-auth/enablepass}</plain-text-password-value>
+          </authentication>
+        </user>
+        <user>
+          <name>read-only</name>
+          <uid>2003</uid>
+          <class>tacacs-readonly</class>
+        </user>
+        <user>
+          <name>read-write</name>
+          <uid>2004</uid>
+          <class>tacacs-superuser</class>
+        </user>
+        </login>
+      </system>  
+      
+      <system>      
+       <tacplus-server>
+         <name>{/remote-auth/aaa-host-1}</name>
+         <port>49</port>
+         <timeout>5</timeout>
+         <single-connection/>
+       </tacplus-server>
+       <tacplus-server>
+         <name>{/remote-auth/aaa-host-2}</name>
+         <port>49</port>
+         <timeout>5</timeout>
+         <single-connection/>
+       </tacplus-server>
+      </system>
+      </configuration>
+          
+          
+          
+      </config>
+    </device>
+  </devices>
+</config-template>

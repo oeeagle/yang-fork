@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0" servicepoint="entity">
+   <devices xmlns="http://tail-f.com/ns/ncs">
+      <!-- ENSURE THE REGIONAL DEVICE GROUP IS DEFINED AND THAT DEVICE IS ADDED TO THE GROUP -->
+      <device-group>
+         <name>{/location/region}</name>
+         <device-name>{/device}</device-name>
+      </device-group>
+      <profiles>
+         <profile>
+            <!-- ENSURE THE DEVICE ROLE IS DEFINED -->
+            <name>{/role-name}</name>
+         </profile>
+      </profiles>
+      <device>
+         <name>{/device}</name>
+         <device-profile>{/role-name}</device-profile>
+         <config>
+            <!-- IOS-XR -->
+            <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+               <Loopback>
+                  <id>0</id>
+                  <description>MGMT-LOOPBACK</description>
+                  <ipv4>
+                     <address>
+                        <ip>{/mgmt-src-addr/mgmt-src-intf/mgmt-src-addr/mgmt-inet4}</ip>
+                        <mask>255.255.255.255</mask>
+                     </address>
+                  </ipv4>
+                  <ipv6 when="{/mgmt-src-addr/mgmt-src-intf/mgmt-src-addr/mgmt-inet6}">
+                     <address>
+                        <prefix-list>
+                           <prefix>{/mgmt-src-addr/mgmt-src-intf/mgmt-src-addr/mgmt-inet6}/128</prefix>
+                        </prefix-list>
+                     </address>
+                  </ipv6>
+               </Loopback>
+            </interface>
+            <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+               <Loopback when="{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet4}">
+                  <id>15</id>
+                  <description>BGP-LOOPBACK</description>
+                  <ipv4>
+                     <address>
+                        <ip>{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet4}</ip>
+                        <mask>255.255.255.255</mask>
+                     </address>
+                  </ipv4>
+                  <ipv6>
+                     <address>
+                        <prefix-list>
+                           <prefix>{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet6}/128</prefix>
+                        </prefix-list>
+                     </address>
+                  </ipv6>
+               </Loopback>
+            </interface>
+            <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+               <Loopback when="{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet4}">
+                  <id>14</id>
+                  <description>MP-BGP-LOOPBACK</description>
+                  <ipv4>
+                     <address>
+                        <ip>{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet4}</ip>
+                        <mask>255.255.255.255</mask>
+                     </address>
+                  </ipv4>
+                  <ipv6 when="{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet6}">
+                     <address>
+                        <prefix-list>
+                           <prefix>{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet6}/128</prefix>
+                        </prefix-list>
+                     </address>
+                  </ipv6>
+               </Loopback>
+            </interface>
+            <snmp-server xmlns="http://tail-f.com/ned/cisco-ios-xr">
+               <location>{/syslocation}</location>
+            </snmp-server>
+            <!-- IOS -->
+            <interface xmlns="urn:ios">
+               <Loopback>
+                  <name>0</name>
+                  <description>MGMT-LOOPBACK</description>
+                  <ipv6 when="{/mgmt-src-addr/mgmt-src-intf/mgmt-src-addr/mgmt-inet6}">
+                     <address>
+                        <prefix-list>
+                           <prefix>{/mgmt-src-addr/mgmt-src-intf/mgmt-src-addr/mgmt-inet6}</prefix>
+                        </prefix-list>
+                     </address>
+                  </ipv6>
+                  <ip>
+                     <address>
+                        <primary>
+                           <mask>255.255.255.255</mask>
+                           <address>{/mgmt-src-addr/mgmt-src-intf/mgmt-src-addr/mgmt-inet4}</address>
+                        </primary>
+                     </address>
+                  </ip>
+               </Loopback>
+            </interface>
+            <interface xmlns="urn:ios">
+               <Loopback when="{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet4}">
+                  <name>15</name>
+                  <description>BGP-LOOPBACK</description>
+                  <ipv6 when="{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet6}">
+                     <address>
+                        <prefix-list>
+                           <prefix>{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet6}/126</prefix>
+                        </prefix-list>
+                     </address>
+                  </ipv6>
+                  <ip>
+                     <address>
+                        <primary>
+                           <mask>255.255.255.255</mask>
+                           <address>{/bgp4-src-addr/bgp4-src-intf/bgp4-src-addr/bgp4-inet4}</address>
+                        </primary>
+                     </address>
+                  </ip>
+               </Loopback>
+            </interface>
+            <interface xmlns="urn:ios">
+               <Loopback when="{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet4}">
+                  <name>14</name>
+                  <description>MP-BGP-LOOPBACK</description>
+                  <ipv6 when="{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet6}">
+                     <address>
+                        <prefix-list>
+                           <prefix>{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet6}</prefix>
+                        </prefix-list>
+                     </address>
+                  </ipv6>
+                  <ip>
+                     <address>
+                        <primary>
+                           <mask>255.255.255.255</mask>
+                           <address>{/mpbgp-src-addr/mpbgp-src-intf/mpbgp-src-addr/mpbgp-inet4}</address>
+                        </primary>
+                     </address>
+                  </ip>
+               </Loopback>
+            </interface>
+            <snmp-server xmlns="urn:ios">
+               <location>{/syslocation}</location>
+            </snmp-server>
+            <!-- JUNOS -->
+         </config>
+      </device>
+   </devices>
+</config-template>

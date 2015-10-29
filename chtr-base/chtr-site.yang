@@ -1,0 +1,93 @@
+module chtr-site {
+  namespace "http://charterlab.com/chtr-base/chtr-site";
+  prefix "site";
+
+  description
+    "A basic location to device tracking model";
+  contact
+    "Bill Armstrong";
+  organization "Charter Advanced Engineering";
+
+  
+  /*** ***/
+	grouping site-info {
+	leaf site-name{
+	  description "a unique name which identifies the site";
+	  type string;
+	}
+	container site-address{
+	leaf street-number{
+	  description "a unique name which identifies the site";
+	  type string;
+	}
+	leaf street{
+	  description "a unique name which identifies the site";
+	  type string;
+	}
+	leaf unit{
+	  description "a unique name which identifies the site";
+	  type string;
+	}
+	leaf city{
+	  description "a unique name which identifies the site";
+	  type string;
+	}
+	leaf state{
+	  description "a unique name which identifies the site";
+	  type string{
+	  pattern "^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$";
+	  }
+	}
+	leaf zipcode{
+	  description "a unique name which identifies the site";
+	  type string{
+	  pattern "^[0-9]{5}(?:-[0-9]{4})?$";
+	  }
+	}
+	leaf lat-long{
+	  description "a unique name which identifies the site";
+	  type string{
+	  pattern  "^(\-?\d+(\.\d+)?),\s*(\-?\d+(\.\d+)?)";
+	  }
+	}
+	}
+	}
+  
+  
+  list customer{
+	  key "customer site-name";
+	  leaf customer{
+	  type leafref{
+	  path "/ncs:customer";
+	  }
+	  }
+	  uses site-info;
+	  leaf-list devices{
+		  type leafref{
+			  path "/ncs:services/ncs:entity/entity:devices";
+		  }
+	  }
+	}
+
+	list charter{
+	    uses site-info;
+		  leaf-list devices{
+			  type leafref{
+				  path "/ncs:services/ncs:entity/entity:devices";
+			  }
+	    
+	}
+
+	
+	}
+    list third-party {
+        description "";
+        uses site-info;
+        leaf-list devices {
+            type leafref {
+                path "/ncs:services/ncs:entity/entity:devices";
+            }
+        }
+
+    }
+}

@@ -1,0 +1,840 @@
+module optical-ethernet {
+    namespace "http://charterlab.com/customer-services/optical-ethernet";
+    prefix optical-ethernet;
+
+    import ietf-inet-types { prefix inet; }
+    import tailf-ncs { prefix ncs; }
+    import tailf-common { prefix tailf; }
+    import tailf-ned-cisco-ios { prefix ios; }
+    import tailf-ned-cisco-ios-xr { prefix cisco-ios-xr; }
+    import engdb { prefix engdb; }
+    import entity { prefix entity; }
+
+    description
+        "Ethernet private line (EPL) and Ethernet virtual private line
+        (EVPL) are carrier Ethernet data services defined by the Metro
+        Ethernet Forum. EPL provides a point-to-point Ethernet virtual
+        connection (EVC) between a pair of dedicated user–network interfaces
+        (UNIs), with a high degree of transparency.";
+
+    revision 2015-09-17 {
+        description
+                "Final Draft";
+    }
+
+    revision 2015-09-11 {
+        description
+                "Added path-elements leaf-list to determine whether or not dsw
+                configuration parameters are required";
+    }
+
+    revision 2015-09-11 {
+        description
+                "There is no role validation taking place, right now all device
+                selection is only based on its existence within the entity tree";
+    }
+
+    revision 2015-09-06 {
+        description
+                "MASSIVE change";
+    }
+
+    revision 2015-09-05 {
+        description
+                "Must Statement at /path/elements was two exclusive statements,
+                adjusted to an 'or' on the element list";
+    }
+
+    revision 2015-09-05 {
+        description
+                "Corrected the interface speed lookup";
+    }
+
+    augment "/ncs:services" {
+        list optical-ethernet {
+            description
+                        "";
+            key "name customer";
+            uses ncs:service-data;
+            ncs:servicepoint "optical-ethernet";
+
+            typedef oe-service-t {
+                type enumeration {
+                    enum "L2EPL" {
+                        tailf:info
+                                                "Ethernet private line (EPL) is a carrier Ethernet data service
+                                                defined by the Metro Ethernet Forum EPL provides a point-to-point
+                                                Ethernet virtual connection (EVC) between a pair of dedicated
+                                                user–network interfaces (UNIs), with a high degree of transparency
+                                                Categorized as an E-Line service type, with an expectation of
+                                                low frame delay, frame delay variation and frame loss ratio EPL
+                                                is implemented using a point-to-point (EVC) with no Service Multiplexing
+                                                at each UNI (physical interface), i.e., all service frames at
+                                                the UNI are mapped to a single EVC (a.k.a. all-to-one bundling)
+                                                Due to a high degree of transparency, EPL is often used to provide
+                                                point-to-point Transparent LAN Service (TLS), where the service
+                                                frame's header and payload are identical at both the source and
+                                                destination UNI Each UNI has a unique Identifier (the UNI ID)
+                                                Each endpoint (and any MPLS Attachment circuits [see UPE]) are
+                                                configured with the same EVC ID. Also referred to as 'L2VPN' Charter
+                                                service type is 'L2EPL'";
+                    }
+                    enum "L2EVPL" {
+                        tailf:info
+                                                " Ethernet virtual private line (EVPL) is a carrier Ethernet data
+                                                services defined by the Metro Ethernet Forum EVPL provides a point-to-point
+                                                or point-to-multipoint connection between a pair of UNIs Categorized
+                                                as an E-Line service type, with an expectation of low frame delay,
+                                                frame delay variation and frame loss ratio Unlike EPL, EVPL allows
+                                                for service multiplexing, i.e., multiple EVCs or Ethernet services
+                                                per UNI The other difference between the EVPL and EPL is the degree
+                                                of transparency - while EPL is highly transparent, filtering only
+                                                the pause frames, EVPL is required to either peer or drop most
+                                                of the Layer 2 Control Protocols. Each UNI has a unique Identifier
+                                                (the UNI ID) Each endpoint (and any MPLS Attachment circuits [see
+                                                UPE]) are configured with the same EVC ID. Also referred to as
+                                                'L2VPN' and as a 'Multiplexed Point-to-Point' Charter Service
+                                                Type is 'L2EVPL'";
+                    }
+                }
+            }
+
+            typedef oe-CoS-tier-t {
+                tailf:info "802.1p CoS Value";
+                type enumeration {
+                    enum "Standard" {
+                    }
+                    enum "Express" {
+                    }
+                    enum "Premier" {
+                    }
+                }
+            }
+            leaf customer {
+                description
+                                "Customer Name";
+                tailf:info "Customer name";
+                type leafref {
+                    path "/ncs:customers/ncs:customer/ncs:id";
+                }
+            }
+            leaf name {
+                description
+                                "A unique name which describes the Customer Bridge Group";
+                tailf:info "A unique name which describes the Customer Bridge Group";
+                mandatory true;
+                type string;
+            }
+            list evc-info {
+                tailf:info "Attachment Circuit";
+                key "evc-id";
+                leaf evc-id {
+                    description
+                                        "";
+                    tailf:info "Granite Circuit ID";
+                    mandatory true;
+                    type string {
+                        pattern "([0-9]){8}";
+                    }
+                }
+                leaf service-type {
+                    tailf:info "Specifies the Neighbor group to be used by the customer.";
+                    type oe-service-t;
+                    default "L2EPL";
+                }
+                leaf service-tier {
+                    tailf:info "CoS Tier";
+                    description
+                                        "";
+                    type oe-CoS-tier-t;
+                    default "Standard";
+                }
+                leaf cir {
+                    description
+                                        "Committed Information Rate in mbps";
+                    tailf:info "Committed Information Rate in mbps";
+                    type int32 {
+                        range "10 .. 100000";
+                    }
+                    mandatory true;
+                }
+                leaf evc_spvlan {
+                    description "This is the service provider VLAN# assigned to the customer for
+                                        this EVC, this value can be overridden on a per-segment basis";
+                    type union {
+                        type int16 {
+                            range "1 .. 999";
+                        }
+                        type int16 {
+                            range "1005 .. 4000";
+                        }
+                    }
+                }
+
+                list path {
+                    min-elements 2;
+                    key "circuit-id";
+                    leaf circuit-id {
+                        description
+                                                "";
+                        tailf:info "The UNI or Granite Circuit ID unique to this interface on this
+                                                device";
+                        mandatory true;
+                        type string {
+                            pattern "([0-9]){8}";
+                        }
+                    }
+                    leaf-list path-elements {
+                        type enumeration {
+                            enum "upe";
+                            enum "dsw";
+                            enum "cpe";
+                        }
+                    }
+
+                    grouping medium-group {
+
+                        typedef intf-connector-t {
+                            description
+                                                        "configures the port for proper physical characteristics (rj45
+                                                        or sfp)";
+                            type enumeration {
+                                enum "sfp";
+                                enum "rj45";
+                            }
+                        }
+                        leaf intf-medium {
+                            description
+                                                        "";
+                            type intf-connector-t;
+                        }
+
+                        typedef intf-speed-t {
+                            description
+                                                        "";
+                            type enumeration {
+                                enum "GigE";
+                                enum "TenGigE";
+                                enum "HundredGigE";
+                            }
+                        }
+                        leaf intf-speed {
+                            description
+                                                        "";
+                            type intf-speed-t;
+                            mandatory true;
+                        }
+                    }
+
+                    grouping intf-parameter-info {
+                        description
+                                                "";
+                        leaf wan_spvlan {
+                            description "This is the service provider VLAN-id which overrides the Global
+                                                        evc_spvlan";
+                            type union {
+                                type int16 {
+                                    range "1 .. 999";
+                                }
+                                type int16 {
+                                    range "1005 .. 4000";
+                                }
+                            }
+                        }
+                        leaf mtu {
+                            type int16 {
+                                range "1500 .. 9000";
+                            }
+                        }
+                    }
+                    container upe-ac-parameters {
+                        leaf upe {
+                            type leafref {
+                                path "/ncs:services/entity:entity/entity:device";
+                            }
+                        }
+
+                        container cfp {
+                            uses medium-group;
+                            choice link-type {
+                                case GigE {
+                                    when "intf-speed='GigE'";
+                                    container GigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../upe]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../upe]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container GigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../upe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../upe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case TenGigE {
+                                    when "intf-speed='TenGigE'";
+                                    container TenGigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../upe]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../upe]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container TenGigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../upe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../upe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case HundredGigE {
+                                    when "intf-speed='HundredGigE'";
+                                    container HundredGigE-iosxr {
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../upe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../upe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    container dsw-ac-parameters {
+                        when "../path-elements='dsw'";
+                        leaf dsw {
+                            type leafref {
+                                path "/ncs:services/entity:entity/entity:device";
+                            }
+                        }
+                        container cfp {
+                            uses medium-group;
+                            choice link-type {
+                                description
+                                                                "";
+                                case GigE {
+                                    when "intf-speed='GigE'";
+                                    container GigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container GigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case TenGigE {
+                                    when "intf-speed='TenGigE'";
+                                    container TenGigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container TenGigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case HundredGigE {
+                                    when "intf-speed='HundredGigE'";
+                                    container HundredGigE-iosxr {
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        container hfp {
+                            uses medium-group;
+                            choice link-type {
+                                description
+                                                                "";
+                                case GigE {
+                                    when "intf-speed='GigE'";
+                                    container GigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container GigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case TenGigE {
+                                    when "intf-speed='TenGigE'";
+                                    container TenGigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container TenGigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case HundredGigE {
+                                    when "intf-speed='HundredGigE'";
+                                    container HundredGigE-iosxr {
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../dsw]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../dsw]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    container cpe-ac-parameters {
+                        leaf cpe {
+                            type leafref {
+                                path "/ncs:services/entity:entity/entity:device";
+                            }
+                        }
+                        container cfp {
+                            uses medium-group;
+                            choice link-type {
+                                description
+                                                                "";
+                                case GigE {
+                                    when "intf-speed='GigE'";
+                                    container GigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container GigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case TenGigE {
+                                    when "intf-speed='TenGigE'";
+                                    container TenGigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container TenGigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case HundredGigE {
+                                    when "intf-speed='HundredGigE'";
+                                    container HundredGigE-iosxr {
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        container hfp {
+                            uses medium-group;
+                            choice link-type {
+                                description
+                                                                "";
+                                case GigE {
+                                    when "intf-speed='GigE'";
+                                    container GigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container GigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            description
+                                                                                        "";
+                                            tailf:info "GigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case TenGigE {
+                                    when "intf-speed='TenGigE'";
+                                    container TenGigE-ios {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                    container TenGigE-iosxr {
+                                        description
+                                                                                "";
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                                case HundredGigE {
+                                    when "intf-speed='HundredGigE'";
+                                    container HundredGigE-iosxr {
+                                        when "/ncs:devices/ncs:device[ncs:name=current()/../../cpe]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                                            tailf:dependency "../../device";
+                                            tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                                        }
+                                        leaf intf-number {
+                                            tailf:info "TenGigabitEthernet Interface ID";
+                                            type leafref {
+                                                path "/ncs:devices/ncs:device[ncs:name=current()/../../../cpe]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                                            }
+                                        }
+                                        container intf-parameters {
+                                            uses intf-parameter-info;
+                                            description
+                                                                                        "";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+module chtr-ntp {
+  namespace "http://com/example/ntp";
+  prefix ntp;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common { 
+   prefix tailf; 
+  }
+
+revision "2015-07-09" {
+	    description
+	        "Expanded module description:
+	    	The goal of this service is to support the user input of 'set service chtr-ntp <name> [device] <ntp-host-1> <ntp-host-2> <ntp-host-3>'
+	    	where name describes the NTP service, device is a list <ntp-host-1> is madatory and <ntp-host-2> and <ntp-host-3> are optional
+	    	Each service instance is made unique by the declaraion of <name> and the ordered combination of ntp-hosts. The devices added to 
+	    	this service act as subscribers to the ntp service RATHER than the service being dependent upon the devices, this allows for devices and services
+	    	to be created indipendent of each other which should allow for simplified changes to the service or shifts in a devices service membership.";
+}     
+  
+  revision "2015-06-18" {
+    description "Refactor model BACK to the original plan.";
+  }
+
+  revision "2015-06-17" {
+    description "Refactor model to discover devices based on group.";
+  }
+
+  revision "2015-06-16" {
+    description "changing device leafref to device-group leafref.";
+  }
+
+  augment /ncs:services {
+    list ntp {
+      key name;
+
+      uses ncs:service-data;
+      ncs:servicepoint "ntp";
+
+      leaf name {
+        type string;
+      }
+
+      leaf-list device {
+        type leafref {
+          path "/ncs:devices/ncs:device/ncs:name";
+        }
+      }
+      // Mandatory NTP server Entry
+        leaf ntp-host-1 {
+         mandatory true;
+         tailf:info "Primary NTP Server, this entry is required";         
+         type inet:ipv4-address;
+       }
+       // Secondary NTP server Entry
+        leaf ntp-host-2 {
+         tailf:info "Secondary NTP Server, this entry is optional";            
+         type inet:ipv4-address;
+       }
+       // Tertiary NTP server Entry
+        leaf ntp-host-3 {
+         tailf:info "Tertiary NTP Server, this entry is optional";    
+         type inet:ipv4-address;
+       } 
+
+      //Platform Specific YANG data GOES HERE
+
+    }
+  }
+}

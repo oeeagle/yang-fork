@@ -1,0 +1,469 @@
+module chtr-isis {
+  namespace "http://charterlab.com/service/chtr-isis";
+  prefix isis;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ned-cisco-ios {
+    prefix ios;
+  }
+  import tailf-ned-cisco-ios-xr {
+    prefix cisco-ios-xr;
+  }
+  import interconnect {
+    prefix interconnect;
+  }
+  import engdb {
+	    prefix engdb;
+	  }
+  
+  import entity {
+	    prefix entity;
+	  }
+  
+  description
+    "
+     The NSAP-selector (NSEL) identifies a network service user, and, when the routing layer is specified
+     as the network service user this is set to zero and is called a NET (Network Entity Title) denoting
+     the routing layer. The only time one would see a non-zero number as a NET would be in a pure ISO CLNS
+     (layer 2) environment where ordinary packets have source and destination NSAPs with non-zero NSEL values.
+     Below is a list of the current Charter IS-IS area addresses:
+
+     IS-IS Area-ID  Regional Network              Backbone Touchpoint(s)
+     49.0001        MO/IL                         Olivette, MO / Belleville, IL
+     49.002         Internal WAN                  N/A
+     49.0425        WI/MN                         Eau Claire, WI / Rochester, MN
+     49.065         MI                            Allendale, MI / Saginaw, MI
+     49.15          Chicago Colo                  Chicago, IL
+     49.16          San Jose Colo                 San Jose, CA
+     49.17          Ashburn Colo                  Ashburn, VA
+     49.18          Denver Colo                   Denver, CO
+     49.185         AL/GA/TN/CARVA                Atlanta, GA / Spartanburg, SC / Greenville, SC
+     49.19          NV                            Reno, NV
+     49.2           Seattle Colo                  Seattle, WA
+     49.22          SOCAL                         Monterey Park, CA / Riverside, CA
+     49.2225        SLO                           San Luis Obispo, CA
+     49.225         WA/OR                         Medford, OR / Yakima, WA
+     49.23          Mountain States               Montana, Utah, Wyoming, and Colorado outside of Denver
+     49.24          TX                            Fort Worth, TX
+     49.25          Nebraska                      Grand Island, NE
+     49.3           Louisiana                     Slidell, LA
+     49.835         MA/CT                         Oxford, MA
+     49.84          Sterling MNW                  Ashburn, VA
+    ";
+
+  
+  revision 2015-08-05 {
+	    description
+	      "added some validation";
+	  } 
+
+  revision 2015-08-04 {
+	    description
+	      "added some validation";
+	  } 
+  
+  revision 2015-08-03 {
+	    description
+	      "Using lots of stuff to make things happen!";
+	  } 
+  
+  revision 2015-08-01 {
+	    description
+	      "Using entity module to populate data";
+	  }  
+  revision 2015-07-31 {
+    description
+      "Pulled a bunch of junk out to create an entity module";
+  }
+  revision 2015-07-23 {
+    description
+      "Changing the role field to use the built in type /devices/profiles/profile";
+  }
+  revision 2015-07-22 {
+    description
+      "Added device role and is-type leafs";
+  }
+  revision 2015-07-21 {
+    description
+      "Added device role and is-type leafs";
+  }
+  revision 2015-07-20 {
+    description
+      "changed interface containers to lists";
+  }
+
+  
+
+  
+  augment "/ncs:services" {
+    list isis {
+            description "";
+      key "region-name area-id";
+      unique "area-password";
+      uses ncs:service-data;
+      ncs:servicepoint "isis";
+
+
+      leaf region-name {
+        tailf:info "Name of isis service grouping";
+        mandatory true;
+        type leafref{
+        	path "/engdb:region/engdb:region-name";
+        }
+      }
+      
+
+      
+      leaf area-id {
+        description
+          "";
+        tailf:info "
+        IS-IS Area-ID  Regional Network              Backbone Touchpoint(s)
+        49.0001        MO/IL                         Olivette, MO / Belleville, IL
+        49.002         Internal WAN                  N/A
+        49.0425        WI/MN                         Eau Claire, WI / Rochester, MN
+        49.065         MI                            Allendale, MI / Saginaw, MI
+        49.15          Chicago Colo                  Chicago, IL
+        49.16          San Jose Colo                 San Jose, CA
+        49.17          Ashburn Colo                  Ashburn, VA
+        49.18          Denver Colo                   Denver, CO
+        49.185         AL/GA/TN/CARVA                Atlanta, GA / Spartanburg, SC / Greenville, SC
+        49.19          NV                            Reno, NV
+        49.2           Seattle Colo                  Seattle, WA
+        49.22          SOCAL                         Monterey Park, CA / Riverside, CA
+        49.2225        SLO                           San Luis Obispo, CA
+        49.225         WA/OR                         Medford, OR / Yakima, WA
+        49.23          Mountain States               Montana, Utah, Wyoming, and Colorado outside of Denver
+        49.24          TX                            Fort Worth, TX
+        49.25          Nebraska                      Grand Island, NE
+        49.3           Louisiana                     Slidell, LA
+        49.835         MA/CT                         Oxford, MA
+        49.84          Sterling MNW                  Ashburn, VA
+        
+        ";
+        mandatory true;
+        type leafref {
+          path "/engdb:region[engdb:region-name=current()/../region-name]/engdb:function/engdb:protocols/engdb:isis/engdb:area-id";
+        }
+      }
+      
+      leaf area-password {
+        description
+          "
+           Charter has standardized the use of authentication to establish adjacencies between IS-IS neighbors.
+           This helps ensure security against intrusive devices injecting unwanted routes into the IS-IS network.
+           There are two types of authentication within IS-IS - level 1 authentication (known as area authentication),
+           and level 2 authentication (known as domain authentication). Charter uses area authentication within each
+           level 1 regional network and domain authentication for the level 2 backbone area.
+          ";
+        tailf:info
+          "Area and domain passwords must be strong passwords containing alphanumeric, variable case,
+           and be seven or more characters in length
+          ";
+        mandatory true;
+        type string;
+      }
+      list isis-node {
+        description
+          "";
+        tailf:info "ISIS interfaces Circuit";
+        key "device";
+        
+        leaf device {
+          description
+            "";
+          tailf:info "Router ISIS";
+          mandatory true;
+          type leafref {
+            path "/ncs:services/entity:entity/entity:device";
+          }
+           must "count(../../../isis[area-id != current()/../../area-id]/isis-node[device = current()/../device]) = 0"{error-message "This device is already configured for ISIS in another Area";}
+
+
+        }
+        leaf role-name {
+            tailf:info "Name of isis service grouping";
+            type leafref{
+            	path "/ncs:services/entity:entity[entity:device=current()/../device]/entity:role-name";
+            }
+            must "/engdb:role[engdb:role-name=current()/../role-name]/engdb:infra-services/engdb:chtr-isis='true'"{error-message "This devices role is not approved to support ISIS";}
+          }
+        
+        leaf system-id {
+          description
+            "System ID
+             The system ID defines an ES (End System) or IS (Intermediate System) router or node, in an area,
+             and each must be unique and of the same length. The loopback 0 address assigned to the router, which
+             is reformatted to 4 decimal octets, defines this.";
+          tailf:info "The loopback 0 address assigned to the router, which is reformatted to 4 decimal segments eg. '172.31.240.172' == '1720.3124.0172'";
+          mandatory true;
+          type string {
+            pattern "172[0-9]{1}.[0-9]{4}.[0-9]{4}";
+          }
+        }
+
+        grouping metric {
+          description
+            "";
+          leaf inet4-metric {
+            tailf:info "Override default metric and apply Address family specific metric";
+            description
+              "Override default metric and apply IPv4 Address family specific metric";
+            type uint32;
+          }
+          leaf inet6-metric {
+            tailf:info "Override default metric and apply Address family specific metric";
+            description
+              "Override default metric and apply IPv6 Address family specific metric";
+            type uint32;
+          }
+        }
+        container system-metric {
+          description
+            "";
+          uses metric;
+        }
+        leaf IS-type {
+          description
+            "level-1, level-2-only or level-1-2";
+          tailf:info "level-1, level-2-only or level-1-2";
+
+          type leafref{
+        	  path "/engdb:role[engdb:role-name=current()/../role-name]/engdb:function/engdb:protocols/engdb:isis/engdb:IS-type";
+         }
+          
+        }
+        must "IS-type != 'empty'"{error-message "Please select the IS type";}
+        
+        container member-interfaces {
+          description
+            "";
+
+          grouping isis-link {
+            description
+              "";
+            leaf intf-circuit-type {
+              description
+                "Level ";
+              tailf:info "ISIS Level interface";
+              mandatory true;
+              type engdb:circuit-type-t;
+            }
+            leaf intf-IIH-type {
+              description
+                "LAN or Point to Point IIH message";
+              tailf:info "IPv6 Unicast bgp source Address Lo15";
+              mandatory true;
+              type engdb:iih-type-t;
+            }
+          }		
+          choice link-type {
+            description
+              "";
+            case GigE {
+              description
+                "";
+              when "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../device]";
+              container GigE-ios {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "GigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:GigE-ios/interconnect:intf-number";
+                    }
+                  }
+                  container isis-interface-type {
+                    uses isis-link;
+                  }
+                  container isis-metric {
+                    description
+                      "";
+                    uses metric;
+                  }
+                }
+              }
+              container GigE-iosxr {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios-xr devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "GigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:GigE-iosxr/interconnect:intf-number";
+                    }
+                  }
+                  container isis-interface-type {
+                    uses isis-link;
+                  }
+                  container isis-metric {
+                    uses metric;
+                    description
+                      "";
+                  }
+                }
+              }
+            }
+            case TenGigE {
+              description
+                "";
+              when "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../device]";
+              container TenGigE-ios {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "GigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:TenGigE-ios/interconnect:intf-number";
+                    }
+                  }
+                  container isis-interface-type {
+                    uses isis-link;
+                  }
+                  container isis-metric {
+                    uses metric;
+                    description
+                      "";
+                  }
+                }
+              }
+              container TenGigE-iosxr {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios-xr devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "TenGigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:TenGigE-iosxr/interconnect:intf-number";
+                    }
+                  }
+                  container isis-interface-type {
+                    uses isis-link;
+                  }
+                  container isis-metric {
+                    uses metric;
+                    description
+                      "";
+                  }
+                }
+              }
+            }
+            case HundredGigE {
+              when "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../device]";
+              container HundredGigE-iosxr {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios-xr devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "GigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:HundredGigE-iosxr/interconnect:intf-number";
+                    }
+                  }
+                container isis-interface-type {
+                  uses isis-link;
+                }
+                container isis-metric {
+                  uses metric;
+                  description
+                    "";
+                }
+              }
+            }
+            }
+            case LAG {
+              description
+                "";
+              when "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../device]";
+              container LAG-ios {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "GigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:LAG-ios/interconnect:intf-number";
+                    }
+                  }
+                  container isis-interface-type {
+                    uses isis-link;
+                  }
+                  container isis-metric {
+                    uses metric;
+                    description
+                      "";
+                  }
+                }
+              }
+              container LAG-iosxr {
+                description
+                  "This container identifies potential isis speaking interfaces when the device selected
+                   is an ios-xr devices";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'";
+                list intf-number {
+                  key "id";
+                  leaf id {
+                    description
+                      "";
+                    tailf:info "GigabitEthernet Interface ID";
+                    type leafref {
+                      path "/ncs:services/interconnect:interconnect/interconnect:link[interconnect:device=current()/../../../../device]/interconnect:intf-details/interconnect:LAG-iosxr/interconnect:intf-number";
+                    }
+                  }
+                  container isis-interface-type {
+                    uses isis-link;
+                  }
+                  container isis-metric {
+                    uses metric;
+                    description
+                      "";
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

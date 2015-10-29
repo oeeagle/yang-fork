@@ -1,0 +1,56 @@
+module stage {
+    namespace "http://charterlab.com/service/stage";
+    prefix stage;
+
+    import ietf-inet-types { prefix inet; }
+    import tailf-ncs { prefix ncs; }
+    import tailf-common { prefix tailf; }
+    import engdb { prefix engdb; }
+
+    description
+        "Basic device staging information, this defines device role, syslocation,
+        and Source Loopback addresses";
+
+    list device-staging {
+        description
+                "";
+        key "device-mac";
+        uses ncs:service-data;
+        ncs:servicepoint "stage";
+        leaf device-mac {
+            description
+                        "mac-address";
+            tailf:info "mac-address of client";
+            type string {
+                pattern "^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$";
+            }
+        }
+        leaf mgmt-area {
+            description
+                        "giaddr of Relay Agent";
+            tailf:info "giaddr of Relay Agent";
+            type string ;
+        }
+
+        container mgmt-src-addr {
+            description
+                        "";
+            leaf mgmt-inet4 {
+                description
+                                "IPv4 management source Address";
+                tailf:info "IPv4 source Address";
+                mandatory true;
+                type inet:ipv4-address;
+            }
+            leaf mgmt-inet6 {
+                description
+                                "IPv6 mangement source Address";
+                tailf:info "IPv6 management source Address loopback0";
+                type inet:ipv6-address;
+            }
+        }
+    }
+}
+}
+}
+}

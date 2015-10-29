@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+	servicepoint="inet4-rr-client">
+	<devices xmlns="http://tail-f.com/ns/ncs">
+		<device tags="nocreate">
+			<name>{/rr-servers}</name>
+			<config tags="merge">
+				<router xmlns="urn:ios">
+					<bgp>
+						<as-no>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+						</as-no>
+
+						<neighbor>
+							<id>iBGP-CORE-BACKBONE</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>Backbone Routers</description>
+							<password>
+								<enctype>7</enctype>
+								<text>0702385846590A</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-CLIENTS-CMTS</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>RR Clients that receive default-only</description>
+							<password>
+								<enctype>7</enctype>
+								<text>020B1D4F03561C</text>
+							</password>
+							<timers>
+								<keepalive-interval>5</keepalive-interval>
+								<holdtime>20</holdtime>
+							</timers>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-CLIENTS</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>RR Clients that receive all routes</description>
+							<password>
+								<enctype>7</enctype>
+								<text>00090A120C0B18</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-CLIENTS-PARTIAL</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>RR Clients that receive all routes</description>
+							<password>
+								<enctype>7</enctype>
+								<text>060B1635441E1A</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-MESH-OTHER-KMA</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>Full Mesh sessions</description>
+							<password>
+								<enctype>7</enctype>
+								<text>1043100D0D4701</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-MESH-SAME-KMA</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>Full Mesh sessions</description>
+							<password>
+								<enctype>7</enctype>
+								<text>12141C031A5B1F</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-CLIENTS-CMTS-ARRIS</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>RR Clients that receive default-only</description>
+							<password>
+								<enctype>7</enctype>
+								<text>110400111F4218</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>iBGP-RR-CLIENTS-CMTS-CASA</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>RR Clients that receive default-only</description>
+							<password>
+								<enctype>7</enctype>
+								<text>12141C031A5B1F</text>
+							</password>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>REX-COLLECTOR</id>
+							<peer-group />
+							<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</remote-as>
+							<description>REX Collector Core</description>
+							<update-source>
+								<Loopback>15</Loopback>
+							</update-source>
+						</neighbor>
+						<neighbor>
+							<id>{../../ncs:services/entity:entity[entity:device=current()/rr-client]/entity:bgp4-src-addr/entity:bgp4-src-intf/entity:bgp4-src-addr/entity:bgp4-inet4}
+							</id>
+							<peer-group>
+								<peer-group-name>{/rr-client/client-mode}</peer-group-name>
+							</peer-group>
+							<description>{/rr-client}</description>
+						</neighbor>
+						<address-family>
+							<no-vrf>
+								<ipv4>
+									<unicast-multicast>unicast</unicast-multicast>
+									<neighbor>
+										<id>iBGP-CORE-BACKBONE</id>
+										<route-map>
+											<inout>out</inout>
+											<route-map-name>KMA-TO-BB</route-map-name>
+										</route-map>
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-CLIENTS-CMTS</id>
+										<route-map>
+											<inout>out</inout>
+											<route-map-name>iBGP-CMTS-Policy-OUT</route-map-name>
+										</route-map>
+										<route-reflector-client />
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-CLIENTS</id>
+										<route-reflector-client />
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-CLIENTS-PARTIAL</id>
+										<route-map>
+											<inout>out</inout>
+											<route-map-name>RR-CLIENTS-PARTIAL-ROUTES</route-map-name>
+										</route-map>
+										<route-reflector-client />
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-MESH-OTHER-KMA</id>
+										<route-map>
+											<inout>out</inout>
+											<route-map-name>OTHER-KMA-RR</route-map-name>
+										</route-map>
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-MESH-SAME-KMA</id>
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-CLIENTS-CMTS-ARRIS</id>
+										<route-map>
+											<inout>in</inout>
+											<route-map-name>iBGP-CMTS-ARRIS-Policy-IN</route-map-name>
+										</route-map>
+										<route-map>
+											<inout>out</inout>
+											<route-map-name>iBGP-CMTS-Policy-OUT</route-map-name>
+										</route-map>
+										<route-reflector-client />
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>iBGP-RR-CLIENTS-CMTS-CASA</id>
+										<route-map>
+											<inout>in</inout>
+											<route-map-name>iBGP-CMTS-CASA-Policy-IN</route-map-name>
+										</route-map>
+										<route-map>
+											<inout>out</inout>
+											<route-map-name>iBGP-CMTS-Policy-OUT</route-map-name>
+										</route-map>
+										<route-reflector-client />
+										<send-community />
+									</neighbor>
+									<neighbor>
+										<id>{../../ncs:services/entity:entity[entity:device=current()/rr-client/device]/entity:bgp4-src-addr/entity:bgp4-src-intf/entity:bgp4-src-addr/entity:bgp4-inet4}
+										</id>
+										<activate />
+									</neighbor>
+								</ipv4>
+							</no-vrf>
+						</address-family>
+					</bgp>
+				</router>
+			</config>
+			<config>
+				<router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<bgp>
+						<bgp-no-instance>
+							<id>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</id>
+							<bgp>
+								<router-id>{../../ncs:services/entity:entity[entity:device=current()/rr-servers]/entity:bgp4-src-addr/entity:bgp4-src-intf/entity:bgp4-src-addr/entity:bgp4-inet4}
+								</router-id>
+								<graceful-restart>
+									<restart-time>120</restart-time>
+									<stalepath-time>360</stalepath-time>
+								</graceful-restart>
+							</bgp>
+							<address-family>
+								<ipv4>
+									<unicast />
+								</ipv4>
+							</address-family>
+							<neighbor>
+								<id>{../../ncs:services/entity:entity[entity:device=current()/rr-client/device]/entity:bgp4-src-addr/entity:bgp4-src-intf/entity:bgp4-src-addr/entity:bgp4-inet4}
+								</id>
+								<description>{/rr-client/device}</description>
+								<use>
+									<neighbor-group>{/rr-client/device/client-mode}
+									</neighbor-group>
+								</use>
+							</neighbor>
+							<nsr />
+							<neighbor-group>
+								<name>iBGP-RR-CLIENTS</name>
+								<description>RR Clients that recieve all routes</description>
+								<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+								</remote-as>
+								<address-family>
+									<ipv4>
+										<unicast>
+											<route-reflector-client />
+										</unicast>
+									</ipv4>
+								</address-family>
+								<password>
+									<enc-type>encrypted</enc-type>
+									<password>0702385846590A</password>
+								</password>
+								<update-source>
+									<Loopback>0</Loopback>
+								</update-source>
+							</neighbor-group>
+						</bgp-no-instance>
+					</bgp>
+				</router>
+			</config>
+		</device>
+		<device tags="nocreate">
+			<name>{/rr-client}</name>
+			<config tags="merge">
+				<router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<bgp>
+						<bgp-no-instance>
+							<id tags="replace">{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+							</id>
+							<bgp>
+								<router-id tags="replace">{../../ncs:services/entity:entity[entity:device=current()/rr-client]/entity:bgp4-src-addr/entity:bgp4-src-intf/entity:bgp4-src-addr/entity:bgp4-inet4}
+								</router-id>
+								<graceful-restart>
+									<restart-time>120</restart-time>
+									<stalepath-time>360</stalepath-time>
+								</graceful-restart>
+							</bgp>
+							<address-family>
+								<vpnv4>
+									<unicast />
+								</vpnv4>
+								<vpnv6>
+									<unicast />
+								</vpnv6>
+								<ipv6>
+									<unicast>
+										<redistribute>
+											<connected>
+												<route-policy>BGP-CONNECTED</route-policy>
+											</connected>
+											<static>
+												<route-policy>BGP-STATIC</route-policy>
+											</static>
+										</redistribute>
+									</unicast>
+								</ipv6>
+							</address-family>
+							<neighbor>
+								<id tags="replace">{../../ncs:services/entity:entity[entity:device=current()/rr-client]/entity:bgp4-src-addr/entity:bgp4-src-intf/entity:bgp4-src-addr/entity:bgp4-inet4}
+								</id>
+								<description>RR#1 brr11cpocmo</description>
+								<address-family>
+									<ipv4>
+										<unicast />
+									</ipv4>
+								</address-family>
+								<use>
+									<neighbor-group>iBGP-ROUTE-REFLECTORS</neighbor-group>
+								</use>
+							</neighbor>
+							<neighbor-group>
+								<name>iBGP-ROUTE-REFLECTORS</name>
+								<description>Route Reflectors</description>
+								<remote-as>{../../engdb:region[engdb:region-name=current()/region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn}
+								</remote-as>
+								<address-family>
+									<ipv4>
+										<unicast>
+											<route-policy>
+												<direction>in</direction>
+												<name>PASS-ALL</name>
+											</route-policy>
+											<next-hop-self />
+										</unicast>
+									</ipv4>
+								</address-family>
+								<password>
+									<enc-type>encrypted</enc-type>
+									<password>13080E06035C17</password>
+								</password>
+								<update-source>
+									<Loopback>15</Loopback>
+								</update-source>
+							</neighbor-group>
+						</bgp-no-instance>
+					</bgp>
+				</router>
+
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+				<prefix-set xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<name>STB-STATIC</name>
+					<set tags="replace">
+						<value>{/rr-client/inet4-export-policy/STB-STATIC/prefix},</value>
+					</set>
+					<set>
+						<value>255.255.255.255/32</value>
+					</set>
+				</prefix-set>
+
+
+			</config>
+		</device>
+	</devices>
+</config-template>

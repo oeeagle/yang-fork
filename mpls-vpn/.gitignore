@@ -1,0 +1,7 @@
+.svn
+*.sw[a-z]
+ncs-cdb
+netsim
+logs
+state
+_tmp_ncs*

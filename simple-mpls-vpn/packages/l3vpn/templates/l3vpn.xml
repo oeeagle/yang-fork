@@ -1,0 +1,182 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+  servicepoint="l3vpn-template">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device tags="nocreate" >
+      <name>{/endpoint/ce/device}</name>
+      <config tags="merge">
+        <!-- CE template for Cisco IOS routers -->
+        <interface xmlns="urn:ios">
+          <GigabitEthernet tags="nocreate">
+            <name>{link/interface-number}</name>
+            <description tags="merge">Link to PE</description>
+            <ip tags="merge">
+              <address>
+                <primary>
+                  <address>{ip-address}</address>
+                  <mask>255.255.255.252</mask>
+                </primary>
+              </address>
+            </ip>
+          </GigabitEthernet>
+          <GigabitEthernet tags="nocreate">
+            <name>{local/interface-number}</name>
+            <description tags="merge">Local network</description>
+            <ip tags="merge">
+              <address>
+                <primary>
+                  <address>{ip-address}</address>
+                  <mask>255.255.255.0</mask>
+                </primary>
+              </address>
+            </ip>
+          </GigabitEthernet>
+        </interface>
+        <router xmlns="urn:ios">
+          <bgp>
+            <as-no>{../as-number}</as-no>
+            <neighbor>
+              <id>{pe/link/ip-address}</id>
+              <remote-as>100</remote-as>
+              <activate/>
+            </neighbor>
+            <redistribute>
+              <connected>
+              </connected>
+            </redistribute>
+          </bgp>
+        </router>
+      </config>
+    </device>
+
+    <device tags="nocreate">
+      <name>{/endpoint/pe/device}</name>
+      <config tags="merge">
+        <!-- PE template for Cisco IOS routers -->
+        <vrf xmlns="urn:ios">
+          <definition>
+            <name>{string(/name)}</name>
+            <rd>{../as-number}:1</rd>
+            <route-target>
+              <export>
+                <asn-ip>{../as-number}:1</asn-ip>
+              </export>
+              <import>
+                <asn-ip>{../as-number}:1</asn-ip>
+              </import>
+            </route-target>
+          </definition>
+        </vrf>
+        <interface xmlns="urn:ios" tags="nocreate">
+          <GigabitEthernet>
+            <name>{link/interface-number}</name>
+            <description tags="merge">Link to CE router</description>
+            <ip tags="merge">
+              <address>
+                <primary>
+                  <address>{ip-address}</address>
+                  <mask>255.255.255.252</mask>
+                </primary>
+              </address>
+            </ip>
+            <vrf tags="merge">
+              <forwarding>{string(/name)}</forwarding>
+            </vrf>
+          </GigabitEthernet>
+        </interface>
+        <router xmlns="urn:ios" tags="merge">
+          <bgp>
+            <as-no>100</as-no>
+            <address-family>
+              <with-vrf>
+                <ipv4>
+                  <unicast-multicast>unicast</unicast-multicast>
+                  <vrf tags="merge">
+                    <name>{string(/name)}</name>
+                    <neighbor>
+                      <id>{../ce/link/ip-address}</id>
+                      <remote-as>{../as-number}</remote-as>
+                      <activate/>
+                      <as-override>
+                      </as-override>
+                    </neighbor>
+                  </vrf>
+                </ipv4>
+              </with-vrf>
+            </address-family>
+          </bgp>
+        </router>
+
+
+        <!-- PE template for Cisco IOS-XR routers -->
+        <vrf xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <vrf-list>
+            <name>{string(/name)}</name>
+            <address-family>
+              <ipv4>
+                <unicast>
+                  <import>
+                    <route-target>
+                      <address-list>
+                        <name>{../as-number}:1</name>
+                      </address-list>
+                    </route-target>
+                  </import>
+                  <export>
+                    <route-target>
+                      <address-list>
+                        <name>{../as-number}:1</name>
+                      </address-list>
+                    </route-target>
+                  </export>
+                </unicast>
+              </ipv4>
+            </address-family>
+          </vrf-list>
+        </vrf>
+        <interface xmlns="http://tail-f.com/ned/cisco-ios-xr" tags="nocreate">
+          <GigabitEthernet>
+            <id>{link/interface-number}</id>
+            <description tags="merge">link to CE</description>
+            <ipv4 tags="merge">
+              <address>
+                <ip>{ip-address}</ip>
+                <mask>255.255.255.252</mask>
+              </address>
+            </ipv4>
+            <vrf tags="merge">{string(/name)}</vrf>
+          </GigabitEthernet>
+        </interface>
+        <router xmlns="http://tail-f.com/ned/cisco-ios-xr" tags="merge">
+          <bgp>
+            <bgp-no-instance>
+              <id>100</id>
+              <vrf tags="merge">
+                <name>{string(/name)}</name>
+                <rd>{../as-number}:1</rd>
+                <address-family>
+                  <ipv4>
+                    <unicast>
+                    </unicast>
+                  </ipv4>
+                </address-family>
+                <neighbor>
+                  <id>{../ce/link/ip-address}</id>
+                  <remote-as>{../../as-number}</remote-as>
+                  <address-family>
+                    <ipv4>
+                      <unicast>
+                        <as-override>
+                        </as-override>
+                      </unicast>
+                    </ipv4>
+                  </address-family>
+                </neighbor>
+              </vrf>
+            </bgp-no-instance>
+          </bgp>
+        </router>
+      </config>
+
+    </device>
+  </devices>
+</config-template>

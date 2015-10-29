@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0" servicepoint="entity">
+   <devices xmlns="http://tail-f.com/ns/ncs">
+      <device>
+         <name>{/device}</name>
+<entity>
+<role-name>{/role-name}</role-name>
+</entity>
+      </device>
+   </devices>
+</config-template>

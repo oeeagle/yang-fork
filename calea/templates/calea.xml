@@ -1,0 +1,69 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+                 servicepoint="calea">
+         
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device-group>
+    <name>AAA</name>
+    <device-group>{/name}</device-group>
+  </device-group>
+
+    <device-group>
+        <name>{/name}</name>
+    <device-name>{/device}</device-name>
+    </device-group>   
+        
+    <device>
+      <name>{../../ncs:devices/ncs:device-group[name=/name]/device-name}</name>
+      <config>
+          <!-- IOS -->
+       
+      
+      
+          <!-- JUNOS -->
+    <configuration xmlns="http://xml.juniper.net/xnm/1.1/xnm">
+      <system>
+        <login>
+        <class>
+         <user>
+          <name>corpwan</name>
+          <uid>2002</uid>
+          <class>super-user</class>
+          <authentication>
+            <plain-text-password-value>{/enable-secret}</plain-text-password-value>
+          </authentication>
+        </user>
+        <user>
+          <name>read-only</name>
+          <uid>2003</uid>
+          <class>tacacs-readonly</class>
+        </user>
+        <user>
+          <name>read-write</name>
+          <uid>2004</uid>
+          <class>tacacs-superuser</class>
+        </user>
+        </login>
+      </system>  
+      
+      <system>      
+       <tacplus-server>
+         <name>{/aaa-host-1}</name>
+         <port>49</port>
+         <timeout>5</timeout>
+         <single-connection/>
+       </tacplus-server>
+       <tacplus-server>
+         <name>{/aaa-host-2}</name>
+         <port>49</port>
+         <timeout>5</timeout>
+         <single-connection/>
+       </tacplus-server>
+      </system>
+      </configuration>
+          
+          
+          
+      </config>
+    </device>
+  </devices>
+</config-template>

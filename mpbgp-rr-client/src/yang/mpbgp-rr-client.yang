@@ -1,0 +1,189 @@
+module inet4-rr-client {
+  namespace "http://charterlab.com/service/inet4-rr-client";
+  prefix inet4-rr-client;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ned-cisco-ios {
+    prefix ios;
+  }
+  import tailf-ned-cisco-ios-xr {
+    prefix cisco-ios-xr;
+  }
+  import interconnect {
+    prefix interconnect;
+  }
+  import engdb {
+    prefix engdb;
+  }
+  import entity {
+    prefix entity;
+  }
+  import chtr-isis {
+    prefix isis;
+  }
+
+  description
+    "\n";
+
+  revision 2015-08-20 {
+    description
+      "added must under address family";
+  }
+
+  augment "/ncs:services" {
+    list inet4-rr-client {
+      description
+        "";
+      key "region-name as-number";
+      uses ncs:service-data;
+      ncs:servicepoint "inet4-rr-client";
+      
+      
+      leaf region-name {
+        tailf:info "Name of ibgp operating area";
+        mandatory true;
+        type leafref {
+          path "/engdb:region/engdb:region-name";
+        }
+      }
+      leaf as-number {
+        description
+          "";
+        tailf:info "Region AS Number";
+        mandatory true;
+        type leafref {
+          path "/engdb:region[engdb:region-name=current()/../region-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:region-asn";
+        }
+      }
+      leaf-list rr-servers {
+        description
+          "";
+        tailf:info "ibgp route reflectors";
+        type leafref {
+          path "/ncs:services/entity:entity/entity:device";
+        }
+      }
+      list rr-client {
+        description
+          "";
+        tailf:info "ibgp route reflector client configuration";
+        key "device";
+        leaf device {
+          description
+            "";
+          tailf:info "ibgp route reflector client device";
+          mandatory true;
+          type leafref {
+            path "/ncs:services/entity:entity/entity:device";
+          }
+        }
+        leaf role-name {
+          tailf:info "Device Role-name";
+          type leafref {
+            path "/ncs:services/entity:entity[entity:device=current()/../device]/entity:role-name";
+          }
+        }
+        leaf client-mode {
+          type leafref {
+            path "/engdb:role[engdb:role-name=current()/../role-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:rr-client-mode";
+          }
+        }
+          container inet4-export-policy {
+            description
+              "";
+
+            grouping inet4-prefix-set {
+              leaf prefix {
+                type inet:ipv4-prefix;
+              }
+              leaf match {
+                type enumeration {
+                  enum "le";
+                  enum "ge";
+                  enum "eq";
+                }
+              }
+              leaf length {
+                type uint8 {
+                  range "0 .. 32";
+                }
+              }
+            }
+            list BGP-STATIC-VOIP {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CB-LBI-BGP-CUST {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CB-LBI-NON-BGP-CUST {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CB-STATIC-CUST {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CB-STATIC-CUST-OWNED-BLOCKS {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CB-T1-PRI-VOIP-BGP {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CB-CONNECTED-FACILITY-MONITORING {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CONNECTED-NETWORK-MGMT {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CONNECTED-PROVISIONING {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CONNECTED-SIMULTRANS-MONITORING {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list CONNECTED-VOIP {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list LEAKED-MGMT {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list NTWRK-MGMT-STATIC {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list PROVISIONING-STATIC {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list STB-STATIC {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+            list VOD-CATCHER {
+              key "prefix";
+              uses inet4-prefix-set;
+            }
+          }
+        
+      }
+    }
+  }
+}

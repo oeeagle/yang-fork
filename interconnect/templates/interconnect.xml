@@ -1,0 +1,177 @@
+
+
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+                 servicepoint="interconnect">
+                 
+
+  
+  <devices xmlns="http://tail-f.com/ns/ncs">
+
+    <!-- Endpoint 1 -->
+    <device tags="nocreate">
+      <name>{/link[1]/device}</name>
+      <config tags="merge">
+
+	  <!-- Cisco IOS XR -->
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <GigabitEthernet when='{/link[1]/intf-details/GigE-iosxr/intf-number}'>
+	      <id>{/link[1]/intf-details/GigE-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[2]/device},GigE{/link[2]/intf-details/GigE-iosxr/intf-number},gige</description>
+          <ipv4>
+           <address>
+            <mask>255.255.255.254</mask>
+             <ip>{/link[1]/intf-details/GigE-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list>
+            <prefix>{/link[1]/intf-details/GigE-iosxr/intf-addr/inet6-intf-addr}/126</prefix>
+            </prefix-list>
+           </address>
+          </ipv6>
+	    </GigabitEthernet>
+	  </interface>
+
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <TenGigE when='{/link[1]/intf-details/TenGigE-iosxr/intf-number}'>
+	      <id>{/link[1]/intf-details/TenGigE-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[2]/device},TenGigE{/link[2]/intf-details/TenGigE-iosxr/intf-number},tge</description>
+          <ipv4>
+           <address>
+            <mask>255.255.255.254</mask>
+            <ip>{/link[1]/intf-details/TenGigE-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[1]/intf-details/TenGigE-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </TenGigE>
+	  </interface>
+
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <HundredGigE when='{/link[1]/intf-details/HundredGigE-iosxr/intf-number}'>
+	      <id>{/link[1]/intf-details/HundredGigE-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[2]/device},HundredGigE{/link[2]/intf-details/HundredGigE-iosxr/intf-number},Hge</description>
+          <ipv4>
+           <address>
+            <mask>255.255.255.254</mask>
+            <ip>{/link[1]/intf-details/HundredGigE-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[1]/intf-details/HundredGigE-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </HundredGigE>
+	  </interface>
+
+    
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <Bundle-Ether when='{/link[1]/intf-details/LAG-iosxr/intf-number}'>
+	      <id>{/link[1]/intf-details/LAG-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[2]/device},Bu{/link[2]/intf-details/LAG-iosxr/intf-number},Bue</description>
+          <ipv4>
+           <address>
+            <mask>255.255.255.254</mask>
+            <ip>{/link[1]/intf-details/LAG-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[1]/intf-details/LAG-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </Bundle-Ether>
+	  </interface>
+      </config>
+    </device>    
+
+
+   <!--Endpoint 2 -->
+    <device tags="nocreate">
+      <name>{/link[2]/device}</name>
+      <config tags="merge">
+
+	  <!-- Cisco IOS XR -->
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <GigabitEthernet  when='{/link[2]/intf-details/GigE-iosxr/intf-number}'>
+	      <id>{/link[2]/intf-details/GigE-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[1]/device},GigE{/link[1]/intf-details/GigE-iosxr/intf-number}gige</description>
+          <ipv4>
+           <address>
+           <ip>{/link[2]/intf-details/GigE-iosxr/intf-addr/inet4-intf-addr}</ip>
+            <mask>255.255.255.254</mask>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[2]/intf-details/GigE-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </GigabitEthernet>
+	  </interface>
+
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <TenGigE  when='{/link[2]/intf-details/TenGigE-iosxr/intf-number}'>
+	      <id>{/link[2]/intf-details/TenGigE-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[1]/device},TenGigE{/link[1]/intf-details/TenGigE-iosxr/intf-number},tge</description>
+          <ipv4>
+           <address>
+            <mask>255.255.255.254</mask>
+            <ip>{/link[2]/intf-details/TenGigE-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[2]/intf-details/TenGigE-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </TenGigE>
+	  </interface>
+
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <HundredGigE  when='{/link[2]/intf-details/HundredGigE-iosxr/intf-number}'>
+	      <id>{/link[2]/intf-details/HundredGigE-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[1]/device},HundredGigE{/link[1]/intf-details/HundredGigE-iosxr/intf-number},Hge</description>
+          <ipv4>
+           <address>
+            <mask>255.255.255.254</mask>
+            <ip>{/link[2]/intf-details/HundredGigE-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[2]/intf-details/HundredGigE-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </HundredGigE>
+	  </interface>
+
+    
+	  <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+	    <Bundle-Ether  when='{/link[2]/intf-details/LAG-iosxr/intf-number}'>
+	      <id>{/link[2]/intf-details/LAG-iosxr/intf-number}</id>
+	      <description>chn{/circuit-id},-,chrtrc,{/link[1]/device},Bu{/link[1]/intf-details/LAG-iosxr/intf-number},Bue</description>
+          <ipv4>
+           <address>
+           <mask>255.255.255.254</mask>
+           <ip>{/link[2]/intf-details/LAG-iosxr/intf-addr/inet4-intf-addr}</ip>
+           </address>
+          </ipv4>
+          <ipv6>
+           <address>
+            <prefix-list><prefix>{/link[2]/intf-details/LAG-iosxr/intf-addr/inet6-intf-addr}/126</prefix></prefix-list>
+           </address>
+          </ipv6>
+	    </Bundle-Ether>
+	  </interface>
+      </config>
+    </device>    
+
+  </devices>
+
+</config-template>

@@ -1,0 +1,119 @@
+module chtr-aaa {
+  namespace "http://com/example/chtr-aaa";
+  prefix chtr-aaa; 
+  
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import engdb {
+    prefix engdb;
+  }
+  import entity {
+    prefix entity;
+  }
+
+  description
+    "";
+
+  revision 2015-08-10 {
+	  description "changed leaf device to leaf-list device, added tailf:info to describe the name leaf and made the shared secret a mandatory field";
+  }
+  revision 2015-08-10 {
+    description
+      "The model has been shifted to support both local and remote AAA, the aaa-host statements have been updated to support either ipv4 or ipv6 server addresses,
+       calea specific components have been moved to calea.yang. The device leafref has been updated to utilize the entity model for device lookups
+       and a must statement has been added to the device lookup which ensures that once a device is only a member of a single aaa service group.
+
+       new set statement(s):
+       set services chtr-aaa <groupname> <device> local-auth local-username <string> vtypass <string> enablepass <string>
+       set services chtr-aaa <groupname> <device> remote-auth shared-secret <string> aaa-host-1 <inet:ipv4-address|inet:ipv6-address> aaa-host-2 <inet:ipv4-address|inet:ipv6-address> aaa-host-3 <inet:ipv4-address|inet:ipv6-address>
+
+       note:
+       I could see the aaa server information for a specific device group being added to the engdb in future revisions.
+      ";
+  }
+  revision 2015-07-19 {
+    description
+      "Expanded the model use the name leaf as a creation point for a AAA device group reference";
+  }
+  revision 2015-07-09 {
+    description
+      "initial model:
+       The goal of this service is to support the user input of 'set service chtr-aaa <name> [device] <aaa-host-1> <aaa-host-2> <aaa-host-3>'
+       where name describes the NTP service, device is a list <aaa-host-1> is madatory and <aaa-host-2> and <aaa-host-3> are optional
+       Each service instance is made unique by the declaraion of <name> and the ordered combination of aaa-hosts. The devices added to
+       this service act as subscribers to the service RATHER than the service being dependent upon the devices";
+  }
+
+  augment "/ncs:services" {
+    list chtr-aaa {
+      key "name";
+      uses ncs:service-data;
+      ncs:servicepoint "chtr-aaa";
+      leaf name {
+        description
+          "AAA authentication group name";
+        tailf:info  "AAA authentication device group name";
+        type string;
+      }
+      leaf-list device {
+        description
+          "";
+        tailf:info "Router requiring remote authentication enabled";
+        type leafref {
+          path "/ncs:services/entity:entity/entity:device";
+        }
+        must "count(../../chtr-aaa[name != current()/../name][device = current()/../device]) = 0";
+      }
+      container local-auth {
+        leaf local-username {
+          tailf:info "shared secret";
+          type string;
+        }
+        leaf vtypass {
+          tailf:info "shared secret";
+          type string;
+        }
+        leaf enablepass {
+          tailf:info "shared secret";
+          type string;
+        }
+      }
+      container remote-auth {
+        leaf aaa-shared-secret {
+        	mandatory true;
+          tailf:info "shared secret";
+          type string;
+        }
+        leaf aaa-host-1 {
+          mandatory true;
+          tailf:info "Primary AAA Server, this entry is required";
+          type union {
+            type inet:ipv4-address;
+            type inet:ipv6-address;
+          }
+        }
+        leaf aaa-host-2 {
+          tailf:info "Secondary AAA Server, this entry is optional";
+          type union {
+            type inet:ipv4-address;
+            type inet:ipv6-address;
+          }
+        }
+        leaf aaa-host-3 {
+          tailf:info "Tertiary AAA Server, this entry is optional";
+          type union {
+            type inet:ipv4-address;
+            type inet:ipv6-address;
+          }
+        }
+      }
+    }
+  }
+}

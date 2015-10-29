@@ -1,0 +1,8 @@
+<ncs-package xmlns="http://tail-f.com/ns/ncs-packages">
+  <name>hundredgige</name>
+  <package-version>1.0</package-version>
+  <description>An datacenter facing service model for the deployment physical tenant network (ptn) environments</description>
+  <ncs-min-version>3.0</ncs-min-version>
+  <!-- It's possible to add more components to the -->
+  <!-- same package, multiple services, data providers etc -->
+</ncs-package>

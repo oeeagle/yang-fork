@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+	servicepoint="bgpcustomer">
+	<devices xmlns="http://tail-f.com/ns/ncs">
+
+
+		<device tags="create">
+			<name>{/PE/device}</name>
+			<config tags="merge">
+				<router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<bgp>
+						<bgp-no-instance>
+							<id>{deref(/PE/device)/../config/router/bgp/bgp-no-instance/id}
+							</id>
+							<neighbor>
+								<id>{/PE/peer-address}</id>
+								<use>
+									<neighbor-group>{/customer-export-policy}</neighbor-group>
+								</use>
+								<remote-as>{/remote-asn}</remote-as>
+								<description>{/name}</description>
+								<address-family>
+									<ipv4>
+										<unicast>
+											<route-policy>
+												<direction>in</direction>
+												<name>STD-CUST-IN&lpar;&dollar;{/customer}-{/name}&rpar;
+												</name>
+											</route-policy>
+										</unicast>
+									</ipv4>
+								</address-family>
+							</neighbor>
+						</bgp-no-instance>
+					</bgp>
+				</router>
+
+				<router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<bgp>
+						<bgp-no-instance>
+							<id>{deref(/PE/device)/../config/router/bgp/bgp-no-instance/id}
+							</id>
+							<neighbor-group>
+								<name>CUSTOMER-NO-ROUTES</name>
+								<address-family>
+									<ipv4>
+										<unicast>
+											<route-policy>
+												<direction>out</direction>
+												<name>CUST-NO-ROUTES-OUT</name>
+											</route-policy>
+										</unicast>
+									</ipv4>
+								</address-family>
+								<password>
+									<password>PASSWORD</password>
+									<enc-type>encrypted</enc-type>
+								</password>
+							</neighbor-group>
+						</bgp-no-instance>
+					</bgp>
+				</router>
+
+				<router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<bgp>
+						<bgp-no-instance>
+							<id>{deref(/PE/device)/../config/router/bgp/bgp-no-instance/id}
+							</id>
+							<neighbor-group>
+								<name>CUSTOMER-FULL-ROUTES</name>
+								<address-family>
+									<ipv4>
+										<unicast>
+											<route-policy>
+												<direction>out</direction>
+												<name>CUST-FULL-ROUTES-OUT</name>
+											</route-policy>
+										</unicast>
+									</ipv4>
+								</address-family>
+								<password>
+									<password>PASSWORD</password>
+									<enc-type>encrypted</enc-type>
+								</password>
+							</neighbor-group>
+						</bgp-no-instance>
+					</bgp>
+				</router>
+				<router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+					<bgp>
+						<bgp-no-instance>
+							<id>{deref(/PE/device)/../config/router/bgp/bgp-no-instance/id}
+							</id>
+							<neighbor-group>
+								<name>CUSTOMER-PARTIAL-ROUTES</name>
+								<address-family>
+									<ipv4>
+										<unicast>
+											<route-policy>
+												<direction>out</direction>
+												<name>CUST-PARTIAL-ROUTES-OUT</name>
+											</route-policy>
+										</unicast>
+									</ipv4>
+								</address-family>
+								<password>
+									<password>PASSWORD</password>
+									<enc-type>encrypted</enc-type>
+								</password>
+							</neighbor-group>
+						</bgp-no-instance>
+					</bgp>
+				</router>
+			</config>
+		</device>
+	</devices>
+</config-template>

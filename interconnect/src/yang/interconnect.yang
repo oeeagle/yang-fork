@@ -1,0 +1,293 @@
+module interconnect {
+  namespace "http://charterlab.com/service/interconnect";
+  prefix interconnect;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ned-cisco-ios {
+    prefix ios;
+  }
+  import tailf-ned-cisco-ios-xr {
+    prefix cisco-ios-xr;
+  }
+  import engdb {
+	    prefix engdb;
+	  }
+  import entity {
+	    prefix entity;
+	  }
+  
+
+  description
+    "";
+  organization "Charter Communications";
+  contact
+    "Bill Armstrong
+     bill.armstrong@charter.com";
+
+  revision 2015-08-01 {
+    description
+      "added conditional statement to validate that the selected interfaces are not already part of the service";
+  }
+  revision 2015-07-21 {
+    description
+      "Removed the 'Name' leaf";
+  }
+  revision 2015-07-20 {
+    description
+      "More stuff";
+  }
+  revision 2015-07-19 {
+    description
+      "Fixed some typos";
+  }
+  revision 2015-07-19 {
+    description
+      "rebuilt the container";
+  }
+  revision 2015-07-10 {
+    description
+      "The goal of the service is to support the user input 'set service interconnect <intf-speed> deviceA <intf-id-A> deviceB <inft-id-B> <circuit-id> <name>'
+       2 times which will result in the instantiation of one point to point interconnection between two routers.";
+  }
+  revision 2015-07-09 {
+    description
+      "The goal of the service is to support the user input 'set service interconnect <intf-speed> deviceA <intf-id-A> deviceB <inft-id-B> <circuit-id> <name>'
+       2 times which will result in the instantiation of one point to point interconnection between two routers.";
+  }
+
+  augment "/ncs:services" {
+    list interconnect {
+      description
+        "";
+      key "intf-speed circuit-id";
+      unique "circuit-id";
+      uses ncs:service-data;
+      ncs:servicepoint "interconnect";
+
+      typedef intf-speed-t {
+        type enumeration {
+          enum "GigE";
+          enum "TenGigE";
+          enum "HundredGigE";
+          enum "LAG";
+        }
+      }
+      leaf intf-speed {
+        type intf-speed-t;
+        mandatory true;
+      }
+      leaf circuit-id {
+        description
+          "";
+        tailf:info "Granite Circuit ID";
+        mandatory true;
+        type string {
+          pattern "([0-9]){8}";
+        }
+      }
+      list link {
+        description
+          "";
+        min-elements "2";
+        max-elements "2";
+        key "device";
+        leaf device {
+          description
+            "";
+          tailf:info "Router";
+          mandatory true;
+          type leafref {
+            path "/ncs:services/entity:entity/entity:device";
+          }
+        }
+        container intf-details {
+          description
+            "";
+
+          grouping intf-addr-info {
+            leaf inet4-intf-addr {
+              description
+                "IPv4 Point to Point Interface Address";
+              tailf:info "IPv4 Point to Point Interface Address";
+              type inet:ipv4-address;
+            }
+            leaf inet6-intf-addr {
+              description
+                "IPv6 Point to Point Interface Address";
+              tailf:info "IPv6 Point to Point Interface Address";
+              type inet:ipv6-address;
+            }
+            description
+              "";
+          }
+          choice link-type {
+            description
+              "";
+            case GigE {
+              when "../../intf-speed='GigE'";
+              container GigE-ios {
+                description
+                  "";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  description
+                    "";
+                  tailf:info "GigabitEthernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/ios:interface/ios:GigabitEthernet/ios:name";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/GigE-ios[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+              container GigE-iosxr {
+                description
+                  "";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  description
+                    "";
+                  tailf:info "GigabitEthernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:GigabitEthernet/cisco-ios-xr:id";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/GigE-iosxr[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+            }
+            case TenGigE {
+              when "../../intf-speed='TenGigE'";
+              container TenGigE-ios {
+                description
+                  "";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  tailf:info "TenGigabitEthernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/ios:interface/ios:TenGigabitEthernet/ios:name";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/TenGigE-ios[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+              container TenGigE-iosxr {
+                description
+                  "";
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  tailf:info "TenGigabitEthernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:TenGigE/cisco-ios-xr:id";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/TenGigE-iosxr[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+            }
+            case HundredGigE {
+              when "../../intf-speed='HundredGigE'";
+              container HundredGigE-iosxr {
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  tailf:info "TenGigabitEthernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:HundredGigE/cisco-ios-xr:id";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/HundredGigE-iosxr[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+            }
+            case LAG {
+              description
+                "";
+              when "../../intf-speed='LAG'";
+              container LAG-ios {
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='ios-id:cisco-ios'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  tailf:info "Aggregated Ethernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/ios:interface/ios:Port-channel/ios:name";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/LAG-ios[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+              container LAG-iosxr {
+                when "/ncs:devices/ncs:device[ncs:name=current()/../../device]/ncs:device-type/ncs:cli/ncs:ned-id='cisco-ios-xr-id:cisco-ios-xr'" {
+                  tailf:dependency "../../device";
+                  tailf:dependency "/ncs:devices/ncs:device/ncs:device-type";
+                }
+                leaf intf-number {
+                  description
+                    "";
+                  tailf:info "Aggregated Ethernet Interface ID";
+                  type leafref {
+                    path "/ncs:devices/ncs:device[ncs:name=current()/../../../device]/ncs:config/cisco-ios-xr:interface/cisco-ios-xr:Bundle-Ether/cisco-ios-xr:id";
+                  }
+                  must "count(../../../../../interconnect[circuit-id != current()/../../../../circuit-id]/link[device = current()/../../../device]/intf-details/LAG-iosxr[intf-number = current()]) = 0";
+                }
+                container intf-addr {
+                  uses intf-addr-info;
+                  description
+                    "";
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

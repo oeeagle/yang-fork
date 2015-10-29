@@ -1,0 +1,906 @@
+submodule engdb-types {
+    belongs-to engdb {
+        prefix engdb-types;
+    }
+
+    
+    import tailf-common { prefix tailf; }
+
+    organization "Charter Engineering";
+    contact
+        "bill.armstrong@charter.com";
+    description
+        "Charter Specific derived types";
+
+    revision 2015-10-10 {
+        description
+                "Initial revision";
+    }
+
+    //Device specific types
+
+    typedef device-origin-t {
+        type enumeration {
+            enum "existing";
+            enum "new";
+        }
+    }
+
+    typedef device-platform-t {
+        description
+                "";
+        type enumeration {
+            enum "physical";
+            enum "virtual";
+        }
+    }
+
+    typedef chtr-region-t {
+        type enumeration {
+            enum "AL/GA/TN/CARVA" {
+                description
+                                "Atlanta, GA / Spartanburg, SC / Greenville, SC IS-IS Area-ID:
+                                49.185";
+                tailf:info "Atlanta, GA / Spartanburg, SC / Greenville, SC IS-IS Area-ID:
+                                49.185";
+            }
+            enum "Colo-Ashburn" {
+                description
+                                "Ashburn, VA   IS-IS Area-ID:    49.17";
+                tailf:info "Ashburn, VA   IS-IS Area-ID:    49.17";
+            }
+            enum "Colo-Chicago" {
+                description
+                                "Chicago, IL   IS-IS Area-ID:    49.15";
+                tailf:info "Chicago, IL   IS-IS Area-ID:    49.15";
+            }
+            enum "Colo-Denver" {
+                description
+                                "Denver, CO    IS-IS Area-ID:    49.18";
+                tailf:info "Denver, CO    IS-IS Area-ID:    49.18";
+            }
+            enum "Colo-San Jose" {
+                description
+                                "San Jose, CA    IS-IS Area-ID:    49.16";
+                tailf:info "San Jose, CA    IS-IS Area-ID:    49.16";
+            }
+            enum "Colo-Seattle" {
+                description
+                                "Seattle, WA   IS-IS Area-ID:    49.2";
+                tailf:info "Seattle, WA   IS-IS Area-ID:    49.2";
+            }
+            enum "Louisiana" {
+                description
+                                "Slidell, LA   IS-IS Area-ID:    49.3";
+                tailf:info "Slidell, LA   IS-IS Area-ID:    49.3";
+            }
+            enum "MA/CT" {
+                description
+                                "Oxford, MA    IS-IS Area-ID:    49.835";
+                tailf:info "Oxford, MA    IS-IS Area-ID:    49.835";
+            }
+            enum "MI" {
+                description
+                                "Allendale, MI / Saginaw, MI   IS-IS Area-ID:    49.065";
+                tailf:info "Allendale, MI / Saginaw, MI   IS-IS Area-ID:    49.065";
+            }
+            enum "MO/IL" {
+                description
+                                "Olivette, MO / Belleville, IL   IS-IS Area-ID:    49.0001";
+                tailf:info "Olivette, MO / Belleville, IL   IS-IS Area-ID:    49.0001";
+            }
+            enum "MT/UT/WY/CO" {
+                description
+                                "Montana, Utah, Wyoming, and Colorado outside of Denver IS-IS
+                                Area-ID: 49.23";
+                tailf:info "Montana, Utah, Wyoming, and Colorado outside of Denver IS-IS
+                                Area-ID: 49.23";
+            }
+            enum "NE" {
+                description
+                                "Grand Island, NE    IS-IS Area-ID:    49.25";
+                tailf:info "Grand Island, NE    IS-IS Area-ID:    49.25";
+            }
+            enum "NV" {
+                description
+                                "Reno, NV    IS-IS Area-ID:    49.19";
+                tailf:info "Reno, NV    IS-IS Area-ID:    49.19";
+            }
+            enum "SLO" {
+                description
+                                "San Luis Obispo, CA   IS-IS Area-ID:    49.2225";
+                tailf:info "San Luis Obispo, CA   IS-IS Area-ID:    49.2225";
+            }
+            enum "SOCAL" {
+                description
+                                "Monterey Park, CA / Riverside, CA IS-IS Area-ID: 49.22";
+                tailf:info "Monterey Park, CA / Riverside, CA IS-IS Area-ID: 49.22";
+            }
+            enum "TX" {
+                description
+                                "Fort Worth, TX    IS-IS Area-ID:    49.24";
+                tailf:info "Fort Worth, TX    IS-IS Area-ID:    49.24";
+            }
+            enum "WA/OR" {
+                description
+                                "Medford, OR / Yakima, WA    IS-IS Area-ID:    49.225";
+                tailf:info "Medford, OR / Yakima, WA    IS-IS Area-ID:    49.225";
+            }
+            enum "WI/MN" {
+                description
+                                "Eau Claire, WI / Rochester, MN IS-IS Area-ID: 49.0425";
+                tailf:info "Eau Claire, WI / Rochester, MN IS-IS Area-ID: 49.0425";
+            }
+        }
+    }
+
+    typedef device-function-t {
+        description
+                "Type description";
+        type enumeration {
+            enum "bbr" {
+                description
+                                "Backbone Router ";
+                reference
+                                "The Backbone Router (bbr) is designed to operate in the National
+                                Backbone building block of the network. Their primary function
+                                is to move packets on high-speed interfaces between other routers
+                                within the National Backbone or in/out of regional networks where
+                                they connect to Core Routers. A Backbone Router connected to a
+                                regional network will also serve as a BGP route reflector from
+                                the NBB into the regional network by reflecting BGP routes to
+                                the regional BGP route reflectors. • The Backbone Router MUST
+                                support ISIS and BGP for both IPv4 and IPv6, run LDP, PIM sparse
+                                mode, and MPLS-TE. • The Backbone Router MUST only be a P router
+                                for MPLS based services. • The Backbone Router MUST support QoS
+                                capabilities acting on both IPv4 and IPv6 packets for egress queuing.
+                                • The Backbone Router MUST support both full IPv4 and IPv6 BGP
+                                tables and scale to 1 million routes in the RIB. • The Backbone
+                                Router SHOULD be engineered for non-blocking (no oversubscription)
+                                10gigE and 100gigE interfaces. • The Backbone Router SHOULD NOT
+                                use 1gigE interfaces. That would be considered an inefficient
+                                use of high speed slots in a high-speed router. • The Backbone
+                                Router MUST NOT have directly connected services such as CB customers.
+                                • The Backbone Router MUST NOT have directly connected video or
+                                voice endpoints. • The Backbone Router MUST NOT be an MPLS PE
+                                for any traffic types. The Backbone Router will serve as the L1/L2
+                                ISIS router in the ISIS hierarchical network design and will also
+                                provide BGP route reflection between the National Backbone reflecting
+                                BPG routes into each regional network. • The Backbone Router MAY
+                                connect to upstream IP Transit providers for off net connectivity.
+                                • The Backbone Router MUST have dual power supplies. • The Backbone
+                                Router MUST have dual route processors. ";
+            }
+            enum "prr" {
+                description
+                                "Peering Router ";
+                reference
+                                "The Peering Router (prr) function is a layer 3 router that will
+                                only reside in the National Backbone building block. It is only
+                                to be used for connections on traffic exchange agreements that
+                                adhere to our peering policy within strategically selected locations
+                                where large numbers of peers are located, typically national COLO
+                                facilities. • The Peering Router MUST run ISIS, BGP, and LDP.
+                                • The Peering Router MUST support QoS capabilities acting on both
+                                IPv4 and IPv6 packets for egress queuing. • The Peering Router
+                                MUST support both full IPv4 and IPv6 BGP tables and scale to 1
+                                million routes in the RIB. • The Peering router MUST NOT be used
+                                for directly connected CB customers. • The Peering router MAY
+                                have both voice and data settlement free peers • The Peering router
+                                MAY have internal WAN related connections where we connect to
+                                third party vendors in co-location facilities. • The Peering Router
+                                MAY connect to upstream IP Transit providers for off net connectivity.
+                                • The Peering Router MUST have dual power supplies. • The Peering
+                                Router MUST have dual route processors. ";
+            }
+            enum "edr" {
+                description
+                                "Edge Router ";
+                reference
+                                "The Edge Router (edr) is the layer 3 transit edge used for connections
+                                with tier 1 and 2 IP transit providers (Qwest, XO, etc.) where
+                                we hand-off backbone IP transit. • The Edge Router MUST support
+                                ISIS, BGP, and LDP. • The Edge Router MUST NOT be used for directly
+                                connected CB customers. • The Edge Router MUST NOT have application
+                                layer services such as voice, video, management servers directly
+                                connected; that is the function of the Service Aggregation Router.
+                                • The Edge Router MUST NOT be used to aggregate CMTS’s. • The
+                                Edge Router MAY connect to upstream IP Transit providers for off
+                                net connectivity. • The Edge Router MUST have dual power supplies.
+                                • The Edge Router MUST have dual route processors. ";
+            }
+            enum "brr" {
+                description
+                                "BGP Route Reflector ";
+                reference
+                                "The BGP Route Reflector is specifically used with the IPv4 and
+                                IPv6 address families. The BGP Route Reflector consists of both
+                                IPv4 and IPv6 route reflector device function name, but will have
+                                one slight difference in the naming used to differentiate them.
+                                The IPv4 BGP Route Reflector will use a 0 in the left most numeric
+                                digit of the hostname (brr0x) where an IPv6 BGP Route Reflector
+                                will use a 1 in the left most numeric digit of the hostname (brr1x).
+                                A single BGP Route Reflector will be used for IPv4 route reflection
+                                or IPv6 route reflection, but never both. Along with all the requirements
+                                listed above under the main route reflector section: • The IPv4
+                                BGP Route Reflector MUST support full IPv4 BGP tables and scale
+                                to 1 million routes in the RIB. • The IPv6 BGP Route Reflector
+                                MUST support full IPv6 BGP tables and scale to 256 thousand routes
+                                in the RIB. • The IPv4 BGP Route Reflector MUST NOT be used to
+                                reflect IPv6 routes. • The IPv6 BGP Route Reflector MUST NOT be
+                                used to reflect IPv4 routes. ";
+            }
+            enum "mrr" {
+                description
+                                "Multiprotocol BGP Route Reflector ";
+                reference
+                                "The Multiprotocol BGP Route Reflector is specifically used for
+                                BGP VPNv4 and VPNv6 address families. A single Multiprotocol BGP
+                                Route Reflector MAY service both VPNv4 and VPNv6 route reflection.
+                                Along with all the requirements listed above under the main route
+                                reflector section: • The IPv4 BGP Route Reflector MUST scale to
+                                1 million VPNv4 and VPNv6 BGP routes in the RIB. • The MRR SHOULD
+                                have both VPNv4 and VPNv6 route reflection ";
+            }
+            enum "sar" {
+                description
+                                "Service Aggregation Router ";
+                reference
+                                "The Service Aggregation Router (sar) is used to connect Charter
+                                streaming video, VOD, Charter Telephone voice services, network
+                                management, name services, etc., into the production layer 3 network.
+                                The Service Aggregation Router will be connected to the Core level
+                                of the network hierarchy in MHE locations where the Core Routers
+                                connect to the Backbone Routers. The Service Aggregation Router
+                                will also connect to the Backbone Routers but will not be a transitive
+                                router for any traffic other than traffic in and out of the Service
+                                Aggregation Network. • The Service Aggregation Router MUST support
+                                ISIS, BGP, PIM sparse mode Layer 2 Ethernet, and VLAN's. • The
+                                Service Aggregation Router MUST support QoS capabilities acting
+                                on both IPv4 and IPv6 packets for egress queuing, marking for
+                                COS, and DSCP, QoS egress queuing, QoS ingress and egress rate
+                                limiting. • The Service Aggregation Router MUST support vPC to
+                                allow dual homed server technology. • The Service Aggregation
+                                Router SHOULD be engineered for non blocking (no oversubscription)
+                                1gigE, 10gigE and 100gigE interfaces. • The Service Aggregation
+                                Router MUST NOT be used for directly connected CB customers. •
+                                The Service Aggregation Router MUST NOT be used for CMTS aggregation
+                                connections. • The Service Aggregation Router MUST be capable
+                                of marking DSCP on unicast and multicast packets. • The Service
+                                Aggregation Router MUST NOT be a transitive router for any traffic
+                                other than traffic destined to/from the Service Aggregation Network.
+                                • The Service Aggregation Router MUST have dual power supplies.
+                                • The Service Aggregation Router MUST have dual route processors.
+                                Figure 8 shows the placement of the Service Aggregation router
+                                connected to both the Core Router and the Backbone Router. The
+                                Service Aggregation Router will be a level 1 only router within
+                                the ISIS regional network. ";
+            }
+            enum "crr" {
+                description
+                                "Core Router ";
+                reference
+                                "The Core Regional Router (crr) is designed to operate in the
+                                Regional/KMA Core building block. Their primary function is to
+                                move packets on high-speed interfaces between the National Backbone
+                                and other regional core routers or other downstream routers. •
+                                The Core Router MUST support ISIS and BGP for both IPv4 and IPv6,
+                                run LDP, PIM sparse mode, and MPLS-TE. • The Core Router MUST
+                                support QoS capabilities acting on both IPv4 and IPv6 packets
+                                for egress queuing. • The Core Router MUST support both full IPv4
+                                and IPv6 BGP tables and scale to 1 million routes in the RIB.
+                                • The Core Router MUST only be a P router for MPLS based services;
+                                the Core Router MUST NOT be an MPLS PE for any traffic types.
+                                • The Core Router SHOULD be engineered for non-blocking (no oversubscription)
+                                10gigE and 100gigE interfaces. • The Core Router SHOULD NOT use
+                                1gigE interfaces. • The Core Router MUST NOT have directly connected
+                                services such as CB customers, or directly connected video or
+                                voice endpoints. • The Core Router MUST have dual power supplies.
+                                • The Core Router MUST have dual route processors. ";
+            }
+            enum "dtr" {
+                description
+                                "Distribution Router ";
+                reference
+                                "A Distribution Router (dtr) functions within the Distribution/Aggregation
+                                building block of a hierarchical network design where it connects
+                                to Core Router’s upstream, other Distribution Router’s and Access
+                                Routers downstream. • The Distribution Router MUST only utilize
+                                layer 3 interfaces to move customer traffic. • The Distribution
+                                Router MUST support ISIS, BGP, LDP, PIM sparse mode, MPLS TE,
+                                and MPLS NPE function for VPLS. • The Distribution Router MUST
+                                support QoS capabilities acting on both IPv4 and IPv6 packets
+                                for egress queuing. • The Distribution Router MUST support both
+                                full IPv4 and IPv6 BGP tables and scale to 1 million routes in
+                                the RIB. • The Distribution Router SHOULD be engineered to use
+                                non-blocking (non oversubscribed) interfaces where required at
+                                1gigE, 10gigE and 100gigE. • The Distribution Router MUST serve
+                                as aggregation for layer 3 CMTS’s. • The Distribution Router MUST
+                                NOT serve as aggregation for layer 2 CMTS’s. • The Distribution
+                                Router MUST NOT be an aggregation point for services originating
+                                from within the regional network, that function MUST be done within
+                                the Service Aggregation Network architecture. This requirement
+                                represents the longer-term multi-year strategy that will happen
+                                as new or upgraded service infrastructure is deployed. • A Distribution
+                                Router MUST NOT have physical direct connections from CB Customers
+                                either layer 2 or layer 3. The only approved CB usage on a Distribution
+                                Router is the H-VPLS NPE role. • The Distribution Routers MUST
+                                NOT act as CB edge. • The Distribution Router MUST NOT have any
+                                layer 2 Ethernet dot1q trunks terminating on it and MUST NOT pass
+                                un-encapsulated layer 2 frames through the device. • The Distribution
+                                Router MUST NOT run any spanning tree protocol. • The Distribution
+                                Router MUST NOT be connected to any layer 2 network management
+                                subnets • CB Edge Switches (esw) or CB Edge Router (ecr) MUST
+                                NOT be directly connected to the Distribution Router. Devices
+                                that terminate or pass layer 2 Ethernet frames MUST be part of
+                                the Access building block and are typically either an Access Router
+                                (acr) or Distribution Switch (dsw). • Both video sources and receivers
+                                MAY be connected to the Distribution Router where we have distributed
+                                video architectures. • The Distribution Router MUST have dual
+                                power supplies. • The Distribution Router MUST have dual route
+                                processors. ";
+            }
+            enum "acr" {
+                description
+                                "Access Router ";
+                reference
+                                "The Access Router (acr) functions within the Access building
+                                block of a hierarchical network design where it connects to Distribution
+                                Routers upstream, other Access Routers, and several other devices
+                                that function within the Access building block. The Access Router
+                                is the layer 3 router facing CB customers and serves as the demarcation
+                                point between the layer 2 Ethernet access networks and the layer
+                                3 network. The Access Router will also serve as aggregation for
+                                layer 2 CMTS connections. • The Access Router MUST NOT be an aggregation
+                                point for services originating from within the regional network;
+                                those connections MUST be made on the Services Aggregation Router
+                                within the Distribution/Aggregation or National Backbone building
+                                blocks. The exceptions to this rule is where we have local access
+                                video channel sources or remote markets that require provisioning
+                                complexes that serve smaller markets where centralized provisioning
+                                does not make sense. • The Access Router MUST support ISIS, BGP,
+                                LDP, PIM sparse, EoMPLS, and MPLS UPE. • The Access Router MUST
+                                support both full IPv4 and IPv6 BGP tables and scale to 1 million
+                                routes in the RIB. • The Access Router MUST support MPLS layer
+                                3 VPN. • The Access Router MUST support QoS capabilities acting
+                                on both IPv4 and IPv6 packets for egress queuing. • The Access
+                                Router MAY have full VPLS capabilities and MAY act as the MPLS
+                                NPE function for multi-chassis VPLS and hVPLS • The Access Router
+                                SHOULD be engineered for non-blocking (non oversubscribed) 1gigE,
+                                10gigE and 100gigE interfaces when available. • The Access Router
+                                MUST NOT have directly connected CB customers; that function should
+                                be done on the Edge Switch (esw), Edge Customer Router (ecr),
+                                or Edge Services Router which means a CB CPE is always required.
+                                • The Access Router MUST NOT perform a rate limiting to the contracted
+                                rate for CB customers. • The Access Router MUST serve as aggregation
+                                for layer 2 CMTS’s. • The Access Router MUST NOT serve as aggregation
+                                for layer 3 CMTS’s. • Both video sources and receivers MAY be
+                                connected to the Access Router where we have distributed video
+                                architectures. • The Access Router MUST terminate layer 2 Ethernet
+                                dot1q trunks. • All Layer-2 traffic coming into an Access Router
+                                must terminate on that Access Router and MUST NOT be trunked through
+                                the Access Router to another device. • The layer 2 network management
+                                subnet MUST be limited to a single Access Router. • The Access
+                                Router MUST have dual power supplies. • The Access Router MUST
+                                have dual route processors. ";
+            }
+            enum "aar" {
+                description
+                                "Access Aggregation Router ";
+                reference
+                                "The Access Aggregation Router (aar) functions within the Access
+                                building block of a hierarchical network design and may connect
+                                to Distribution Routers upstream, the Access Router or other Access
+                                Aggregation Routers. The Access Aggregation Router will also be
+                                a aggregation point for customer CPE devices. The Access Aggregation
+                                Router is the layer 3 router facing CB customers and serves as
+                                the demarcation point between the layer 2 Ethernet access networks
+                                and the layer 3 network. • The Access Aggregation Router MUST
+                                NOT be an aggregation point for services originating from within
+                                the regional network; those connections MUST be made on the Services
+                                Aggregation Router within the Distribution/Aggregation or National
+                                Backbone building blocks. • The Access Aggregation Router MAY
+                                uplink into an Access Router, another Access Aggregation Router,
+                                or a Distribution Router. The Access Aggregation Router SHOULD
+                                NOT uplink into two hierarchy levels at the same time, but until
+                                a clear delineation between Access and Distribution is created
+                                it MAY be allowed using a high ISIS metric of 5000 so the Access
+                                Aggregation Router does not become a transit router for traffic
+                                not terminating on the device. • The Access Aggregation Router
+                                MUST NOT be a layer 3 transitive device for the Access Router
+                                or Distribution Router within the topology however, the Access
+                                Aggregation Router MAY be a layer 3 transitive device for another
+                                Access Aggregation Router. • The Access Aggregation Router MUST
+                                NOT terminate customer connections when an Access Router resides
+                                in the same facility. • The Access Aggregation Router MUST NOT
+                                exceed two Access Aggregation Routers in the same facility. Once
+                                the need to exceed two Access Aggregation Routers is exceeded
+                                then an Access Router MUST be deployed and services migrated to
+                                the Access Router. • The Access Aggregation Router MUST NOT uplink
+                                to a Cisco 7600. • The Access Aggregation Router SHOULD NOT be
+                                the primary access device in a Head End to terminate customer
+                                (CPE). • The Access Aggregation Router MUST support ISIS, BGP,
+                                LDP, PIM sparse, EoMPLS, and MPLS. • The Access Aggregation Router
+                                MAY act as a MPLS UPE device. • The Access Aggregation Router
+                                MUST NOT act as a MPLS NPE device. • The Access Aggregation Router
+                                MUST support both full IPv4 and IPv6 BGP tables and scale to 1
+                                million routes in the RIB. • The Access Aggregation Router MUST
+                                support MPLS layer 3 VPN. • The Access Aggregation Router MUST
+                                support QoS capabilities acting on both IPv4 and IPv6 packets
+                                for egress queuing. • The Access Aggregation Router MUST use or
+                                be engineered for non-blocking (non oversubscribed) 1gigE, and
+                                10gigE interfaces. • The Access Aggregation Router MUST NOT have
+                                directly connected CB customers; that function should be done
+                                on the Edge Switch (esw), Shared Services Router (ssr), or Edge
+                                Services Router which means a CB CPE is always required. • The
+                                Access Aggregation Router MUST NOT perform rate limiting to the
+                                contracted rate for CB customers. • The Access Aggregation Router
+                                MUST NOT serve as aggregation for layer 2 or 3 CMTS’s. • Access
+                                Aggregation Router MAY be connected to both video sources and
+                                receivers where we have distributed video architectures. • The
+                                Access Aggregation Router MUST terminate layer 2 Ethernet dot1q
+                                trunks. • All Layer-2 traffic coming into an Access Aggregation
+                                Router MUST terminate on that Access Aggregation Router and MUST
+                                NOT be trunked through the Access Aggregation Router to another
+                                device. • The layer 2 network management subnet MUST be limited
+                                to a single Access Aggregation Router. • The Access Aggregation
+                                Router MUST NOT exceed two Access Aggregation Routers in a chain.
+                                • The number of devices in a Layer 3 Daisy Chain MUST NOT exceed
+                                three (3) devices • The bandwidth (provisioned CIR) MUST NOT exceed
+                                70% of total bandwidth at any uplink port. • When the Committed
+                                Bandwidth (CIR) at any of the uplink devices exceeds 70%, the
+                                uplinks MUST be augmented. • All non cell backhaul CB traffic
+                                transported to a head end MUST terminate their primary connection
+                                on an Access Router. • When an Access Aggregation Router is placed
+                                in a HE with an Access Router, the Access Aggregation Router is
+                                only to terminate Cell Tower backup connections. ";
+            }
+            enum "cts" {
+                description
+                                "CMTS ";
+                reference
+                                "The CMTS (cts or its) is a specialized device within the Access
+                                building block of the hierarchical network that connects to both
+                                the layer 3 network and the DOCSIS network. It can be debated
+                                if the CMTS is a router or not, but since it plays a key role
+                                in the layer 3 network design it is included into the router section
+                                of this EDD because of its router functions. • The CMTS MUST run
+                                ISIS, BGP, RIPv2, LDP, and PIM sparse mode. • The CMTS MUST NOT
+                                be used for directly connected CB fiber customers. • The CMTS
+                                MUST NOT connect to other CMTS. • The CMTS MUST NOT be a transit
+                                router for other routers within the regional network. • The CMTS
+                                SHOULD act as the layer 3 demarcation point for DOCSIS based services
+                                such as HSI, Charter Telephone, CB Coax customers, and internal
+                                WAN layer 3 VPN sites. • If the CMTS is a layer 3 CMTS it MUST
+                                connect into the network via the Distribution Router. • If the
+                                CMTS is a layer 2 CMTS it MUST connect into the network via the
+                                Access Router. Note: that once we test/deploy a layer 2 CMTS the
+                                device function will change into something different and not use
+                                the cts abbreviation. • The CMTS MUST have dual power supplies.
+                                • The CMTS MAY have dual route processors. ";
+            }
+            enum "ecr" {
+                description
+                                "Edge Customer Router ";
+                reference
+                                "Some uses for the Edge Customer Router (ecr) device function
+                                will be replaced by multiple device functions as listed below:
+                                \t\t • For MTSO router see Edge Services Router (esr). • For small
+                                or single carrier ENNI see Edge Services Router (esr). • For CB
+                                Ethernet CPE see Edge Tunnel Router (etr). • For devices with
+                                Fiber Internet, layer 3 VPN, and layer 2 VPN services in co-location
+                                facilities see Shared Services Router (ssr). The one remaining
+                                use for the Edge Customer Router (ecr) is for providing TDMoIP
+                                from cell towers in cell backhaul solutions. The Edge Customer
+                                Router will only connect into the Access building block of the
+                                network hierarchy. • The Edge Customer Router MUST support ISIS
+                                and LDP and be capable of building TDMoIP tunnels using MPLS.
+                                • The Edge Customer Router MUST support QoS capabilities acting
+                                on both IPv4 and IPv6 packets for egress queuing. • The Edge Customer
+                                Router MUST have QoS capabilities to properly mark EXP bits. •
+                                The Edge Customer Router MUST be a completely temperature hardened
+                                platform including the optics. • The Edge Customer Router MUST
+                                connect into the network via the Access Router. • The Edge Customer
+                                Router MUST have dual power supplies. • The Edge Customer Router
+                                MAY have dual route processors. ";
+            }
+            enum "ssr" {
+                description
+                                "Shared Services Router ";
+                reference
+                                "The Shared Services Router (ssr) is a fully functional router
+                                where multiple services are terminated. The main differentiator
+                                between the Shared Services Router and the Edge Services Router
+                                is BGP. The Shared Services Router MUST support full IPv4 and
+                                IPv6 BGP routes and the Edge Services Router does not run BGP
+                                at all. The Edge Services Router will be covered in more detail
+                                below. • The Shared Services Router MUST support BGP, ISIS, LDP,
+                                layer 2 Ethernet, dot1q trunking, VLAN's, and EoMPLS. • The Shared
+                                Services Router MUST support QoS capabilities acting on both IPv4
+                                and IPv6 packets marking for COS, DSCP, and EXP, QoS egress queuing,
+                                QoS ingress and egress rate limiting. • The Shared Services Router
+                                MUST support both full IPv4 and IPv6 BGP tables and scale to 1
+                                million routes in the RIB. • The Shared Services Router MUST NOT
+                                have application layer services such as voice, video, management
+                                servers. • The Shared Services Router MUST NOT be used for CMTS
+                                aggregation connections. • The Shared Services Router MAY act
+                                as both the layer 2 and layer 3 CB edge for Fiber Internet, layer
+                                2 VPN’s, layer 3 VPN’s, T1/PRI, SIP trunking, and advanced video
+                                services. • The Shared Services Router MUST have dual power supplies.
+                                • The Shared Services Router MUST have dual route processors.
+                                • The Shared Services Router MAY connect to the network in the
+                                Access layer or the NBB layer of the hierarchy. • When in the
+                                Access layer the Shared Services Router MUST connect directly
+                                to the Access Router. • When in the NBB layer the Shared Service
+                                Router MUST connect to the Backbone Router. • The Shared Services
+                                Router MAY be installed in a national co-location facility or
+                                in other smaller co-location facilities in regional networks where
+                                one or more customers reside and the layer 3 edge needs to be
+                                extended onsite. ";
+            }
+            enum "esr" {
+                description
+                                "Edge Services Router ";
+                reference
+                                "The Edge Services Router (esr) resides in the Access, Distribution,
+                                and National Backbone building blocks of the network hierarchy.
+                                One key characteristic about the Edge Services Router is that
+                                it does not run BGP. The Edge Services Router is used to connect
+                                to 3rd party networks where we provide L2VPN services such as
+                                ENNI and cell backhaul aggregation at the MTSO. The Edge Services
+                                Router acts as the layer 2 CB edge for carrier class Ethernet
+                                with directly connected CB carrier class customers at strategically
+                                selected locations to connect to other carrier’s networks. • The
+                                Edge Services Router MUST support ISIS, LDP, layer 2 Ethernet,
+                                dot1q trunking, VLAN's, and EoMPLS. • The Edge Services Router
+                                MUST support QoS capabilities acting on both IPv4 and IPv6 packets
+                                marking for COS, DSCP, and EXP, QoS egress queuing, QoS ingress
+                                and egress rate limiting. • The Edge Services Router MUST NOT
+                                have application layer services such as voice, video, management
+                                servers. • The Edge Services Router MUST NOT be used for CMTS
+                                aggregation connections. • The Edge Services Router MUST NOT participate
+                                in any type of VPLS as a bridge router as an NPE or UPE; The Edge
+                                Services Router MAY only connect to a VPLS solution using MPLS
+                                Attachment Circuits. • The Edge Services Router MUST have dual
+                                power supplies. • The Edge Services Router MAY have dual route
+                                processors. ";
+            }
+            enum "atr" {
+                description
+                                "Access Tunnel Router ";
+                reference
+                                "The Access Tunnel Router (atr) resides in the Access building
+                                block of the network hierarchy and is used to aggregate L2TPv3
+                                connections for the CB Ethernet product offering. • The Access
+                                Tunnel Router MUST support ISIS, LDP, and L2TPv3. • The Access
+                                Tunnel Router MUST NOT be used for directly connected CB customers.
+                                • The Access Tunnel Router MUST NOT have application layer services
+                                such as voice, video, management servers directly connected. •
+                                The Access Tunnel Router MUST NOT be used for CMTS aggregation
+                                connections. • The Access Tunnel Router MUST only be directly
+                                connected to an Access Router via a 802.1q trunk. • The Access
+                                Tunnel Router MUST have dual power supplies. • The Access Tunnel
+                                Router MAY have dual route processors. ";
+            }
+            enum "etr" {
+                description
+                                "Edge Tunnel Router ";
+                reference
+                                "The Edge Tunnel Router (etr) resides in the Access building block
+                                of the network hierarchy. It is used at the customer premise for
+                                the CB Ethernet product offering. • The Edge Tunnel Router MUST
+                                support L2TPv3. • The Edge Tunnel Router MUST support at least
+                                four 10/100/1000 switch ports. • The Edge Tunnel Router MUST have
+                                a configurable MTU. • The Edge Tunnel Router MUST support RIPv2.
+                                • The Edge Tunnel Router MUST NOT act as a tunnel aggregation
+                                device. • The Edge Tunnel Router tunnel MUST connect to an atr
+                                via the L2TPv3 tunnel; The Edge Tunnel Router MUST NOT connect
+                                to another Edge Tunnel Router. ";
+            }
+            enum "ptr" {
+                description
+                                "Partner Tunnel Router ";
+                reference
+                                "The Partner Tunnel Router (ptr) is used to connect a 3rd party
+                                vendor to a portion of the external production network. This connectivity
+                                may be used to connect to Application Service Providers where
+                                the 3rd party is contracted to provide application services for
+                                network infrastructure components. • The Partner Tunnel Router
+                                MUST support IPSEC tunnel encryption. • The Partner Tunnel Router
+                                MUST use static routing in both directions and not run any routing
+                                protocols. ";
+            }
+            enum "dcr" {
+                description
+                                "Datacenter Core Router ";
+                reference
+                                "The Datacenter Core Router (dcr) is used in the Charter national
+                                datacenters locations as the main core router in the datacenter
+                                service aggregation network. • The Datacenter Core Router MUST
+                                support EIGRP, BGP, PIM sparse mode Layer 2 Ethernet, VLAN's.
+                                • The Datacenter Core Router MUST support QoS capabilities acting
+                                on both IPv4 and IPv6 packets, marking for COS, and DSCP, QoS
+                                egress queuing, QoS ingress and egress rate limiting. • The Datacenter
+                                Core Router MUST support vPC to allow dual homed server technology.
+                                • The Datacenter Core Router MUST support OTV and LISP. • The
+                                Datacenter Core Router SHOULD use or be engineered for non-blocking
+                                (no oversubscription) 1gigE, 10gigE and 100gigE interfaces. •
+                                The Datacenter Core Router MUST NOT be used for directly connected
+                                CB customers. • The Datacenter Core Router MUST NOT be used for
+                                CMTS aggregation connections. • The Datacenter Core Router MUST
+                                be capable of marking DSCP on unicast and multicast packets. •
+                                The Datacenter Core Router MUST have dual power supplies. • The
+                                Datacenter Core Router MUST have dual route processors. ";
+            }
+            enum "esw" {
+                description
+                                "Edge switch";
+                reference
+                                "The Edge Switch (esw) resides in the Access building block of
+                                the network hierarchical. The Edge Switch is a CB CPE deployed
+                                at the customer premise that is a layer 2 only switch that acts
+                                as the layer 2 edge for customer services. The following requirements
+                                exist for the Edge Switch. • The Edge Switch MUST support dot1q
+                                trunks and VLAN encapsulation per service. • The Edge Switch MUST
+                                connect to either the Distribution Switch or to the Access Router
+                                upstream. • The Edge Switch MUST support transparent and selective
+                                QnQ. • The Edge Switch MUST have full QoS capabilities to perform
+                                QoS marking on both IPv4 and IPv6 packets marking for COS and
+                                DSCP, QoS egress queuing, QoS ingress and egress rate limiting.
+                                • Layer 3 routing protocols MUST NOT be running on Edge Switches.
+                                • Edge Switches MUST NOT be shared by multiple customers. Edge
+                                Switches MUST only have a single customer of record. ";
+            }
+            enum "dsw" {
+                description
+                                "Distribution Switch";
+                reference
+                                "The Distribution Switch (dsw) resides in the Access building
+                                block of the hierarchical network where it functions as a layer
+                                2 Ethernet aggregation device. The Distribution Switch is a layer
+                                2 only Ethernet switch with dot1q trunks toward the Access Router
+                                and Edge Switch. • The Distribution Switch MAY be used as an aggregation
+                                point for many different CB customer services or a management
+                                VLAN. • Each of those services or management VLAN MUST be transported
+                                on a separate assigned service provider VLAN. • CB customers MUST
+                                NOT be directly connected to a Distribution Switch. • Layer 3
+                                routing protocols MUST NOT be running on Distribution Switches.
+                                • The Distribution Switch MUST NOT have any directly connected
+                                video devices. ";
+            }
+        }
+    }
+
+    //ISIS Specific Types
+
+    typedef IS-type-t {
+        description
+                "";
+        type enumeration {
+            enum "level-1";
+            enum "level-2-only";
+            enum "level-1-2";
+        }
+    }
+
+    typedef circuit-type-t {
+        description
+                "";
+        type enumeration {
+            enum "level-1";
+            enum "level-2";
+            enum "level-1-2";
+        }
+    }
+
+    typedef iih-type-t {
+        description
+                "";
+        type enumeration {
+            enum "point-to-point";
+            enum "LAN";
+        }
+    }
+
+    //BGP Specific Types 
+
+    typedef chtr-safi-t {
+        description "supported BGP secondary address family information (SAFI)";
+        type enumeration {
+            enum ipv4-unicast {
+                reference "http://www.iana.org/go/rfc4760";
+            }
+            enum ipv6-unicast {
+                reference "http://www.iana.org/go/rfc4760";
+            }
+            enum bgp-label {
+                reference "http://www.iana.org/go/rfc3107";
+            }
+            enum vpnv4-unicast {
+                reference "http://www.iana.org/go/rfc4364";
+            }
+            enum vpnv6-unicast {
+            }
+            enum ipv4-flowspec {
+                reference "http://www.iana.org/go/rfc5575";
+            }
+            enum vpnv4-flowspec {
+                reference "http://www.iana.org/go/rfc5575";
+            }
+            enum ipv6-flowspec {
+            }
+            enum l2vpn-evpn {
+                reference "http://www.iana.org/go/rfc7432";
+            }
+            enum mcast-vpn {
+                reference "http://www.iana.org/go/rfc6514";
+            }
+        }
+    }
+
+    typedef bgp4-rr-client-t {
+        description
+                "";
+        type enumeration {
+            enum "iBGP-RR-CLIENTS-PARTIAL" {
+                description
+                                "RR  Clients  that  receive  partial  routes";
+                tailf:info "RR  Clients  that  receive  partial  routes";
+            }
+            enum "iBGP-RR-CLIENTS-CMTS-CASA" {
+                description
+                                "RR  Clients  that  receive  default-only";
+                tailf:info "RR  Clients  that  receive  default-only";
+            }
+            enum "iBGP-RR-CLIENTS-CMTS-ARRIS" {
+                description
+                                "RR  Clients  that  receive  default-only";
+                tailf:info "RR  Clients  that  receive  default-only";
+            }
+            enum "iBGP-RR-CLIENTS-CMTS" {
+                description
+                                "RR  Clients  that  receive  default-only";
+                tailf:info "RR  Clients  that  receive  default-only";
+            }
+            enum "iBGP-RR-CLIENTS" {
+                description
+                                "RR  Clients  that  receive  all  routes";
+                tailf:info "RR  Clients  that  receive  all  routes";
+            }
+            enum "iBGP-RR-MESH-SAME-KMA" {
+                description
+                                "Full  Mesh  sessions";
+                tailf:info "Full  Mesh  sessions";
+            }
+            enum "iBGP-RR-MESH-OTHER-KMA" {
+                description
+                                "Full  Mesh  sessions";
+                tailf:info "Full  Mesh  sessions";
+            }
+            enum "iBGP-CORE-BACKBONE" {
+                description
+                                "Backbone  Routers";
+                tailf:info "Backbone  Routers";
+            }
+        }
+    }
+
+    typedef bgp4-inet4-neighbor-group-t {
+        description
+                "";
+        type enumeration {
+            enum "ARBOR-COLLECTOR" {
+                description
+                                " Neighbor group for Arbor ";
+                tailf:info " Neighbor group for Arbor ";
+            }
+            enum "BB-MESH-OTHER-ZONES" {
+                description
+                                " Neighbor group for BBR in other cities (block transit routes)
+                                ";
+                tailf:info " Neighbor group for BBR in other cities (block transit routes)
+                                ";
+            }
+            enum "BB-MESH-SAME-ZONE" {
+                description
+                                " Neighbor group for BBR in same city (share transit routes) ";
+                tailf:info " Neighbor group for BBR in same city (share transit routes) ";
+            }
+            enum "CUSTOMER-FULL-ROUTES" {
+                description
+                                " Neighbor group for customers that want full routes ";
+                tailf:info " Neighbor group for customers that want full routes ";
+            }
+            enum "CUSTOMER-NO-ROUTES" {
+                description
+                                " Neighbor group for customers who only wish to announce routes
+                                ";
+                tailf:info " Neighbor group for customers who only wish to announce routes
+                                ";
+            }
+            enum "CUSTOMER-PARTIAL-ROUTES" {
+                description
+                                " Neighbor group for customers that want Charter routes ";
+                tailf:info " Neighbor group for customers that want Charter routes ";
+            }
+            enum "iBGP-ROUTE-REFLECTORS" {
+                description
+                                " Peer-group for IPV4 RRs ";
+                tailf:info " Peer-group for IPV4 RRs ";
+            }
+            enum "REGIONAL-NETWORK" {
+                description
+                                " Neighbor group for BBR – Regional RR to pass down transit routes
+                                ";
+                tailf:info " Neighbor group for BBR – Regional RR to pass down transit routes
+                                ";
+            }
+            enum "REGIONAL-NETWORK-NO-TRANSIT" {
+                description
+                                " Neighbor group for BBR – Regional RR to block transit routes
+                                ";
+                tailf:info " Neighbor group for BBR – Regional RR to block transit routes
+                                ";
+            }
+        }
+    }
+
+    typedef bgp4-inet6-neighbor-group-t {
+        description
+                "";
+        type enumeration {
+            enum "IPV6-BB-MESH-OTHER-ZONES" {
+                description
+                                "Neighbor group for BBR in other cities (block transit routes)";
+                tailf:info "Neighbor group for BBR in other cities (block transit routes)";
+            }
+            enum "IPV6-BB-MESH-SAME-ZONE" {
+                description
+                                "Neighbor group for BBR in same city (share transit routes)";
+                tailf:info "Neighbor group for BBR in same city (share transit routes)";
+            }
+            enum "IPV6-CUSTOMER-FULL-ROUTES" {
+                description
+                                "Neighbor group for customers that want full routes";
+                tailf:info "Neighbor group for customers that want full routes";
+            }
+            enum "IPV6-CUSTOMER-NO-ROUTES" {
+                description
+                                "Neighbor group for customers who only wish to announce routes";
+                tailf:info "Neighbor group for customers that want full routes";
+            }
+            enum "IPV6-CUSTOMER-PARTIAL-ROUTES" {
+                description
+                                "Neighbor group for customers that want Charter routes";
+                tailf:info "Neighbor group for customers that want Charter routes";
+            }
+            enum "IPV6-iBGP-ROUTE-REFLECTORS" {
+                description
+                                "Peer-group for IPV6 RRs";
+                tailf:info "Peer-group for IPV6 RRs";
+            }
+            enum "IPV6-REGIONAL-NETWORK" {
+                description
+                                " Neighbor group for BBR – Regional RR to pass down transit routes";
+                tailf:info " Neighbor group for BBR – Regional RR to pass down transit routes";
+            }
+            enum "IPV6-REGIONAL-NETWORK-NO-TRANSIT" {
+                description
+                                " Neighbor group for BBR – Regional RR to block transit routes";
+                tailf:info " Neighbor group for BBR – Regional RR to block transit routes";
+            }
+        }
+    }
+
+    typedef mpbgp-inet4-neighbor-group-t {
+        description
+                "";
+        type enumeration {
+            enum "MPBGP-RR" {
+                description
+                                "Peer-group for Multi-protocol RRs";
+                tailf:info "Peer-group for Multi-protocol RRs";
+            }
+        }
+    }
+}

@@ -1,0 +1,85 @@
+submodule engdb-taxon {
+    belongs-to engdb {
+        prefix engdb-taxon;
+    }
+    
+
+    include engdb-types;
+    include engdb-region;
+    include engdb-role;
+
+    import ietf-inet-types { prefix inet; }
+
+    import tailf-common { prefix tailf; }
+
+    organization "Charter Engineering";
+    contact
+        "bill.armstrong@charter.com";
+    description
+        "Domain/Context/LoB/Class/Name/ Domain: an area of territory under
+        the control of a particular organization or individual. Context:
+        the circumstances that form the setting for an event, statement,
+        or idea, and in terms of which it can be fully understood and
+        assessed. Line Of Business: a set of one or more highly related
+        products which service a particular customer transaction or business
+        need. Class: a set or category of things having some property
+        or attribute in common and differentiated from others by kind,
+        type, or quality. The Layer of the OSI Reference Model that the
+        service or entity operates or exists is a class. Name: a word
+        or set of words by which an Entity or Service is known, addressed,
+        or referred to. ";
+
+    revision 2015-10-10 {
+        description
+                "Initial revision";
+    }
+
+    list Domain {
+        key "id";
+        leaf id {
+            type string;
+        }
+        list Context {
+            description
+                        "";
+            key "id";
+            leaf id {
+                type string;
+            }
+
+            list LoB {
+                description
+                                "";
+                key "id";
+                leaf id {
+                    type string;
+                }
+
+                list Class {
+                    description
+                                        "";
+                    key "id";
+                    leaf id {
+                        type string;
+                    }
+
+                    list Name {
+                        description
+                                                "";
+                        key "id instance";
+                        leaf id {
+                            type string;
+                        }
+                        leaf instance {
+                            type string;
+                        }
+                        leaf uuid {
+                            type string;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

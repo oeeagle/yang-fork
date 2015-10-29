@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0" servicepoint="isis">
+   <devices xmlns="http://tail-f.com/ns/ncs">
+      <device-group>
+         <name>ISIS</name>
+         <device-group>{/area-id}</device-group>
+      </device-group>
+      <device-group>
+         <name>{/area-id}</name>
+         <device-name>{/isis-node/device}</device-name>
+      </device-group>
+      <!-- Endpoint 1 -->
+      <device tags="nocreate">
+         <name>{/isis-node/device}</name>
+         <config tags="merge">
+            <!-- 
+
+ -->
+            <!-- Cisco IOS XR -->
+            <router xmlns="http://tail-f.com/ned/cisco-ios-xr">
+           
+               <isis>
+                  <tag>
+                     <name>default</name>
+                     <is-type tags="nocreate">{/isis-node/IS-type}</is-type>
+                     <net tags="replace">{/area-id}.{/isis-node/system-id}.00</net>
+                     <address-family>
+                        <ipv4>
+                           <unicast>
+                              <metric>{/isis-node/system-metric/inet4-metric}</metric>
+                              <metric-style>
+                                 <wide />
+                              </metric-style>
+                           </unicast>
+                        </ipv4>
+                        <ipv6>
+                           <unicast>
+                              <metric>{/isis-node/system-metric/inet6-metric}</metric>
+                           </unicast>
+                        </ipv6>
+                     </address-family>
+                     <interface tags="merge" when="{/isis-node/member-interfaces/GigE-iosxr}">
+                        <name>GigabitEthernet{/isis-node/member-interfaces/GigE-iosxr/intf-number}</name>
+                        <interface-type>suppressed</interface-type>
+                        <point-to-point tags="replace" when="{/isis-node/member-interfaces/GigE-iosxr/isis-interface-type/intf-IIH-type='point-to-point'}" />
+                        <address-family>
+                           <ipv4>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/GigE-iosxr/intf-number/isis-metric/inet4-metric}">{/isis-node/member-interfaces/GigE-iosxr/intf-number/isis-metric/inet4-metric}</metric>
+                              </unicast>
+                           </ipv4>
+                           <ipv6>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/GigE-iosxr/intf-number/isis-metric/inet6-metric}">{/isis-node/member-interfaces/GigE-iosxr/intf-number/isis-metric/inet6-metric}</metric>
+                              </unicast>
+                           </ipv6>
+                        </address-family>
+                     </interface>
+                     <interface tags="merge" when="{/isis-node/member-interfaces/TenGigE-iosxr}">
+                        <name>TenGigE{/isis-node/member-interfaces/GigE-iosxr/intf-number}</name>
+                        <interface-type>suppressed</interface-type>
+                        <point-to-point tags="replace" when="{/isis-node/member-interfaces/TenGigE-iosxr/isis-interface-type/intf-IIH-type='point-to-point'}" />
+                        <address-family>
+                           <ipv4>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/TenGigE-iosxr/intf-number/isis-metric/inet4-metric}">{/isis-node/member-interfaces/TenGigE-iosxr/intf-number/isis-metric/inet4-metric}</metric>
+                              </unicast>
+                           </ipv4>
+                           <ipv6>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/TenGigE-iosxr/intf-number/isis-metric/inet6-metric}">{/isis-node/member-interfaces/TenGigE-iosxr/intf-number/isis-metric/inet6-metric}</metric>
+                              </unicast>
+                           </ipv6>
+                        </address-family>
+                     </interface>
+                     <interface tags="merge" when="{/isis-node/member-interfaces/HundredGigE-iosxr}">
+                        <name>HundredGigE{/isis-node/member-interfaces/GigE-iosxr/intf-number}</name>
+                        <interface-type>suppressed</interface-type>
+                        <point-to-point tags="replace" when="{/isis-node/member-interfaces/HundredGigE-iosxr/isis-interface-type/intf-IIH-type='point-to-point'}" />
+                        <address-family>
+                           <ipv4>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/HundredGigE-iosxr/intf-number/isis-metric/inet4-metric}">{/isis-node/member-interfaces/HundredGigE-iosxr/intf-number/isis-metric/inet4-metric}</metric>
+                              </unicast>
+                           </ipv4>
+                           <ipv6>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/HundredGigE-iosxr/intf-number/isis-metric/inet6-metric}">{/isis-node/member-interfaces/HundredGigE-iosxr/intf-number/isis-metric/inet6-metric}</metric>
+                              </unicast>
+                           </ipv6>
+                        </address-family>
+                     </interface>
+                     <interface tags="merge" when="{/isis-node/member-interfaces/LAG-iosxr}">
+                        <name>Bundle-Ether{/isis-node/member-interfaces/GigE-iosxr/intf-number}</name>
+                        <interface-type>suppressed</interface-type>
+                        <point-to-point tags="replace" when="{/isis-node/member-interfaces/LAG-iosxr/isis-interface-type/intf-IIH-type='point-to-point'}" />
+                        <address-family>
+                           <ipv4>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/LAG-iosxr/intf-number/isis-metric/inet4-metric}">{/isis-node/member-interfaces/LAG-iosxr/intf-number/isis-metric/inet4-metric}</metric>
+                              </unicast>
+                           </ipv4>
+                           <ipv6>
+                              <unicast>
+                                 <metric when="{/isis-node/member-interfaces/LAG-iosxr/intf-number/isis-metric/inet6-metric}">{/isis-node/member-interfaces/LAG-iosxr/intf-number/isis-metric/inet6-metric}</metric>
+                              </unicast>
+                           </ipv6>
+                        </address-family>
+                     </interface>
+                     <interface>
+                        <name>Loopback0</name>
+                        <interface-type>passive</interface-type>
+                        <address-family>
+                           <ipv4>
+                              <unicast />
+                           </ipv4>
+                        </address-family>
+                     </interface>
+                     <interface>
+                        <name>Loopback14</name>
+                        <interface-type>passive</interface-type>
+                        <address-family>
+                           <ipv4>
+                              <unicast />
+                           </ipv4>
+                        </address-family>
+                     </interface>
+                     <interface>
+                        <name>Loopback15</name>
+                        <interface-type>passive</interface-type>
+                        <address-family>
+                           <ipv4>
+                              <unicast />
+                           </ipv4>
+                           <ipv6>
+                              <unicast />
+                           </ipv6>
+                        </address-family>
+                     </interface>
+                     <set-overload-bit>
+                        <on-startup>360</on-startup>
+                     </set-overload-bit>
+                     <lsp-gen-interval>
+                        <maximum-wait>{/engdb:role[engdb:role-name=current()/role-name]/engdb:function/engdb:protocols/engdb:isis/engdb:lsp-gen-interval/engdb:maximum-wait}</maximum-wait>
+                        <initial-wait>{/engdb:role[engdb:role-name=current()/role-name]/engdb:function/engdb:protocols/engdb:isis/engdb:lsp-gen-interval/engdb:initial-wait}</initial-wait>
+                        <secondary-wait>{/engdb:role[engdb:role-name=current()/role-name]/engdb:function/engdb:protocols/engdb:isis/engdb:lsp-gen-interval/engdb:secondary-wait}</secondary-wait>
+                     </lsp-gen-interval>
+                     <lsp-refresh-interval>65000</lsp-refresh-interval>
+                     <max-lsp-lifetime>65535</max-lsp-lifetime>
+                     <log>
+                        <adjacency>
+                           <changes />
+                        </adjacency>
+                     </log>
+                     <nsf>
+                        <ietf />
+                     </nsf>
+                     <mpls>
+                        <ldp>sync</ldp>
+                     </mpls>
+                  </tag>
+               </isis>
+            </router>
+         </config>
+      </device>
+   </devices>
+</config-template>

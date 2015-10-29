@@ -1,0 +1,121 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0"
+                 servicepoint="chtr-ntp">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+      <name>{/device}</name>
+      <config tags="replace">
+       <ntp xmlns="http://tail-f.com/ned/cisco-ios-xr">
+        <server>
+          <address>{/ntp-host-1}</address>
+        </server>
+        <server>
+          <address>{/ntp-host-2}</address>
+        </server>
+        <server>
+          <address>{/ntp-host-3}</address>
+        </server>
+        <access-group>
+          <type>peer</type>
+          <name>NTP-SECURITY</name>
+          <version>ipv4</version>
+        </access-group>
+        <source>
+          <Loopback>0</Loopback>
+        </source>
+        <update-calendar/>
+       </ntp>
+      <ipv4 xmlns="http://tail-f.com/ned/cisco-ios-xr">
+      <access-list>
+        <named-acl>
+          <name>NTP-SECURITY</name>
+          <rule>
+            <id>10</id>
+            <line>permit ipv4 host 24.177.176.38 any</line>
+          </rule>
+          <rule>
+            <id>20</id>
+            <line>permit ipv4 host 71.9.127.107 any</line>
+          </rule>
+          <rule>
+            <id>30</id>
+            <line>permit ipv4 host 68.190.192.35 any</line>
+          </rule>
+          <rule>
+            <id>40</id>
+            <line>permit ipv4 host 24.205.224.36 any</line>
+          </rule>
+          <rule>
+            <id>50</id>
+            <line>permit ipv4 host 66.189.0.100 any</line>
+          </rule>
+          <rule>
+            <id>60</id>
+            <line>permit ipv4 host 97.81.22.195 any</line>
+          </rule>
+          <rule>
+            <id>70</id>
+            <line>permit ipv4 host 71.92.29.130 any</line>
+          </rule>
+          <rule>
+            <id>80</id>
+            <line>permit ipv4 host 24.247.24.53 any</line>
+          </rule>
+          <rule>
+            <id>90</id>
+            <line>permit ipv4 host 68.115.71.53 any</line>
+          </rule>
+          <rule>
+            <id>100</id>
+            <line>permit ipv4 host 24.247.15.53 any</line>
+          </rule>
+          <rule>
+            <id>110</id>
+            <line>permit ipv4 host 24.159.193.40 any</line>
+          </rule>
+          <rule>
+            <id>120</id>
+            <line>permit ipv4 host 24.217.0.5 any</line>
+          </rule>
+          <rule>
+            <id>130</id>
+            <line>permit ipv4 host 66.168.128.20 any</line>
+          </rule>
+          <rule>
+            <id>140</id>
+            <line>permit ipv4 host 24.205.192.61 any</line>
+          </rule>
+          <rule>
+            <id>150</id>
+            <line>permit ipv4 host 24.178.162.3 any</line>
+          </rule>
+          <rule>
+            <id>160</id>
+            <line>permit ipv4 host 68.116.46.115 any</line>
+          </rule>
+          <rule>
+            <id>170</id>
+            <line>permit ipv4 host 24.159.64.23 any</line>
+          </rule>
+          <rule>
+            <id>180</id>
+            <line>permit ipv4 host 68.113.206.10 any</line>
+          </rule>
+          <rule>
+            <id>190</id>
+            <line>permit ipv4 host 24.196.64.53 any</line>
+          </rule>
+          <rule>
+            <id>200</id>
+            <line>permit ipv4 host 24.217.201.67 any</line>
+          </rule>
+          <rule>
+            <id>210</id>
+            <line>deny ipv4 any any</line>
+          </rule>
+        </named-acl>
+      </access-list>
+      </ipv4>
+      </config>
+    </device>
+  </devices>
+</config-template>

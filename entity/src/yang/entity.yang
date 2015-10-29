@@ -1,0 +1,96 @@
+module entity {
+    namespace "http://charterlab.com/base/entity";
+    prefix entity;
+
+    import ietf-inet-types { prefix inet; }
+    import tailf-ncs { prefix ncs; }
+    import tailf-common { prefix tailf; }
+    import engdb { prefix engdb; }
+
+    description
+        "Basic Chater router identity information, this defines device
+        role, Source Loopback addresses";
+
+    typedef source-intf-t {
+        description
+                "";
+        type enumeration {
+            enum "Loopback 0";
+            enum "Loopback 14";
+            enum "Loopback 15";
+            enum "system";
+        }
+    }
+
+    leaf device {
+        description
+                "";
+        type leafref {
+            path "/ncs:devices/ncs:device/ncs:name";
+        }
+    }
+    
+    augment "/ncs:devices/ncs:device" {
+        container entity {
+            description
+                        "";
+            leaf role-name {
+                description
+                                "";
+                type engdb:device-function-t;
+            }
+            container platform{
+            	leaf vendor{
+            		type string;
+            	}
+            	leaf model{
+            		type string;
+            	}
+            }
+
+            grouping intf-grp {
+                leaf intf-name {
+                    type union {
+                        type source-intf-t;
+                        type string;
+                    }
+                }
+                container src-addr {
+                    leaf inet4 {
+                        description "";
+                        tailf:info "IPv4 source Address";
+                        type inet:ipv4-address;
+                    }
+                    leaf inet6 {
+                        tailf:info "IPv6 source Address";
+                        type inet:ipv6-address;
+                    }
+                }
+            }
+
+            container mgmt-src {
+                uses intf-grp;
+            }
+            choice bgp-support {
+                description "";
+                case bgp-support {
+                    when "/engdb:role[engdb:role-name=current()/role-name]/engdb:function/engdb:protocols/engdb:bgp/engdb:SAFI/engdb:ipv4-unicast='true'";
+                    container bgp4-src {
+                        uses intf-grp;
+                    }
+                }
+            }
+            choice mpls-support {
+                description "";
+                case mpls-support {
+                    description
+                                        "";
+                    when "/engdb:role[engdb:role-name=current()/role-name]/engdb:function/engdb:protocols/engdb:mpls/engdb:ldp='true'";
+                    container mpbgp-src {
+                        uses intf-grp;
+                    }
+                }
+            }
+        }
+    }
+}

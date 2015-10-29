@@ -1,0 +1,283 @@
+module dc-tenant {
+    description "";
+  namespace "http://charterlab.com/service/dc-tenant";
+  prefix dc-tenant;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import interconnect {
+    prefix interconnect;
+  }
+  import engdb {
+    prefix engdb;
+  }
+  import entity {
+    prefix entity;
+  }
+  import dc-rib {
+	    prefix dc-rib;
+	  }
+  
+  
+  augment "/ncs:services" {
+    list dc-tenant {
+      key "region-name Business-Unit tenant-name Ecosystem-ID";
+      uses ncs:service-data;
+      ncs:servicepoint "dc-tenant";
+      leaf region-name {
+        description
+          "";
+        tailf:info "Datacenter Location";
+        mandatory true;
+        type leafref {
+          path "/engdb:region/engdb:region-name";
+        }
+      }
+      leaf Business-Unit {
+        description
+          "";
+        tailf:info "Business-Unit";
+        type leafref {
+        	//path "/ncs:customers/ncs:customer/ncs:id[text()[contains(.,'chtr-')]]";
+          path "/ncs:customers/ncs:customer/ncs:id";
+        }
+      }
+      leaf tenant-name {
+        description
+          "Tenant Environment Name";
+        type string;
+      }
+
+      typedef tenant-id-t {
+        type enumeration {
+          enum "01";
+          enum "02";
+          enum "03";
+          enum "04";
+          enum "05";
+          enum "06";
+          enum "07";
+          enum "08";
+          enum "09";
+        }
+      }
+      leaf Ecosystem-ID {
+        type union {
+          type tenant-id-t;
+          type int16 {
+            range "10 .. 99";
+          }
+        }
+      }
+
+      typedef network-segment-t {
+        type enumeration {
+          enum "pnf-security-segment" {
+            description
+              "physical network function security appliance tenant attachment network";
+            tailf:info "physical network function security appliance tenant attachment network";
+            value 37;
+          }
+          enum "pnf-load-balancer-segment" {
+            description
+              "physical network function security appliance tenant attachment network";
+            tailf:info "physical network function security appliance tenant attachment network";
+            value 36;
+          }
+          enum "pnf-vnf-interconnect" {
+            description
+              "physical network function to virtual network function tenant attachment network";
+            tailf:info "physical network function security appliance tenant attachment network";
+            value 35;
+          }
+          enum "Multicast" {
+            description
+              "multicast";
+            tailf:info "multicast";
+            value 6;
+          }
+        }
+      }
+      list service-network {
+                description "";
+        key "network-segment inet4-allocation inet6-allocation";
+        leaf forwarding-context{
+                    description "";
+        	type leafref{
+        	path "/domain[]/context";
+        }
+        }
+        leaf network-segment {
+          type union {
+            type network-segment-t;
+            type int8 {
+              range "1 .. 5";
+            }
+            type int8 {
+              range "7 .. 9";
+            }
+            type int8 {
+              range "11 .. 34";
+            }
+          }
+        }
+        leaf segment-name {
+          description
+            "Layer2 Network segment User Defined Name";
+          tailf:info "Layer2 Network segment User Defined Name";
+          type string;
+        }
+        leaf inet4-allocation {
+          type inet:ipv4-prefix;
+        }
+        leaf inet6-allocation {
+          type inet:ipv6-prefix;
+        }
+      }
+      container export-policy {
+        list inet4-tenant-prefix-set {
+          key "prefix";
+          leaf prefix {
+            type leafref {
+              path "../dc-rib:service-network/dc-rib:inet4-allocation";
+            }
+          }
+          leaf match {
+            type enumeration {
+              enum "le";
+              enum "ge";
+              enum "eq";
+            }
+          }
+          leaf length {
+            type uint8 {
+              range "0 .. 32";
+            }
+          }
+        }
+        list inet6-tenant-prefix-set {
+          key "prefix";
+          leaf prefix {
+            type leafref {
+              path "../dc-rib:service-network/dc-rib:inet6-allocation";
+            }
+          }
+          leaf match {
+            type enumeration {
+              enum "le";
+              enum "ge";
+              enum "eq";
+            }
+          }
+          leaf length {
+            type uint8 {
+              range "0 .. 128";
+            }
+          }
+        }
+      }
+      container import-policy {
+        container external-networks {
+          leaf-list external-rib {
+            description
+              "";
+            type leafref {
+              path "/ncs:services/dc-rib:dc-rib/dc-rib:name";
+            }
+          }
+          list inet4-external-prefix-set {
+            key "prefix";
+            leaf prefix {
+              type inet:ipv4-prefix;
+            }
+            leaf match {
+              type enumeration {
+                enum "le";
+                enum "ge";
+                enum "eq";
+              }
+            }
+            leaf length {
+              type uint8 {
+                range "0 .. 32";
+              }
+            }
+          }
+          list inet6-external-prefix-set {
+            key "prefix";
+            leaf prefix {
+              type inet:ipv6-prefix;
+            }
+            leaf match {
+              type enumeration {
+                enum "le";
+                enum "ge";
+                enum "eq";
+              }
+            }
+            leaf length {
+              type uint8 {
+                range "0 .. 128";
+              }
+            }
+          }
+        }
+        container datacenter-networks {
+          leaf-list tenant-rib {
+                        description "";
+            type leafref {
+              path "/ncs:services/dc-tenant:dc-tenant[region-name=current()/../../region-name]dc-tenant:tenant-name";
+            }
+          }
+          list inet4-tenant-prefix-set {
+            key "prefix";
+            leaf prefix {
+              type leafref {
+                path "/ncs:services/dc-tenant:dc-tenant[dc-tenant:region-name=current()/../../region-name][dc-tenant:name=current()/../tenant-rib]dc-tenant:service-network/dc-tenant:inet4-allocation";
+              }
+            }
+            leaf match {
+              type enumeration {
+                enum "le";
+                enum "ge";
+                enum "eq";
+              }
+            }
+            leaf length {
+              type uint8 {
+                range "0 .. 32";
+              }
+            }
+          }
+          list inet6-tenant-prefix-set {
+            key "prefix";
+            leaf prefix {
+              type leafref {
+                path "/ncs:services/dc-tenant:dc-tenant[dc-tenant:region-name=current()/../../region-name][dc-tenant:name=current()/../tenant-rib]dc-tenant:service-network/dc-tenant:inet6-allocation";
+              }
+            }
+            leaf match {
+              type enumeration {
+                enum "le";
+                enum "ge";
+                enum "eq";
+              }
+            }
+            leaf length {
+              type uint8 {
+                range "0 .. 128";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

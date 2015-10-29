@@ -1,0 +1,163 @@
+module map-domain {
+    namespace "http://charterlab.com/service/map-domain";
+    prefix map-domain;
+
+    import ietf-inet-types { prefix inet; }
+    import tailf-ncs { prefix ncs; }
+    import tailf-common { prefix tailf; }
+
+    description
+        "The Mapping of Address and Port using Translation (MAP-T) architecture
+        specified in this document is such a double stateless NAT64-based
+        solution. This YANG model provides a service definition for the
+        creation of a MAP domain and its associated rule-set";
+
+    typedef dmr-prefix-t {
+        type string {
+            pattern '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:)|((32{1})|(40{1})|(48{1})|(56{1})|(64{1})|(96{1}))';
+            pattern '(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|'
+            + '((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)'
+            + '(/.+)';
+        }
+        description
+                "The prefixes can only have one of the following lengths: 32,
+                40, 48, 56, 64, or 96. (The Well-Known Prefix is 96 bits long,
+                and can only be used in the last form of the table.)";
+        reference
+                "RFC 6052: IPv6 Addressing of IPv4/IPv6 Translators";
+        reference
+                "RFC 7599: Mapping of Address and Port using Translation (MAP-T)";
+    }
+    grouping domain-attributes-g {
+        description "";
+
+        leaf EA-Length {
+            description "The IPv4 EA-bits in the IPv6 address identify an IPv4 prefix/address
+                        (or part thereof) or a shared IPv4 address (or part thereof) and
+                        a port-set identifier.";
+            type int8 {
+                range "0 ... 48";
+            }
+        }
+
+        leaf PSID-offset {
+            type int8 {
+                range "0 ... 6";
+            }
+        }
+
+        leaf map-mtu {
+            description "";
+            type uint16 {
+                range "1280 ... 9216";
+            }
+        }
+        leaf mss-rewrite {
+            type uint16 {
+                range "1280 ... 9216";
+            }
+            must "map-mtu < mss-rewrite" {
+                error-message "The mss rewrite value must be 40 bytes less than the map domain
+                                mtu value";
+            }
+            must "(map-mtu - mss-rewrite) >= 40" {
+                error-message "The mss rewrite value must be 40 bytes less than the map domain
+                                mtu";
+            }
+        }
+    }
+
+    grouping rule-entry-g {
+        description "";
+        leaf rule-ipv6-prefix {
+            description "";
+            type dmr-prefix-t;
+        }
+        leaf rule-ipv4-prefix {
+            type inet:ipv4-prefix;
+        }
+    }
+
+    augment "/ncs:services" {
+        list map-domain {
+            description "One or more MAP CEs and BRs connected by means of an IPv6 network
+                        and sharing a common set of MAP Rules. A service provider may
+                        deploy a single MAP domain or may utilize multiple MAP domains.";
+            key "region name";
+            uses ncs:service-data;
+            ncs:servicepoint "map-domain";
+
+            leaf region {
+                description "One or more MAP CEs and BRs connected by means of an IPv6 network
+                                and sharing a common set of MAP Rules. A service provider may
+                                deploy a single MAP domain , or may utilize multiple MAP domains.";
+                mandatory true;
+                type leafref {
+                    path "/engdb:region/engdb:region-name";
+                }
+            }
+
+            leaf name {
+                description "Map domain name";
+                mandatory true;
+                type string ;
+            }
+
+            leaf BR-Prefix {
+                description "";
+                mandatory true;
+                type dmr-prefix-t;
+            }
+            uses domain-attributes-g;
+
+            leaf-list MAP-BR {
+                description "A MAP-enabled router managed by the service provider at the edge
+                                of a MAP domain. A BR has at least an IPv6-enabled interface and
+                                an IPv4 interface connected to the native IPv4 network. A MAP
+                                BR may also be referred to assimply a 'BR' within the context
+                                of MAP.";
+                type leafref {
+                    path "/ncs:devices/device";
+                }
+            }
+
+            list map-rule-set {
+
+                key id;
+                unique "rule-ipv6-prefix  rule-ipv4-prefix";
+                description
+                                "A rule set is composed of all the MAP Rules communicated to a
+                                device that are intended to determine the device's IP+port mapping
+                                and forwarding operations. ";
+
+                leaf id {
+                    type int8 {
+                        range "1 ... 32";
+                    }
+                }
+                leaf type {
+                    description "";
+                    type enumeration {
+                        enum global;
+                        enum extended;
+                    }
+                    default "global";
+                }
+                choice rule-type {
+                    description "";
+                    case global {
+                    	when "type='global'";
+                        description "Rules of this type will utilize the globally defined MAP Rules";
+                        uses rule-entry-g;
+                    }
+                    case extended {
+                    	when "type='extended'";
+                        description "Rules of this type will require the specification of alternate domain attributes";
+                        uses domain-attributes-g;
+                        uses rule-entry-g;
+                    }
+                }
+            }
+        }
+    }
+}

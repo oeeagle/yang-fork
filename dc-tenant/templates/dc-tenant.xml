@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-template xmlns="http://tail-f.com/ns/config/1.0" servicepoint="dc-tenant">
+   <devices xmlns="http://tail-f.com/ns/ncs">
+      <device>
+         <!--
+          Select the devices from some data structure in the service
+          model. In this skeleton the devices are specified in a leaf-list.
+          Select all devices in that leaf-list:
+      -->
+         <name>{/device}</name>
+         <config>
+            <vrf xmlns="http://tail-f.com/ned/cisco-nx">
+               <context>
+                  <id>{/name}</id>
+                  <address-family>
+                     <ipv4>
+                        <unicast>
+                           <route-target>
+                              <import tags="update" when="{/import-policy/external-networks/external-rib}">1{/ncs:services/dc-rib:dc-rib[dc-rib:name=current()/../external-rib]id}:10</import>
+                              <import tags="update" when="{/import-policy/datacenter-networks/tenant-rib}">1{/ncs:services/dc-tenant:dc-tenant[dc-tenant:name=current()/tenant-rib]Ecosystem-ID}:10</import>
+                              <export when="{/availability=&quot;regional&quot;}">1{/Ecosystem-ID}:80</export>
+                              <export when="{/availability=&quot;national&quot;}">1{/Ecosystem-ID}:10</export>
+                           </route-target>
+                        </unicast>
+                     </ipv4>
+                  </address-family>
+               </context>
+            </vrf>
+            <vlan xmlns="http://tail-f.com/ned/cisco-nx">
+               <vlan-list>
+                  <id>{/service-network/network-segment}{/Ecosystem-ID}</id>
+               </vlan-list>
+            </vlan>
+            <interface xmlns="http://tail-f.com/ned/cisco-nx">
+               <Vlan>
+                  <name>{/service-network/network-segment}{/Ecosystem-ID}</name>
+                  <description>{/service-network/segment-name}-{/service-network/inet4-allocation}-{/service-network/inet6-allocation}</description>
+                  <ip>
+                     <address>{/service-network/inet4-allocation}</address>
+                  </ip>
+                  <shutdown>false</shutdown>
+                  <vrf>
+                     <member>{/tenant-name}</member>
+                  </vrf>
+                  <hsrp>
+                     <version>2</version>
+                     <hsrp-list>
+                        <id>{/service-network/network-segment}{/Ecosystem-ID}</id>
+                        <ip>71.85.81.17</ip>
+                        <preempt />
+                     </hsrp-list>
+                  </hsrp>
+               </Vlan>
+            </interface>
+         </config>
+      </device>
+   </devices>
+</config-template>

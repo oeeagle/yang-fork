@@ -1,0 +1,44 @@
+module calea {
+  namespace "http://com/example/calea";
+  prefix calea;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import tailf-common { 
+   prefix tailf; 
+  }
+    description "this is a calea\lawful intercept base class";
+ 
+  
+  augment /ncs:services {
+    list calea {
+      key name;
+
+      uses ncs:service-data;
+      ncs:servicepoint "calea";
+
+      leaf name {
+        description "calea authentication group service name";
+        type string;
+      }
+
+      leaf-list device {
+        type leafref {
+          path "/ncs:devices/ncs:device/ncs:name";
+        }
+      }
+
+      leaf shared-secret {
+          tailf:info "shared secret";    
+          type string;
+        }
+
+
+
+    }
+  }
+}
