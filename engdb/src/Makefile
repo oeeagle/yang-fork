@@ -15,8 +15,14 @@ all:	fxs javac
 # Include standard NCS examples build definitions and rules
 include $(NCS_DIR)/src/ncs/build/include.ncs.mk
 
-SRC = $(wildcard yang/*.yang)
-FXS = $(SRC:yang/%.yang=../load-dir/%.fxs)
+YANG = $(wildcard yang/*.yang)
+SUBMODULES = $(shell grep -l belongs-to yang/*.yang)
+YANG_MODULES = $(filter-out $(SUBMODULES),$(YANG))
+
+
+
+
+FXS = $(YANG_MODULES:yang/%.yang=../load-dir/%.fxs)
 
 fxs:	$(FXS)
 
