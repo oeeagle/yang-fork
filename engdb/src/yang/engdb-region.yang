@@ -118,6 +118,7 @@ submodule engdb-region {
                 type boolean;
                 default "false";
             }
+            
             leaf l2vpn {
                 description
                                 "";
