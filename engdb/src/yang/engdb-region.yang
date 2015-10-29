@@ -22,7 +22,7 @@ submodule engdb-region {
                 "";
         key "region-name";
         leaf region-name {
-            type chtr-region-t;
+            type engdb:chtr-region-t;
         }
         container function {
             description
