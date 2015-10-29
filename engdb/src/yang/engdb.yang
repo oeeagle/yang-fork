@@ -2,14 +2,8 @@ module engdb {
     namespace "http://charterlab.com/base/engdb";
     prefix engdb;
 
-    include engdb-role;
-    include engdb-rib;
-    include engdb-taxon;
     include engdb-types;
-    include engdb-region;
 
-    import tailf-common { prefix tailf; }
-    import ietf-inet-types { prefix inet; }
 
     organization "Charter Engineering";
     contact
@@ -19,21 +13,6 @@ module engdb {
         of this module is the provide a facility that exposes Engineering
         certified attributes to aid in the creation of services";
 
-    revision 2015-10-10 {
-        description
-                "Initial revision";
-    }
-    container taxonomy{
-    	uses taxa-grp;
-    }
-    container role{
-    	uses role-grp;
-    }
-    container region{
-    	uses region-grp;
-    }
-    container rib{
-    	uses rib-grp;
-    }
+
 }
 
