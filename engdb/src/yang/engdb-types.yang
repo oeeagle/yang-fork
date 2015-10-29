@@ -5,11 +5,8 @@ submodule engdb-types {
 
     import tailf-common { prefix tailf; }
 
-    revision 2015-10-10 {
-        description
-                "Initial revision";
-    }
-
+description "common types used within charter";
+    
     //Device specific types
 
     typedef device-origin-t {
