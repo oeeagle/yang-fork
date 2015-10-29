@@ -1,8 +1,8 @@
 submodule engdb-rib {
-    belongs-to engdb{
+    belongs-to engdb {
         prefix engdb-rib;
     }
-    
+
     include engdb-types;
     include engdb-region;
     include engdb-role;
@@ -46,7 +46,6 @@ submodule engdb-rib {
             }
         }
         container SAFI {
-            //to be augmented               
-        	}
+            //to be augmented                       }
     }
 }

@@ -1,18 +1,16 @@
 module engdb {
     namespace "http://charterlab.com/base/engdb";
     prefix engdb;
-    
-    
+
     include engdb-role;
     include engdb-rib;
     include engdb-taxon;
     include engdb-types;
     include engdb-region;
-    
+
     import tailf-common { prefix tailf; }
     import ietf-inet-types { prefix inet; }
 
-    
     organization "Charter Engineering";
     contact
         "bill.armstrong@charter.com";

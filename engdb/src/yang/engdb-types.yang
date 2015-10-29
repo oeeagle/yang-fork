@@ -3,7 +3,6 @@ submodule engdb-types {
         prefix engdb-types;
     }
 
-    
     import tailf-common { prefix tailf; }
 
     organization "Charter Engineering";

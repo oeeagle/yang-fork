@@ -2,7 +2,6 @@ submodule engdb-taxon {
     belongs-to engdb {
         prefix engdb-taxon;
     }
-    
 
     include engdb-types;
     include engdb-region;

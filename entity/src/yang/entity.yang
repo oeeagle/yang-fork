@@ -14,6 +14,7 @@ module entity {
     typedef source-intf-t {
         description
                 "";
+
         type enumeration {
             enum "Loopback 0";
             enum "Loopback 14";
@@ -29,7 +30,7 @@ module entity {
             path "/ncs:devices/ncs:device/ncs:name";
         }
     }
-    
+
     augment "/ncs:devices/ncs:device" {
         container entity {
             description
@@ -39,13 +40,13 @@ module entity {
                                 "";
                 type engdb:device-function-t;
             }
-            container platform{
-            	leaf vendor{
-            		type string;
-            	}
-            	leaf model{
-            		type string;
-            	}
+            container platform {
+                leaf vendor {
+                    type string;
+                }
+                leaf model {
+                    type string;
+                }
             }
 
             grouping intf-grp {
