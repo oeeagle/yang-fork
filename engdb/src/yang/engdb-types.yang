@@ -1,8 +1,7 @@
-submodule engdb-types {
-    belongs-to engdb {
-        prefix engdb-types;
-    }
-
+module engdb-types {
+    namespace "http://charterlab.com/base/engdb";
+    prefix engdb-types;
+    
     import tailf-common { prefix tailf; }
 
     description "common types used within charter";

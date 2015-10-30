@@ -1,14 +1,10 @@
-submodule engdb-region {
-    belongs-to engdb {
- prefix engdb;
-    }
+module engdb-region {
+    namespace "http://charterlab.com/base/engdb-types";
+    prefix region;
 
-    include engdb-types;
-
-       
     import tailf-common { prefix tailf; }
     import ietf-inet-types { prefix inet; }
-
+    import engdb-types { prefix engdb-types; }
     organization "Charter Engineering";
     contact
         "bill.armstrong@charter.com";
@@ -20,153 +16,153 @@ submodule engdb-region {
                 "Initial revision";
     }
 
-    grouping region{
-    list region {
-        description
-                "";
-        key "region-name";
-        leaf region-name {
-            type chtr-region-t;
-        }
-        container function {
+    grouping region {
+        list region {
             description
                         "";
-            container protocols {
+            key "region-name";
+            leaf region-name {
+                type engdb-types:chtr-region-t;
+            }
+            container function {
                 description
                                 "";
-
-                container isis {
+                container protocols {
                     description
                                         "";
-                    leaf area-id {
+
+                    container isis {
                         description
                                                 "";
-                        tailf:info
-                                                " IS-IS Area-ID Regional Network Backbone Touchpoint(s) 49.0001
-                                                MO/IL Olivette, MO / Belleville, IL 49.002 Internal WAN N/A 49.0425
-                                                WI/MN Eau Claire, WI / Rochester, MN 49.065 MI Allendale, MI /
-                                                Saginaw, MI 49.15 Chicago Colo Chicago, IL 49.16 San Jose Colo
-                                                San Jose, CA 49.17 Ashburn Colo Ashburn, VA 49.18 Denver Colo
-                                                Denver, CO 49.185 AL/GA/TN/CARVA Atlanta, GA / Spartanburg, SC
-                                                / Greenville, SC 49.19 NV Reno, NV 49.2 Seattle Colo Seattle,
-                                                WA 49.22 SOCAL Monterey Park, CA / Riverside, CA 49.2225 SLO San
-                                                Luis Obispo, CA 49.225 WA/OR Medford, OR / Yakima, WA 49.23 Mountain
-                                                States Montana, Utah, Wyoming, and Colorado outside of Denver
-                                                49.24 TX Fort Worth, TX 49.25 Nebraska Grand Island, NE 49.3 Louisiana
-                                                Slidell, LA 49.835 MA/CT Oxford, MA 49.84 Sterling MNW Ashburn,
-                                                VA ";
-                        mandatory true;
-                        type string {
-                            pattern "49.[0-9]{1,4}";
+                        leaf area-id {
+                            description
+                                                        "";
+                            tailf:info
+                                                        " IS-IS Area-ID Regional Network Backbone Touchpoint(s) 49.0001
+                                                        MO/IL Olivette, MO / Belleville, IL 49.002 Internal WAN N/A 49.0425
+                                                        WI/MN Eau Claire, WI / Rochester, MN 49.065 MI Allendale, MI /
+                                                        Saginaw, MI 49.15 Chicago Colo Chicago, IL 49.16 San Jose Colo
+                                                        San Jose, CA 49.17 Ashburn Colo Ashburn, VA 49.18 Denver Colo
+                                                        Denver, CO 49.185 AL/GA/TN/CARVA Atlanta, GA / Spartanburg, SC
+                                                        / Greenville, SC 49.19 NV Reno, NV 49.2 Seattle Colo Seattle,
+                                                        WA 49.22 SOCAL Monterey Park, CA / Riverside, CA 49.2225 SLO San
+                                                        Luis Obispo, CA 49.225 WA/OR Medford, OR / Yakima, WA 49.23 Mountain
+                                                        States Montana, Utah, Wyoming, and Colorado outside of Denver
+                                                        49.24 TX Fort Worth, TX 49.25 Nebraska Grand Island, NE 49.3 Louisiana
+                                                        Slidell, LA 49.835 MA/CT Oxford, MA 49.84 Sterling MNW Ashburn,
+                                                        VA ";
+                            mandatory true;
+                            type string {
+                                pattern "49.[0-9]{1,4}";
+                            }
+                        }
+                    }
+                    container bgp {
+                        leaf region-asn {
+                            type inet:as-number ;
+                            default 20115;
+                        }
+                    }
+                    list origination-communities {
+                        key "name origin-community";
+                        leaf name {
+                            type string;
+                        }
+                        leaf origin-community {
+                            type string {
+                                pattern "20115:6[0-9]{5}";
+                            }
                         }
                     }
                 }
-                container bgp {
-                    leaf region-asn {
-                        type inet:as-number ;
-                        default 20115;
-                    }
+            }
+            container infra-services {
+                description
+                                "";
+                leaf interconnect {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
                 }
-                list origination-communities {
-                    key "name origin-community";
-                    leaf name {
-                        type string;
-                    }
-                    leaf origin-community {
-                        type string {
-                            pattern "20115:6[0-9]{5}";
-                        }
-                    }
+                leaf chtr-isis {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf ibgp-rr-client {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf ibgp-rr-server {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf ebgp-transit {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf ebgp-peering {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+
+                leaf l2vpn {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf lcr-sip-peering {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf anycast-recursive-dns {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
                 }
             }
-        }
-        container infra-services {
-            description
-                        "";
-            leaf interconnect {
+            container customer-services {
                 description
                                 "";
-                type boolean;
-                default "true";
-            }
-            leaf chtr-isis {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf ibgp-rr-client {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf ibgp-rr-server {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf ebgp-transit {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf ebgp-peering {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            
-            leaf l2vpn {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf lcr-sip-peering {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf anycast-recursive-dns {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-        }
-        container customer-services {
-            description
-                        "";
-            leaf hsi-docsis {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf sbi-docsis {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf fiber-internet {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf l2vpn {
-                description
-                                "";
-                type boolean;
-                default "false";
+                leaf hsi-docsis {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf sbi-docsis {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf fiber-internet {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf l2vpn {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
             }
         }
     }
-}
 }

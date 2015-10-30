@@ -1,7 +1,6 @@
-submodule engdb-taxon {
-    belongs-to engdb {
-        prefix engdb;
-    }
+module engdb-taxon {
+    namespace "http://charterlab.com/base/engdb/taxon";
+    prefix taxon;
 
     import ietf-inet-types { prefix inet; }
     import tailf-common { prefix tailf; }

@@ -2,9 +2,8 @@ module engdb {
     namespace "http://charterlab.com/base/engdb";
     prefix engdb;
 
-    include engdb-types;
+    import engdb-types{ prefix engdb-types; }
     	
-
 
     organization "Charter Engineering";
     contact

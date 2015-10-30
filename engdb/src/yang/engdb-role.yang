@@ -1,11 +1,10 @@
-submodule engdb-taxon {
-    belongs-to engdb {
-        prefix engdb;
-    }
-    include engdb-types {
-    }
-    import tailf-common { prefix tailf; }
+module engdb-role {
+    namespace "http://charterlab.com/base/engdb/role";
+    prefix role;
 
+    
+    import tailf-common { prefix tailf; }
+    import engdb-types { prefix engdb-types; }
     organization "Charter Engineering";
     contact
         "bill.armstrong@charter.com";
@@ -24,7 +23,7 @@ submodule engdb-taxon {
                         "";
             key "role-name";
             leaf role-name {
-                type device-function-t;
+                type engdb-types:device-function-t;
             }
             container function {
                 description
@@ -111,7 +110,7 @@ submodule engdb-taxon {
                         leaf IS-type {
                             description
                                                         "";
-                            type IS-type-t;
+                            type engdb-types:IS-type-t;
                         }
                         leaf metric-style {
                             type enumeration {
@@ -180,26 +179,26 @@ submodule engdb-taxon {
                         leaf rr-client-mode {
                             description
                                                         "";
-                            type bgp4-rr-client-t;
+                            type engdb-types:bgp4-rr-client-t;
                         }
                         container neighbor-group {
                             list ipv4-unicast {
                                 key group-name;
                                 leaf group-name {
-                                    type bgp4-inet4-neighbor-group-t;
+                                    type engdb-types:bgp4-inet4-neighbor-group-t;
                                 }
                             }
                             list ipv6-unicast {
                                 key group-name;
                                 leaf group-name {
-                                    type bgp4-inet6-neighbor-group-t ;
+                                    type engdb-types:bgp4-inet6-neighbor-group-t ;
                                 }
                             }
                             list vpnv4-unicast {
                                 key group-name;
                                 leaf group-name {
                                     description "";
-                                    type mpbgp-inet4-neighbor-group-t ;
+                                    type engdb-types:mpbgp-inet4-neighbor-group-t ;
                                 }
                             }
                         }

@@ -1,8 +1,6 @@
-submodule engdb-rib {
-    belongs-to engdb {
-        prefix engdb;
-    }
-
+module engdb-rib {
+    namespace "http://charterlab.com/base/engdb/rib";
+    prefix rib;
     import ietf-inet-types { prefix inet; }
 
     list rib {
