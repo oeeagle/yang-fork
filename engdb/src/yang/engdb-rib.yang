@@ -31,7 +31,7 @@ module engdb-rib {
                         or idea, and in terms of which it can be fully understood and
                         assessed.";
             type leafref {
-                path "/taxon:domain[id=current()/domain]/context/id";
+                path "/taxon:domain[domain:id=current()/domain]/taxon:context/id";
             }
         }
         container SAFI {
