@@ -1,12 +1,12 @@
 submodule engdb-types {
-    belongs-to "engdb" {
+    belongs-to engdb {
         prefix engdb;
     }
 
     import tailf-common { prefix tailf; }
 
-description "common types used within charter";
-    
+    description "common types used within charter";
+
     //Device specific types
 
     typedef device-origin-t {

@@ -1,13 +1,9 @@
 submodule engdb-taxon {
-    belongs-to "engdb"  {
+    belongs-to engdb {
         prefix engdb;
     }
-    
-
-    
 
     import ietf-inet-types { prefix inet; }
-
     import tailf-common { prefix tailf; }
 
     organization "Charter Engineering";
@@ -27,12 +23,6 @@ submodule engdb-taxon {
         or set of words by which an Entity or Service is known, addressed,
         or referred to. ";
 
-    revision 2015-10-10 {
-        description
-                "Initial revision";
-    }
-grouping taxa-grp{
-	
     list Domain {
         key "id";
         leaf id {
@@ -81,4 +71,4 @@ grouping taxa-grp{
         }
     }
 }
-}
+

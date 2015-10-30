@@ -1,10 +1,9 @@
-submodule engdb-role {
-    belongs-to "engdb"  {
+submodule engdb-taxon {
+    belongs-to engdb {
         prefix engdb;
     }
-
-    
-    include engdb-types;
+    include engdb-types {
+    }
     import tailf-common { prefix tailf; }
 
     organization "Charter Engineering";
@@ -19,455 +18,455 @@ submodule engdb-role {
                 "Initial revision";
     }
 
-    grouping role-grp{
-    list role {
-        description
-                "";
-        key "role-name";
-        leaf role-name {
-            type device-function-t;
-        }
-        container function {
+    grouping role-grp {
+        list role {
             description
                         "";
-            container system {
-                description
-                                "";
-                container aaa {
-                    leaf-list remote-auth {
-                        description "";
-                        type enumeration {
-                            enum "tacacs";
-                            enum "radius";
-                        }
-                    }
-                    container local-auth {
-                        leaf-list local-accounts {
-                            type string;
-                        }
-                    }
-                }
-                container snmp {
-                    leaf poll {
-                        type boolean;
-                    }
-                    leaf traps {
-                        type boolean;
-                    }
-                    leaf version {
-                        description "";
-                        type enumeration {
-                            enum "2";
-                            enum "2c";
-                            enum "3";
-                        }
-                    }
-                }
-                container logging {
-                    leaf local {
-                        type boolean;
-                    }
-                    leaf remote {
-                        type boolean;
-                    }
-                }
-                container time-protocols {
-                    leaf ntp {
-                        type boolean;
-                    }
-                    leaf ptp {
-                        type boolean;
-                    }
-                }
-                container dns {
-                    leaf look-up {
-                        description "";
-                        type boolean;
-                    }
-                    leaf recursive {
-                        description "";
-                        type boolean;
-                    }
-                }
+            key "role-name";
+            leaf role-name {
+                type device-function-t;
             }
-            container protocols {
+            container function {
                 description
                                 "";
-                container connected {
+                container system {
                     description
                                         "";
-                    container ethernet-options {
-                        leaf bridging {
-                            type boolean;
-                        }
-                    }
-                }
-                container static {
-                    description
-                                        "";
-                }
-                container isis {
-                    description
-                                        "";
-                    leaf IS-type {
-                        description
-                                                "";
-                        type IS-type-t;
-                    }
-                    leaf metric-style {
-                        type enumeration {
-                            enum "wide";
-                        }
-                    }
-                    leaf default-metric {
-                        description
-                                                "";
-                        type string;
-                    }
-                    container isis-log-options {
-                        leaf adjacency-changes {
-                            tailf:info "Enable sending of IS-IS syslog messages";
-                            type boolean;
-                            default "true";
-                        }
-                        leaf pdu-drops {
-                            tailf:info "Enable logging of Protocol Data Unit drops";
-                            type boolean;
-                            default "true";
-                        }
-                    }
-                    container spf-interval {
-                        leaf maximum-wait {
-                            type uint16;
-                            default "5000";
-                        }
-                        leaf initial-wait {
-                            type uint16;
-                            default "50";
-                        }
-                        leaf secondary-wait {
-                            type uint16;
-                            default "100";
-                        }
-                    }
-                    container lsp-gen-interval {
-                        leaf maximum-wait {
-                            type uint16;
-                            default "5000";
-                        }
-                        leaf initial-wait {
-                            type uint16;
-                            default "1";
-                        }
-                        leaf secondary-wait {
-                            type uint16;
-                            default "5000";
-                        }
-                    }
-                    leaf lsp-refresh-interval {
-                        description
-                                                "";
-                        type uint16;
-                        default "65000";
-                    }
-                    leaf max-lsp-lifetime {
-                        description
-                                                "";
-                        type uint16;
-                        default "65535";
-                    }
-                }
-                container bgp {
-                    leaf rr-client-mode {
-                        description
-                                                "";
-                        type bgp4-rr-client-t;
-                    }
-                    container neighbor-group {
-                        list ipv4-unicast {
-                            key group-name;
-                            leaf group-name {
-                                type bgp4-inet4-neighbor-group-t;
+                    container aaa {
+                        leaf-list remote-auth {
+                            description "";
+                            type enumeration {
+                                enum "tacacs";
+                                enum "radius";
                             }
                         }
-                        list ipv6-unicast {
-                            key group-name;
-                            leaf group-name {
-                                type bgp4-inet6-neighbor-group-t ;
-                            }
-                        }
-                        list vpnv4-unicast {
-                            key group-name;
-                            leaf group-name {
-                                description "";
-                                type mpbgp-inet4-neighbor-group-t ;
+                        container local-auth {
+                            leaf-list local-accounts {
+                                type string;
                             }
                         }
                     }
-                    container SAFI {
-                        description "";
-                        leaf ipv4-unicast {
+                    container snmp {
+                        leaf poll {
                             type boolean;
-                            reference "http://www.iana.org/go/rfc4760";
                         }
-                        leaf ipv6-unicast {
+                        leaf traps {
                             type boolean;
-                            reference "http://www.iana.org/go/rfc4760";
                         }
-                        leaf bgp-label {
+                        leaf version {
+                            description "";
+                            type enumeration {
+                                enum "2";
+                                enum "2c";
+                                enum "3";
+                            }
+                        }
+                    }
+                    container logging {
+                        leaf local {
+                            type boolean;
+                        }
+                        leaf remote {
+                            type boolean;
+                        }
+                    }
+                    container time-protocols {
+                        leaf ntp {
+                            type boolean;
+                        }
+                        leaf ptp {
+                            type boolean;
+                        }
+                    }
+                    container dns {
+                        leaf look-up {
                             description "";
                             type boolean;
-                            reference "http://www.iana.org/go/rfc3107";
                         }
-                        leaf vpnv4-unicast {
+                        leaf recursive {
+                            description "";
                             type boolean;
-                            reference "http://www.iana.org/go/rfc4364";
-                        }
-                        leaf vpnv6-unicast {
-                            type boolean;
-                        }
-                        leaf ipv4-flowspec {
-                            type boolean;
-                            reference "http://www.iana.org/go/rfc5575";
-                        }
-                        leaf vpnv4-flowspec {
-                            type boolean;
-                            reference "http://www.iana.org/go/rfc5575";
-                        }
-                        leaf ipv6-flowspec {
-                            type boolean;
-                        }
-                        leaf l2vpn-evpn {
-                            type boolean;
-                            reference "http://www.iana.org/go/rfc7432";
-                        }
-                        leaf mcast-vpn {
-                            type boolean;
-                            reference "http://www.iana.org/go/rfc6514";
                         }
                     }
                 }
-                container PIM {
-
+                container protocols {
                     description
                                         "";
-                    leaf pim-sm {
-                        description "";
-                        type boolean;
-                        default "true";
+                    container connected {
+                        description
+                                                "";
+                        container ethernet-options {
+                            leaf bridging {
+                                type boolean;
+                            }
+                        }
                     }
-                    leaf pim-boundary {
+                    container static {
+                        description
+                                                "";
+                    }
+                    container isis {
+                        description
+                                                "";
+                        leaf IS-type {
+                            description
+                                                        "";
+                            type IS-type-t;
+                        }
+                        leaf metric-style {
+                            type enumeration {
+                                enum "wide";
+                            }
+                        }
+                        leaf default-metric {
+                            description
+                                                        "";
+                            type string;
+                        }
+                        container isis-log-options {
+                            leaf adjacency-changes {
+                                tailf:info "Enable sending of IS-IS syslog messages";
+                                type boolean;
+                                default "true";
+                            }
+                            leaf pdu-drops {
+                                tailf:info "Enable logging of Protocol Data Unit drops";
+                                type boolean;
+                                default "true";
+                            }
+                        }
+                        container spf-interval {
+                            leaf maximum-wait {
+                                type uint16;
+                                default "5000";
+                            }
+                            leaf initial-wait {
+                                type uint16;
+                                default "50";
+                            }
+                            leaf secondary-wait {
+                                type uint16;
+                                default "100";
+                            }
+                        }
+                        container lsp-gen-interval {
+                            leaf maximum-wait {
+                                type uint16;
+                                default "5000";
+                            }
+                            leaf initial-wait {
+                                type uint16;
+                                default "1";
+                            }
+                            leaf secondary-wait {
+                                type uint16;
+                                default "5000";
+                            }
+                        }
+                        leaf lsp-refresh-interval {
+                            description
+                                                        "";
+                            type uint16;
+                            default "65000";
+                        }
+                        leaf max-lsp-lifetime {
+                            description
+                                                        "";
+                            type uint16;
+                            default "65535";
+                        }
+                    }
+                    container bgp {
+                        leaf rr-client-mode {
+                            description
+                                                        "";
+                            type bgp4-rr-client-t;
+                        }
+                        container neighbor-group {
+                            list ipv4-unicast {
+                                key group-name;
+                                leaf group-name {
+                                    type bgp4-inet4-neighbor-group-t;
+                                }
+                            }
+                            list ipv6-unicast {
+                                key group-name;
+                                leaf group-name {
+                                    type bgp4-inet6-neighbor-group-t ;
+                                }
+                            }
+                            list vpnv4-unicast {
+                                key group-name;
+                                leaf group-name {
+                                    description "";
+                                    type mpbgp-inet4-neighbor-group-t ;
+                                }
+                            }
+                        }
+                        container SAFI {
+                            description "";
+                            leaf ipv4-unicast {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc4760";
+                            }
+                            leaf ipv6-unicast {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc4760";
+                            }
+                            leaf bgp-label {
+                                description "";
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc3107";
+                            }
+                            leaf vpnv4-unicast {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc4364";
+                            }
+                            leaf vpnv6-unicast {
+                                type boolean;
+                            }
+                            leaf ipv4-flowspec {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc5575";
+                            }
+                            leaf vpnv4-flowspec {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc5575";
+                            }
+                            leaf ipv6-flowspec {
+                                type boolean;
+                            }
+                            leaf l2vpn-evpn {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc7432";
+                            }
+                            leaf mcast-vpn {
+                                type boolean;
+                                reference "http://www.iana.org/go/rfc6514";
+                            }
+                        }
+                    }
+                    container PIM {
+
+                        description
+                                                "";
+                        leaf pim-sm {
+                            description "";
+                            type boolean;
+                            default "true";
+                        }
+                        leaf pim-boundary {
+                            description
+                                                        "";
+                            type boolean;
+                            default "false";
+                        }
+                    }
+                    container mpls {
+                        leaf rsvp-te {
+                            description
+                                                        "";
+                            type boolean;
+                            default "false";
+                        }
+                        description
+                                                "";
+                        leaf ldp {
+                            type boolean;
+                            default "false";
+                        }
+                    }
+                }
+                container qos {
+                    description
+                                        "";
+                    leaf cos {
+                        description
+                                                "";
+                        type boolean;
+                        default "false";
+                    }
+                    leaf dscp {
+                        description
+                                                "";
+                        type boolean;
+                        default "false";
+                    }
+                    leaf exp {
                         description
                                                 "";
                         type boolean;
                         default "false";
                     }
                 }
-                container mpls {
-                    leaf rsvp-te {
+                container routing-options {
+                    container multicast {
+
+                        leaf igmpv3 {
+                            description "";
+                            type boolean;
+                        }
+                        leaf mldv2 {
+                            description "";
+                            type boolean;
+                            default "false";
+                        }
+                    }
+                    leaf bfd {
+                        type boolean;
+                        default "false";
+                    }
+
+                    leaf udld {
+                        type boolean;
+                        default "false";
+                    }
+                    container ethernet-OAM {
+                    }
+                    container flow {
+                        description "";
+                    }
+                }
+                container filter {
+                    container acl {
+                    }
+                    container prefix-set {
+                    }
+                    container community-set {
+                    }
+                    container as-set {
+                        description "";
+                    }
+                }
+                container policy-options {
+                    container route-policy {
+                    }
+                    container traffic-policy {
+                    }
+                }
+            }
+
+            container infra-services {
+                description
+                                "";
+                leaf interconnect {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf isis {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf multicast {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf mpls-ldp {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf mpls-rsvp {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf inet4-rr-client {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf inet6-rr-client {
+                    description
+                                        "";
+                    type boolean;
+                    default "true";
+                }
+                leaf ibgp-rr-server {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf ebgp-transit {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf ebgp-peering {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+
+                leaf lcr-sip-peering {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+            }
+            container customer-services {
+
+                description
+                                "";
+                leaf hsi-docsis {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf sbi-docsis {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                leaf fiber-internet {
+                    description
+                                        "";
+                    type boolean;
+                    default "false";
+                }
+                container optical-ethernet {
+                    description "";
+                    leaf EPL {
                         description
                                                 "";
                         type boolean;
                         default "false";
                     }
-                    description
-                                        "";
-                    leaf ldp {
+                    leaf EVPL {
+                        description
+                                                "";
                         type boolean;
                         default "false";
                     }
-                }
-            }
-            container qos {
-                description
-                                "";
-                leaf cos {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
-                }
-                leaf dscp {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
-                }
-                leaf exp {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
-                }
-            }
-            container routing-options {
-                container multicast {
-
-                    leaf igmpv3 {
-                        description "";
-                        type boolean;
-                    }
-                    leaf mldv2 {
-                        description "";
+                    leaf EPLAN {
+                        description
+                                                "";
                         type boolean;
                         default "false";
                     }
-                }
-                leaf bfd {
-                    type boolean;
-                    default "false";
-                }
-
-                leaf udld {
-                    type boolean;
-                    default "false";
-                }
-                container ethernet-OAM {
-                }
-                container flow {
-                    description "";
-                }
-            }
-            container filter {
-                container acl {
-                }
-                container prefix-set {
-                }
-                container community-set {
-                }
-                container as-set {
-                    description "";
-                }
-            }
-            container policy-options {
-                container route-policy {
-                }
-                container traffic-policy {
-                }
-            }
-        }
-
-        container infra-services {
-            description
-                        "";
-            leaf interconnect {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf isis {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf multicast {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf mpls-ldp {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf mpls-rsvp {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf inet4-rr-client {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf inet6-rr-client {
-                description
-                                "";
-                type boolean;
-                default "true";
-            }
-            leaf ibgp-rr-server {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf ebgp-transit {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf ebgp-peering {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-
-            leaf lcr-sip-peering {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-        }
-        container customer-services {
-
-            description
-                        "";
-            leaf hsi-docsis {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf sbi-docsis {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            leaf fiber-internet {
-                description
-                                "";
-                type boolean;
-                default "false";
-            }
-            container optical-ethernet {
-                description "";
-                leaf EPL {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
-                }
-                leaf EVPL {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
-                }
-                leaf EPLAN {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
-                }
-                leaf E-LINE {
-                    description
-                                        "";
-                    type boolean;
-                    default "false";
+                    leaf E-LINE {
+                        description
+                                                "";
+                        type boolean;
+                        default "false";
+                    }
                 }
             }
         }
     }
-}
 }

@@ -15,7 +15,7 @@ all:	fxs javac
 # Include standard NCS examples build definitions and rules
 include $(NCS_DIR)/src/ncs/build/include.ncs.mk
 
-YANGPATH= --yangpath /opt/ncs/current/packages/YANG/engdb/src/yang
+YANGPATH= --yangpath /opt/ncs/current/packages/yang-fork/generic-package-name/src/yang
 
 YANG = $(wildcard yang/*.yang)
 SUBMODULES = $(shell grep -l belongs-to yang/*.yang)

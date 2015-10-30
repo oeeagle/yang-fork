@@ -1,15 +1,10 @@
 submodule engdb-rib {
-    belongs-to "engdb"  {
+    belongs-to engdb {
         prefix engdb;
     }
 
-    
-
-    
     import ietf-inet-types { prefix inet; }
 
-
-grouping rib-grp{
     list rib {
         description "A discriptor for a discrete routing information base ";
         key "name as-number";
@@ -41,8 +36,6 @@ grouping rib-grp{
             }
         }
         container SAFI {
-            //to be augmented       
+            //to be augmented               }
     }
-}
-}
 }
