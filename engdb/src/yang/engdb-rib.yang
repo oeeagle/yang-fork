@@ -2,6 +2,7 @@ module engdb-rib {
     namespace "http://charterlab.com/base/engdb/rib";
     prefix rib;
     import ietf-inet-types { prefix inet; }
+    import engdb-taxon { prefix taxon; }
 
     list rib {
         description "A discriptor for a discrete routing information base ";
