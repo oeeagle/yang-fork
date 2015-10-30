@@ -22,12 +22,12 @@ module engdb-taxon {
         or set of words by which an Entity or Service is known, addressed,
         or referred to. ";
 
-    list Domain {
+    list domain {
         key "id";
         leaf id {
             type string;
         }
-        list Context {
+        list context {
             description
                         "";
             key "id";
@@ -43,7 +43,7 @@ module engdb-taxon {
                     type string;
                 }
 
-                list Class {
+                list class {
                     description
                                         "";
                     key "id";
@@ -51,7 +51,7 @@ module engdb-taxon {
                         type string;
                     }
 
-                    list Name {
+                    list name {
                         description
                                                 "";
                         key "id instance";
