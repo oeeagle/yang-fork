@@ -20,7 +20,7 @@
                </community>
             </snmp-server>
             <snmp-server xmlns="http://tail-f.com/ned/cisco-ios-xr">
-               <location>{/node-list/city} {/node-list/state} {/node-list/realestate-id}</location>
+               <location>{/node-list/device/city} {/node-list/state} {/node-list/realestate-id}</location>
                <view>
                   <view-name>restricted</view-name>
                   <oid-list>
@@ -57,7 +57,7 @@
       <access-list>
       <named-acl>
       <name>{/access-list/inet4/name}</name>
-      <rule>
+      <rule tags="replace">
       <id>{/access-list/inet4/name/id}</id>
       <line>{/access-list/inet4/name/id/action} ipv4 {/access-list/inet4/name/id/prefix}</line> 
               </rule>           
