@@ -59,7 +59,8 @@
       <name>{/access-list/inet4/name}</name>
       <rule>
       <id>{/access-list/inet4/name/id}</id>
-      <line>{/access-list/inet4/name/id/action} ipv4 {/access-list/inet4/name/id/prefix}</line>            
+      <line>{/access-list/inet4/name/id/action} ipv4 {/access-list/inet4/name/id/prefix}</line> 
+              </rule>           
         <rule>
           <id>256</id>
           <line>deny ipv4 any any</line>
