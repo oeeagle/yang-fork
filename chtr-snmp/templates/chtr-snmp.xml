@@ -67,6 +67,7 @@
         </rule>
              </named-acl> 
                    </access-list>    
+                   </ipv4>
          </config>
       </device>
    </devices>
