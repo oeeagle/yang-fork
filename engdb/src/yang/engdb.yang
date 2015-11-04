@@ -3,7 +3,6 @@ module engdb {
   prefix engdb;
 
   include engdb-types;
-  include engdb-region;
   include engdb-role;
   
 

@@ -1,6 +1,6 @@
 submodule engdb-types {
   belongs-to engdb {
-    prefix engdb-types;
+    prefix engdb;
   }
 
   import tailf-common {
