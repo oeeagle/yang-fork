@@ -65,7 +65,7 @@ module chtr-snmp {
             container community-list {
                 list community {
 
-                    key "id type address-family acl";
+                    key "id type address-family";
                     description
                                         "";
 
