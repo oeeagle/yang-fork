@@ -1,6 +1,6 @@
 submodule engdb-role {
   belongs-to engdb {
-    prefix engdb-role;
+	    prefix engdb;
   }
 
   include engdb-types;

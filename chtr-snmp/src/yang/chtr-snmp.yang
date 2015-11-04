@@ -1,0 +1,198 @@
+module chtr-snmp {
+    namespace "http://com/example/chtr-snmp";
+    prefix chtr-snmp;
+
+    import ietf-inet-types { prefix inet; }
+    import tailf-ncs { prefix ncs; }
+    import tailf-common { prefix tailf; }
+
+    description
+        "";
+
+    revision 2015-11-02 {
+        description
+                "initial model: The goal of this service is to support the user
+                input of 'set service chtr-snmp <name> [device] <SNMP-host-1>
+                <SNMP-host-2> <SNMP-host-3>' where name describes the NTP service,
+                device is a list <SNMP-host-1> is madatory and <SNMP-host-2> and
+                <SNMP-host-3> are optional Each service instance is made unique
+                by the declaraion of <name> and the ordered combination of SNMP-hosts.
+                The devices added to this service act as subscribers to the service
+                RATHER than the service being dependent upon the devices";
+    }
+
+    augment "/ncs:services" {
+        list chtr-snmp {
+            key "name";
+            uses ncs:service-data;
+            ncs:servicepoint "chtr-snmp";
+            leaf name {
+                description
+                                "SNMP group name";
+                tailf:info "SNMP authentication device group name";
+                type string;
+            }
+            list device {
+                leaf name {
+                    description
+                                        "";
+                    type leafref {
+                        path "/ncs:devices/ncs:device/ncs:name";
+                    }
+                    must "count(../../chtr-snmp[name != current()/../name]device[name =
+                                        current()/../name]) = 0";
+                }
+                container location {
+                    leaf city {
+                        type string {
+                            length "4";
+                        }
+                    }
+                    leaf state {
+                        type string {
+                            length "2";
+                            pattern "^((A[LKZR])|(C[AOT])|(D[EC])|(FL)|(GA)|(HI)|(I[DLNA])|(K[SY])|(LA)|(M[EDAINSOT])|(N[EVHJMYCD])|(O[HKR])|(PA)|(RI)|(S[CD])|(T[NX])|(UT)|(V[TA])|(W[AVIY]))$";
+                        }
+                    }
+                    leaf realestate-id {
+                        type string {
+                            length "6";
+                        }
+                    }
+                }
+            }
+            list community {
+
+                key id;
+                description
+                                "";
+
+                leaf id {
+                    type string {
+                    }
+                }
+                leaf type {
+                    description "";
+                    type enumeration {
+                        enum read-only;
+                        enum read-write;
+                    }
+                    default "read-only";
+                }
+
+                choice type {
+                    description "";
+                    case ro {
+                        when "type='read-only'";
+                        description "Rules of this type will utilize the globally defined MAP Rules";
+                        leaf address-family {
+                            description "";
+                            type enumeration {
+                                enum ipv4;
+                                enum ipv6;
+                            }
+                            default "ipv4";
+                        }
+                        choice address-family {
+                            description "";
+                            case ipv4 {
+                                leaf acl {
+                                    type leafref {
+                                        path "/ncs:services/chtr-snmp/inet4-access-list";
+                                    }
+                                }
+                            }
+                            case ipv6 {
+                                description "";
+                                leaf acl {
+                                    description "";
+                                    type leafref {
+                                        path "/ncs:services/chtr-snmp/inet6-access-list";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    case rw {
+                        when "type='read-write'";
+                        description "Rules of this type will require the specification of alternate
+                                                domain attributes";
+                        leaf address-family {
+                            description "";
+                            type enumeration {
+                                enum ipv4;
+                                enum ipv6;
+                            }
+                            default "ipv4";
+                        }
+                        choice address-family {
+                            description "";
+                            case ipv4 {
+                                leaf acl {
+                                    description "";
+                                    type leafref {
+                                        path "/ncs:services/chtr-snmp/inet4-access-list";
+                                    }
+                                }
+                            }
+                            case ipv6 {
+                                description "";
+                                leaf acl {
+                                    description "";
+                                    type leafref {
+                                        path "/ncs:services/chtr-snmp/inet6-access-list";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            list inet4-access-list {
+                description "";
+                key name;
+                unique "id inet4-prefix";
+                leaf name {
+                    description "";
+                    type string;
+                }
+                leaf id {
+                    description "";
+                    type int16;
+                }
+                leaf action {
+                    type enumeration {
+                        enum "permit";
+                        enume "deny";
+                    }
+                }
+                leaf prefix {
+                    type inet:ipv4-prefix;
+                }
+            }
+            list inet6-access-list {
+                description "";
+                key name;
+                unique "id inet4-prefix";
+                leaf name {
+                    description "";
+                    type string;
+                }
+                leaf id {
+                    description "";
+                    type int16;
+                }
+                leaf action {
+                    type enumeration {
+                        enum "permit";
+                        enume "deny";
+                    }
+                }
+                leaf prefix {
+                    type inet:ipv6-prefix;
+                }
+            }
+        }
+    }
+}
