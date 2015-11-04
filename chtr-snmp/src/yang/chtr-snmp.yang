@@ -163,7 +163,7 @@ module chtr-snmp {
                 leaf action {
                     type enumeration {
                         enum "permit";
-                        enume "deny";
+                        enum "deny";
                     }
                 }
                 leaf prefix {
@@ -185,7 +185,7 @@ module chtr-snmp {
                 leaf action {
                     type enumeration {
                         enum "permit";
-                        enume "deny";
+                        enum "deny";
                     }
                 }
                 leaf prefix {
