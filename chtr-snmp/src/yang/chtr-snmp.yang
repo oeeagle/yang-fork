@@ -32,6 +32,55 @@ module chtr-snmp {
                 tailf:info "SNMP group name";
                 type string;
             }
+            list inet4-access-list {
+                description "";
+                key "name id action prefix";
+                unique "id prefix";
+                leaf name {
+                    description "";
+                    type string;
+                }
+                leaf id {
+                    description "";
+                    type int16{
+                    	range "1 .. 255";
+                    }
+                }
+                leaf action {
+                    type enumeration {
+                        enum "permit";
+                        enum "deny";
+                    }
+                }
+                leaf prefix {
+                    description "";
+                    type inet:ipv4-prefix;
+                }
+            }
+            list inet6-access-list {
+                description "";
+                key "name id action prefix";
+                unique "id prefix";
+                leaf name {
+                    description "";
+                    type string;
+                }
+                leaf id {
+                    description "";
+                    type int16{
+                    	range "1 .. 255";
+                    }
+                }
+                leaf action {
+                    type enumeration {
+                        enum "permit";
+                        enum "deny";
+                    }
+                }
+                leaf prefix {
+                    type inet:ipv6-prefix;
+                }
+            }
             list device {
             	key "name city state realestate-id";
                 leaf name {
@@ -144,55 +193,6 @@ module chtr-snmp {
                             }
                         }
                     }
-                }
-            }
-            list inet4-access-list {
-                description "";
-                key "name id action prefix";
-                unique "id prefix";
-                leaf name {
-                    description "";
-                    type string;
-                }
-                leaf id {
-                    description "";
-                    type int16{
-                    	range "1 .. 255";
-                    }
-                }
-                leaf action {
-                    type enumeration {
-                        enum "permit";
-                        enum "deny";
-                    }
-                }
-                leaf prefix {
-                    description "";
-                    type inet:ipv4-prefix;
-                }
-            }
-            list inet6-access-list {
-                description "";
-                key "name id action prefix";
-                unique "id prefix";
-                leaf name {
-                    description "";
-                    type string;
-                }
-                leaf id {
-                    description "";
-                    type int16{
-                    	range "1 .. 255";
-                    }
-                }
-                leaf action {
-                    type enumeration {
-                        enum "permit";
-                        enum "deny";
-                    }
-                }
-                leaf prefix {
-                    type inet:ipv6-prefix;
                 }
             }
         }
