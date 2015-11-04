@@ -63,6 +63,7 @@
                      </rule>
                   </named-acl>
                   <named-acl>
+                   <name>{/access-list/inet4/name}</name>
                      <rule>
                         <id>256</id>
                         <line>deny ipv4 any any</line>
