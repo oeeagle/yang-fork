@@ -65,7 +65,8 @@
           <id>256</id>
           <line>deny ipv4 any any</line>
         </rule>
-             </named-acl>     
+             </named-acl> 
+                   </access-list>    
          </config>
       </device>
    </devices>
