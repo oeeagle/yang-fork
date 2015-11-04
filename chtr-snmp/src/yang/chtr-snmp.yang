@@ -149,15 +149,17 @@ module chtr-snmp {
             }
             list inet4-access-list {
                 description "";
-                key name;
-                unique "id action prefix";
+                key "name id action prefix";
+                unique "id prefix";
                 leaf name {
                     description "";
                     type string;
                 }
                 leaf id {
                     description "";
-                    type int16;
+                    type int16{
+                    	range "1 ... 255";
+                    }
                 }
                 leaf action {
                     type enumeration {
@@ -171,15 +173,17 @@ module chtr-snmp {
             }
             list inet6-access-list {
                 description "";
-                key name;
-                unique "id action prefix";
+                key "name id action prefix";
+                unique "id prefix";
                 leaf name {
                     description "";
                     type string;
                 }
                 leaf id {
                     description "";
-                    type int16;
+                    type int16{
+                    	range "1 ... 255";
+                    }
                 }
                 leaf action {
                     type enumeration {
