@@ -96,7 +96,7 @@ module chtr-snmp {
                             case ipv4 {
                                 leaf acl {
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp[name = current()]inet4-access-list";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet4-access-list";
                                     }
                                 }
                             }
@@ -105,7 +105,7 @@ module chtr-snmp {
                                 leaf acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp[name = current()]inet6-access-list";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet6-access-list";
                                     }
                                 }
                             }
@@ -130,7 +130,7 @@ module chtr-snmp {
                                 leaf acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp[name = current()]inet4-access-list";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet4-access-list";
                                     }
                                 }
                             }
@@ -139,7 +139,7 @@ module chtr-snmp {
                                 leaf acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp[name = current()]inet6-access-list";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet6-access-list";
                                     }
                                 }
                             }
