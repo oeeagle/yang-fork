@@ -158,7 +158,7 @@ module chtr-snmp {
                 leaf id {
                     description "";
                     type int16{
-                    	range "1 ... 255";
+                    	range "1 ... 64";
                     }
                 }
                 leaf action {
@@ -182,7 +182,7 @@ module chtr-snmp {
                 leaf id {
                     description "";
                     type int16{
-                    	range "1 ... 255";
+                    	range "1 ... 64";
                     }
                 }
                 leaf action {
