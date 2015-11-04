@@ -65,14 +65,9 @@ module chtr-snmp {
             container community-list {
                 list community {
 
-                    key "id type address-family";
+                    key "type id";
                     description
                                         "";
-
-                    leaf id {
-                        type string {
-                        }
-                    }
                     leaf type {
                         description "";
                         type enumeration {
@@ -80,6 +75,10 @@ module chtr-snmp {
                             enum read-write;
                         }
                         default "read-only";
+                    }
+                    leaf id {
+                        type string {
+                        }
                     }
                     leaf address-family {
                         description "";
