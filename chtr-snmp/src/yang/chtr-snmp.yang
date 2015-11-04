@@ -78,12 +78,12 @@ module chtr-snmp {
                     default "read-only";
                 }
 
-                choice type {
+                choice access-type {
                     description "";
                     case ro {
                         when "type='read-only'";
                         description "Rules of this type will utilize the globally defined MAP Rules";
-                        leaf address-family {
+                        leaf ro-af {
                             description "";
                             type enumeration {
                                 enum ipv4;
@@ -91,22 +91,22 @@ module chtr-snmp {
                             }
                             default "ipv4";
                         }
-                        choice af {
+                        choice ro-acl {
                             description "";
                             case ipv4 {
-                                leaf acl {
+                                leaf inet4-ro-acl {
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()../../name]chtr-snmp:inet4-access-list";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:inet4-access-list/chtr-snmp:name";
                                     }
                                 }
                             }
                             case ipv6 {
                                 description "";
-                                leaf acl {
+                                leaf inet6-ro-acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet6-access-list";
-                                    }
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:inet6-access-list/chtr-snmp:name";
+                                        }
                                 }
                             }
                         }
@@ -116,7 +116,7 @@ module chtr-snmp {
                         when "type='read-write'";
                         description "Rules of this type will require the specification of alternate
                                                 domain attributes";
-                        leaf address-family {
+                        leaf rw-af {
                             description "";
                             type enumeration {
                                 enum ipv4;
@@ -124,22 +124,22 @@ module chtr-snmp {
                             }
                             default "ipv4";
                         }
-                        choice af {
+                        choice rw-acl {
                             description "";
                             case ipv4 {
-                                leaf acl {
+                                leaf inet4-rw-acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet4-access-list/chtr-snmp:name";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:inet4-access-list/chtr-snmp:name";
                                     }
                                 }
                             }
                             case ipv6 {
                                 description "";
-                                leaf acl {
+                                leaf inet6-rw-acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../name]chtr-snmp:inet6-access-list";
+                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:inet6-access-list/chtr-snmp:name";
                                     }
                                 }
                             }
