@@ -150,7 +150,7 @@ module chtr-snmp {
             list inet4-access-list {
                 description "";
                 key name;
-                unique "id prefix";
+                unique "id action prefix";
                 leaf name {
                     description "";
                     type string;
@@ -172,7 +172,7 @@ module chtr-snmp {
             list inet6-access-list {
                 description "";
                 key name;
-                unique "id prefix";
+                unique "id action prefix";
                 leaf name {
                     description "";
                     type string;
