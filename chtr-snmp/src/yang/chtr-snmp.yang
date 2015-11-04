@@ -44,7 +44,6 @@ module chtr-snmp {
                         type leafref {
                             path "/ncs:devices/ncs:device/ncs:name";
                         }
-
                     }
                     leaf city {
                         type string {
@@ -63,88 +62,50 @@ module chtr-snmp {
                     }
                 }
             }
-            list community {
+            container community-list {
+                list community {
 
-                key id;
-                description
-                                "";
+                    key "id type address-family acl";
+                    description
+                                        "";
 
-                leaf id {
-                    type string {
-                    }
-                }
-                leaf type {
-                    description "";
-                    type enumeration {
-                        enum read-only;
-                        enum read-write;
-                    }
-                    default "read-only";
-                }
-
-                choice access-type {
-                    description "";
-                    case ro {
-                        when "type='read-only'";
-                        description "Rules of this type will utilize the globally defined MAP Rules";
-                        leaf ro-af {
-                            description "";
-                            type enumeration {
-                                enum ipv4;
-                                enum ipv6;
-                            }
-                            default "ipv4";
+                    leaf id {
+                        type string {
                         }
-                        choice ro-acl {
-                            description "";
-                            case ipv4 {
-                                leaf inet4-ro-acl {
-                                    type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:access-list/chtr-snmp:inet4/chtr-snmp:name";
-                                    }
-                                }
-                            }
-                            case ipv6 {
+                    }
+                    leaf type {
+                        description "";
+                        type enumeration {
+                            enum read-only;
+                            enum read-write;
+                        }
+                        default "read-only";
+                    }
+                    leaf address-family {
+                        description "";
+                        mandatory "true";
+                        type enumeration {
+                            enum inet4;
+                            enum inet6;
+                        }
+                    }
+                    choice acl {
+                        description "";
+                        case ipv4 {
+                            when "address-family='inet4'";
+                            leaf inet4-acl {
                                 description "";
-                                leaf inet6-ro-acl {
-                                    description "";
-                                    type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:access-list/chtr-snmp:inet6/chtr-snmp:name";
-                                    }
+                                type leafref {
+                                    path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:access-list/chtr-snmp:inet4/chtr-snmp:name";
                                 }
                             }
                         }
-                    }
-
-                    case rw {
-                        when "type='read-write'";
-                        description "Rules of this type will require the specification of alternate
-                                                domain attributes";
-                        leaf rw-af {
-                            description "";
-                            type enumeration {
-                                enum ipv4;
-                                enum ipv6;
-                            }
-                            default "ipv4";
-                        }
-                        choice rw-acl {
-                            description "";
-                            case ipv4 {
-                                leaf inet4-rw-acl {
-                                    description "";
-                                    type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:access-list/chtr-snmp:inet4/chtr-snmp:name";
-                                    }
-                                }
-                            }
-                            case ipv6 {
+                        case ipv6 {
+                            when "address-family='inet6'";
+                            leaf inet6-acl {
                                 description "";
-                                leaf inet6-rw-acl {
-                                    description "";
-                                    type leafref {
-                                        path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:access-list/chtr-snmp:inet6/chtr-snmp:name";
-                                    }
+                                type leafref {
+                                    path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../name]/chtr-snmp:access-list/chtr-snmp:inet6/chtr-snmp:name";
                                 }
                             }
                         }
