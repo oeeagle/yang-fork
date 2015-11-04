@@ -29,10 +29,11 @@ module chtr-snmp {
             leaf name {
                 description
                                 "SNMP group name";
-                tailf:info "SNMP authentication device group name";
+                tailf:info "SNMP group name";
                 type string;
             }
             list device {
+            	key "name city state realestate-id";
                 leaf name {
                     description
                                         "";
@@ -40,7 +41,6 @@ module chtr-snmp {
                         path "/ncs:devices/ncs:device/ncs:name";
                     }
                 }
-                container location {
                     leaf city {
                         type string {
                             length "4";
@@ -57,7 +57,7 @@ module chtr-snmp {
                         }
                     }
                 }
-            }
+            
             list community {
 
                 key id;
@@ -167,6 +167,7 @@ module chtr-snmp {
                     }
                 }
                 leaf prefix {
+                    description "";
                     type inet:ipv4-prefix;
                 }
             }
