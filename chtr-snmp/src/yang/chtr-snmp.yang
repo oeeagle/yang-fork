@@ -39,7 +39,6 @@ module chtr-snmp {
                     type leafref {
                         path "/ncs:devices/ncs:device/ncs:name";
                     }
-                    must "count(../../chtr-snmp[name != current()/../name]device[name = current()/../name]) = 0";
                 }
                 container location {
                     leaf city {
@@ -92,12 +91,12 @@ module chtr-snmp {
                             }
                             default "ipv4";
                         }
-                        choice address-family {
+                        choice af {
                             description "";
                             case ipv4 {
                                 leaf acl {
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp/inet4-access-list";
+                                        path "/ncs:services/chtr-snmp[name = current()]inet4-access-list";
                                     }
                                 }
                             }
@@ -106,7 +105,7 @@ module chtr-snmp {
                                 leaf acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp/inet6-access-list";
+                                        path "/ncs:services/chtr-snmp[name = current()]inet6-access-list";
                                     }
                                 }
                             }
@@ -125,13 +124,13 @@ module chtr-snmp {
                             }
                             default "ipv4";
                         }
-                        choice address-family {
+                        choice af {
                             description "";
                             case ipv4 {
                                 leaf acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp/inet4-access-list";
+                                        path "/ncs:services/chtr-snmp[name = current()]inet4-access-list";
                                     }
                                 }
                             }
@@ -140,7 +139,7 @@ module chtr-snmp {
                                 leaf acl {
                                     description "";
                                     type leafref {
-                                        path "/ncs:services/chtr-snmp/inet6-access-list";
+                                        path "/ncs:services/chtr-snmp[name = current()]inet6-access-list";
                                     }
                                 }
                             }
@@ -151,7 +150,7 @@ module chtr-snmp {
             list inet4-access-list {
                 description "";
                 key name;
-                unique "id inet4-prefix";
+                unique "id prefix";
                 leaf name {
                     description "";
                     type string;
@@ -173,7 +172,7 @@ module chtr-snmp {
             list inet6-access-list {
                 description "";
                 key name;
-                unique "id inet4-prefix";
+                unique "id prefix";
                 leaf name {
                     description "";
                     type string;
