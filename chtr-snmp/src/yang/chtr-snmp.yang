@@ -44,7 +44,7 @@ module chtr-snmp {
                         type leafref {
                             path "/ncs:devices/ncs:device/ncs:name";
                         }
-                        must "count(../../../chtr-snmp[name != current()/../../name]/node-list[device = current()/../device]) = 0"{error-message "This device is already configured for SNMP in another group";}
+                        must "count(../../../chtr-snmp[name != current()/../../name]/node-list/device[name = current()/../name]) = 0"{error-message "This device is already configured for SNMP in another group";}
 
                     }
                     leaf city {
