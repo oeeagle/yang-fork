@@ -23,6 +23,7 @@ module chtr-snmp {
 
     augment "/ncs:services" {
         list chtr-snmp {
+            description "";
             key "name";
             uses ncs:service-data;
             ncs:servicepoint "chtr-snmp";
@@ -33,8 +34,9 @@ module chtr-snmp {
                 type string;
             }
 
-            container device-list {
-                list member {
+            container node-list {
+                list device {
+                    description "";
                     key "name city state realestate-id";
                     leaf name {
                         description
@@ -42,6 +44,8 @@ module chtr-snmp {
                         type leafref {
                             path "/ncs:devices/ncs:device/ncs:name";
                         }
+                        must "count(../../../chtr-snmp[name != current()/../../name]/node-list[device = current()/../device]) = 0"{error-message "This device is already configured for SNMP in another group";}
+
                     }
                     leaf city {
                         type string {
@@ -149,6 +153,7 @@ module chtr-snmp {
                 }
             }
             container access-list {
+                description "";
                 list inet4 {
                     description "";
                     key "name id action prefix";
