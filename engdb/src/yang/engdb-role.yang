@@ -1,10 +1,13 @@
-module engdb-role {
-    namespace "http://charterlab.com/base/engdb/role";
-    prefix role;
+submodule engdb-role {
+  belongs-to engdb {
+    prefix engdb-role;
+  }
 
-    
-    import tailf-common { prefix tailf; }
-    import engdb-types { prefix engdb-types; }
+  include engdb-types;
+  import tailf-common {
+    prefix tailf;
+  }
+  
     organization "Charter Engineering";
     contact
         "bill.armstrong@charter.com";
@@ -12,12 +15,6 @@ module engdb-role {
         "Charter specfic device attribite model, this models YANG's Jim
         Rampley's Devices and Functions device reference";
 
-    revision 2015-10-10 {
-        description
-                "Initial revision";
-    }
-
-    grouping role-grp {
         list role {
             description
                         "";
@@ -468,4 +465,4 @@ module engdb-role {
             }
         }
     }
-}
+

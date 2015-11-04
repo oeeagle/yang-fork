@@ -1,13 +1,23 @@
-module engdb-types {
-    namespace "http://charterlab.com/base/engdb";
+submodule engdb-types {
+  belongs-to engdb {
     prefix engdb-types;
-    
-    import tailf-common { prefix tailf; }
+  }
 
-    description "common types used within charter";
+  import tailf-common {
+    prefix tailf;
+  }
 
-    //Device specific types
+  organization "Charter Engineering";
+  contact
+    "bill.armstrong@charter.com";
+  description
+    "Charter Specific derived types";
 
+  revision 2015-10-10 {
+      description
+              "Initial revision";
+  }
+  
     typedef device-origin-t {
         type enumeration {
             enum "existing";

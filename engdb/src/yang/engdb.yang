@@ -1,18 +1,23 @@
 module engdb {
-    namespace "http://charterlab.com/base/engdb";
-    prefix engdb;
+  namespace "http://charterlab.com/example/engdb";
+  prefix engdb;
 
-    import engdb-types{ prefix engdb-types; }
-    	
+  include engdb-types;
+  include engdb-region;
+  include engdb-role;
 
-    organization "Charter Engineering";
-    contact
-        "bill.armstrong@charter.com";
-    description
-        "This is the Charter Engineering Datastore YANG module. The Goal
-        of this module is the provide a facility that exposes Engineering
-        certified attributes to aid in the creation of services";
+  
+
+
+  organization "Charter Engineering";
+  contact
+    "bill.armstrong@charter.com";
+  description
+    "This is the Charter Engineering Datastore YANG module. The Goal of this module is the provide a facility that exposes Engineering certified attributes to aid in the creation of services";
+
+  revision 2015-08-03 {
+	    description
+	      "Created region and added more types";
+	  }
 
 }
-
-

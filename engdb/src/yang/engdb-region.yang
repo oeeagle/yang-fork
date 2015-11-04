@@ -1,10 +1,17 @@
-module engdb-region {
-    namespace "http://charterlab.com/base/engdb-types";
-    prefix region;
+submodule engdb-region {
+  belongs-to engdb {
+    prefix engdb-region;
+  }
 
-    import tailf-common { prefix tailf; }
-    import ietf-inet-types { prefix inet; }
-    import engdb-types { prefix engdb-types; }
+  include engdb-types;
+  
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  
     organization "Charter Engineering";
     contact
         "bill.armstrong@charter.com";
