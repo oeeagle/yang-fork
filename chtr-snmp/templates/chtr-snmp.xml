@@ -56,10 +56,10 @@
             <ipv4 xmlns="http://tail-f.com/ned/cisco-ios-xr">
                <access-list>
                   <named-acl>
-                     <name>{/access-list/inet4/name}</name>
+                     <name>{/access-list/inet4/named-acl/name}</name>
                      <rule tags="replace">
-                        <id>{/access-list/inet4/name/id}</id>
-                        <line>&quot;{/access-list/inet4/name/id[action]}&quot;</line>
+                        <id>{/access-list/inet4/named-acl/name/rule/id}</id>
+                        <line>&quot;{/access-list/inet4/named-acl/name/rule/id/action}&quot;</line>
                      </rule>
                   </named-acl>
                                  </access-list>
