@@ -59,9 +59,11 @@
                      <name>{/access-list/inet4/name}</name>
                      <rule tags="replace">
                         <id>{/access-list/inet4/name/id}</id>
-                        <line>{/access-list/inet4/name/id/action} ipv4 {/access-list/inet4/name/id/prefix}</line>
+                        <line>"{/access-list/inet4/name/id/action} ipv4 {/access-list/inet4/name/id/prefix}"</line>
                      </rule>
                   </named-acl>
+                                 </access-list>
+                                                <access-list>
                   <named-acl>
                    <name>{/access-list/inet4/name}</name>
                      <rule>
