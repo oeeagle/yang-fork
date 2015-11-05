@@ -133,7 +133,7 @@ module chtr-snmp {
                             }
                             leaf line {
                                 type string {
-                                    pattern "^\bpermit|deny\b"+"\sipv4\s";
+                                    pattern "^permit\sipv4\s*|^deny\sipv6\s*";
                                 }
                             }
                         }
@@ -159,7 +159,7 @@ module chtr-snmp {
                             }
                             leaf line {
                                 type string {
-                                    pattern "^\bpermit|deny\b"+"\sipv6\s";
+                                    pattern "^permit\sipv6\s*|^deny\sipv6\s*";
                                 }
                             }
                         }
