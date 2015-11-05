@@ -113,15 +113,16 @@ module chtr-snmp {
             container access-list {
                 description "";
                 
-                list inet4 {
+                container inet4 {
                 	list named-acl{
                     description "";
                     key "name";
-                    unique "id action prefix";
                     leaf name {
                         description "";
                         type string;
                     }
+                    list rule{
+                    key	"id action prefix";
                     leaf id {
                         description "";
                         type int16 {
@@ -139,17 +140,19 @@ module chtr-snmp {
                         type inet:ipv4-prefix;
                     }
                 }
+                	}
                 }
                 
-                list inet6 {
+                container inet6 {
                 	list named-acl{
                     description "";
                     key "name";
-                    unique "id action prefix";
                     leaf name {
                         description "";
                         type string;
                     }
+                    list rule{
+                    key	"id action prefix";
                     leaf id {
                         description "";
                         type int16 {
@@ -167,6 +170,7 @@ module chtr-snmp {
                         type inet:ipv6-prefix;
                     }
                 }
+                	}
                 }
             }
         }
