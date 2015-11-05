@@ -59,7 +59,7 @@
                      <name>{/access-list/inet4/named-acl/name}</name>
                      <rule tags="merge">
                         <id>{/access-list/inet4/named-acl/name/rule/id}</id>
-                        <line when="{/access-list/inet4/named-acl/name/rule[id='1']/line}">{/access-list/inet4/named-acl/name/rule/id/line}</line>
+                        <line>{/access-list/inet4/named-acl/name/rule/id/line}</line>
                      </rule>             
                      <rule tags="merge">
                         <id>1000</id>
