@@ -116,50 +116,80 @@ module chtr-snmp {
 
                 container inet4 {
                     list named-acl {
-                        description "";
-                        key "name";
+
+                        key name;
                         leaf name {
-                            description "";
-                            type string;
+                            type string {
+                                tailf:info "WORD;;User selected string identifying this "                                +
+                                                                "access list";
+                            }
                         }
                         list rule {
-                            key	"id";
-                            unique "line";
+                            key "id";
                             leaf id {
-                                description "";
-                                type int16 {
-                                    range "1 .. 60";
+                                type uint32 {
+                                    tailf:info "<1-2147483644>;;Sequence number for this entry";
                                 }
                             }
+
+                            // FIXME: create better data model for this, probably a choice along
+                            // the lines of
+                            // choice rule-choice {
+                            //   container permit {
+                            //   }
+                            //   container deny {
+                            //   }
+                            //   container remark {
+                            //   }
+                            // }
+
                             leaf line {
+
                                 type string {
-                                    pattern "^permit\sipv4\s*|^deny\sipv6\s*";
+                                    tailf:info "deny - Specify packets to reject\n"                                    + "permit;;Specify packets to forward\n"                                    +
+                                                                        "remark;;Comment for access list";
+                                    pattern "(deny.*)|(permit.*)|(remark.*)|(no.*)";
                                 }
                             }
                         }
                     }
-                }
 
-                container inet6 {
-                    list named-acl {
-                        description "";
-                        key "name";
-                        leaf name {
-                            description "";
-                            type string;
-                        }
-                        list rule {
-                            key	"id";
-                            unique "line";
-                            leaf id {
-                                description "";
-                                type int16 {
-                                    range "1 .. 60";
+                    container inet6 {
+                        list named-acl {
+
+                            key name;
+                            leaf name {
+                                type string {
+                                    tailf:info "WORD;;User selected string identifying this "                                    +
+                                                                        "access list";
                                 }
                             }
-                            leaf line {
-                                type string {
-                                    pattern "^permit\sipv6\s*|^deny\sipv6\s*";
+                            list rule {
+                                key "id";
+                                leaf id {
+                                    type uint32 {
+                                        tailf:info "<1-2147483644>;;Sequence number for this entry";
+                                    }
+                                }
+
+                                // FIXME: create better data model for this, probably a choice along
+                                // the lines of
+                                // choice rule-choice {
+                                //   container permit {
+                                //   }
+                                //   container deny {
+                                //   }
+                                //   container remark {
+                                //   }
+                                // }
+
+                                leaf line {
+
+                                    type string {
+                                        tailf:info "deny - Specify packets to reject\n"                                        + "permit;;Specify packets to forward\n"                                        +
+                                                                                "remark;;Comment for access list";
+                                        pattern "(deny.*)|(permit.*)|(remark.*)|(no.*)";
+                                    }
                                 }
                             }
                         }
@@ -167,5 +197,3 @@ module chtr-snmp {
                 }
             }
         }
-    }
-}
