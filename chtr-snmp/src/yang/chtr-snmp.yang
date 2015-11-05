@@ -94,7 +94,7 @@ module chtr-snmp {
                             leaf inet4-acl {
                                 description "";
                                 type leafref {
-                                    path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../../name]/chtr-snmp:access-list/chtr-snmp:inet4/chtr-snmp:name";
+                                    path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../../name]/chtr-snmp:access-list/chtr-snmp:inet4/chtr-snmp:named-acl/chtr-snmp:name";
                                 }
                             }
                         }
@@ -103,7 +103,7 @@ module chtr-snmp {
                             leaf inet6-acl {
                                 description "";
                                 type leafref {
-                                    path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../../name]/chtr-snmp:access-list/chtr-snmp:inet6/chtr-snmp:name";
+                                    path "/ncs:services/chtr-snmp:chtr-snmp[chtr-snmp:name=current()/../../../name]/chtr-snmp:access-list/chtr-snmp:inet6/chtr-snmp:named-acl/chtr-snmp:name";
                                 }
                             }
                         }
@@ -112,10 +112,12 @@ module chtr-snmp {
             }
             container access-list {
                 description "";
+                
                 list inet4 {
+                	list named-acl{
                     description "";
-                    key "name id action prefix";
-                    unique "id prefix";
+                    key "name";
+                    unique "id action prefix";
                     leaf name {
                         description "";
                         type string;
@@ -137,10 +139,13 @@ module chtr-snmp {
                         type inet:ipv4-prefix;
                     }
                 }
+                }
+                
                 list inet6 {
+                	list named-acl{
                     description "";
-                    key "name id action prefix";
-                    unique "id prefix";
+                    key "name";
+                    unique "id action prefix";
                     leaf name {
                         description "";
                         type string;
@@ -158,10 +163,13 @@ module chtr-snmp {
                         }
                     }
                     leaf prefix {
+                        description "";
                         type inet:ipv6-prefix;
                     }
+                }
                 }
             }
         }
     }
+
 }
