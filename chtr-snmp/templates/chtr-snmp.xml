@@ -59,11 +59,11 @@
                      <name>{/access-list/inet4/named-acl/name}</name>
                      <rule>
                         <id>{/access-list/inet4/named-acl/name/rule/id}</id>
-                        <line>{/access-list/inet4/named-acl/name/rule[id = current()/id][action]}</line>
+                        <line>{deref(/access-list/inet4/named-acl/name/rule/id)/../access-list/inet4/named-acl[name=()]/rule[id=current()]action}</line>
                      </rule>
                   </named-acl>
                                  </access-list>
-                                       </ipv4>
+                                       </ipv4>    deref(/PE/device)/../config/router/bgp/bgp-no-instance/id
          </config>
       </device>
    </devices>

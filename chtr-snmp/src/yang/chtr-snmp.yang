@@ -110,6 +110,9 @@ module chtr-snmp {
                     }
                 }
             }
+           /* iterating over the entries with the way the XR acl yang model is constructed sucks, for now the 
+            acl will be applied as a standard within the xml.
+            
             container access-list {
                 description "";
                 
@@ -172,7 +175,7 @@ module chtr-snmp {
                 }
                 	}
                 }
-            }
+            } */
         }
     }
 
