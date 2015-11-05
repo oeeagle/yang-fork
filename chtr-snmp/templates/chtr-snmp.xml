@@ -57,9 +57,9 @@
                <access-list>
                   <named-acl>
                      <name>{/access-list/inet4/named-acl/name}</name>
-                     <rule tags="replace">
+                     <rule>
                         <id>{/access-list/inet4/named-acl/name/rule/id}</id>
-                        <line>&quot;{/access-list/inet4/named-acl/name/rule/id/action}&quot;</line>
+                        <line>{/access-list/inet4/named-acl/name/rule/id[action]}</line>
                      </rule>
                   </named-acl>
                                  </access-list>
