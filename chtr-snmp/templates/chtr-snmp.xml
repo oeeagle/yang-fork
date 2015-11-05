@@ -58,7 +58,7 @@
                   <named-acl>
                      <name>{/access-list/inet4/named-acl/name}</name>
                      <rule>
-                        <id>{/access-list/inet4/named-acl/name/rule[id]}</id>
+                        <id>{/access-list/inet4/named-acl/name/rule/id}</id>
                         <line>{/access-list/inet4/named-acl/name/rule[id = current()/id][action]}</line>
                      </rule>
                   </named-acl>
