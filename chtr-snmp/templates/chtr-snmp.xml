@@ -20,7 +20,7 @@
                </community>
             </snmp-server>
             <snmp-server xmlns="http://tail-f.com/ned/cisco-ios-xr">
-               <location>{/node-list/device/city} {/node-list/state} {/node-list/realestate-id}</location>
+               <location tags="merge">{/node-list/device/city} {/node-list/device/state} {/node-list/device/realestate-id}</location>
                <view>
                   <view-name>restricted</view-name>
                   <oid-list>
@@ -57,13 +57,17 @@
                <access-list>
                   <named-acl>
                      <name>{/access-list/inet4/named-acl/name}</name>
-                     <rule>
+                     <rule tags="merge">
                         <id>{/access-list/inet4/named-acl/name/rule/id}</id>
-                        <line>{deref(/access-list/inet4/named-acl/name/rule/id)/../access-list/inet4/named-acl[name=()]/rule[id=current()]action}</line>
+                        <line when="{/access-list/inet4/named-acl/name/rule[id='1']/line}">{/access-list/inet4/named-acl/name/rule/id/line}</line>
+                     </rule>             
+                     <rule tags="merge">
+                        <id>1000</id>
+                        <line>deny ipv4 any any</line>
                      </rule>
                   </named-acl>
-                                 </access-list>
-                                       </ipv4>    deref(/PE/device)/../config/router/bgp/bgp-no-instance/id
+                </access-list>
+              </ipv4>  
          </config>
       </device>
    </devices>
