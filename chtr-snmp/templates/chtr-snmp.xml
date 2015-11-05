@@ -58,8 +58,8 @@
                   <named-acl>
                      <name>{/access-list/inet4/name}</name>
                      <rule tags="replace">
-                        <id>{/access-list/inet4/name[id]}</id>
-                        <line>&quot;{/access-list/inet4/name/id[action]} ipv4 {/access-list/inet4/name/id[action][prefix]} any&quot;</line>
+                        <id>{/access-list/inet4/name/id}</id>
+                        <line>&quot;{/access-list/inet4/name[id][action]}&quot;</line>
                      </rule>
                   </named-acl>
                                  </access-list>
